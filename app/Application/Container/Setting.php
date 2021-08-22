@@ -3,9 +3,10 @@
 namespace App\Application\Container;
 
 use ArrayAccess;
+use IteratorAggregate;
 use RuntimeException;
 
-class Setting implements ArrayAccess
+class Setting implements ArrayAccess, IteratorAggregate
 {
     const APP_ENV = 'APP_ENV';
     const PRODUCTION = 'production';
@@ -113,5 +114,10 @@ class Setting implements ArrayAccess
     public function offsetUnset($offset)
     {
         throw new RuntimeException('Cannot unset an offset!');
+    }
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->settings);
     }
 }

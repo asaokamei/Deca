@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Twig;
+namespace App\Application\Services\Twig;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;

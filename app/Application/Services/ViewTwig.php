@@ -4,8 +4,6 @@ namespace App\Application\Services;
 
 use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
-use App\Application\Twig\TwigExtension;
-use App\Application\Twig\TwigRuntimeLoader;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
@@ -15,6 +13,8 @@ use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
+use App\Application\Services\Twig\TwigExtension;
+use App\Application\Services\Twig\TwigRuntimeLoader;
 
 class ViewTwig implements ViewInterface
 {

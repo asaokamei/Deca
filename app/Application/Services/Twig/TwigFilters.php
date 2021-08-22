@@ -1,21 +1,25 @@
 <?php
 
 
-namespace App\Application\Twig;
+namespace App\Application\Services\Twig;
 
 
 use Twig\Markup;
 
 class TwigFilters
 {
-    public function filterArrayToString(array $array): Markup
+    /**
+     * @param array|\ArrayAccess $array
+     * @return Markup
+     */
+    public function filterArrayToString($array): Markup
     {
         return new Markup($this->arrayToString($array), 'UTF-8');
     }
 
     private function arrayToString($value): string
     {
-        if (is_array($value)) {
+        if (is_iterable($value)) {
             $list = '';
             foreach ($value as $key => $v) {
                 $v = $this->arrayToString($v);

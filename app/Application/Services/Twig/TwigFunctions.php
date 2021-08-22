@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Twig;
+namespace App\Application\Services\Twig;
 
 use App\Application\Interfaces\SessionInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -72,7 +72,7 @@ END_TAGS;
      */
     public function getFlashMessages(): array
     {
-        return $this->session->getFlash('messages');
+        return (array) $this->session->getFlash('messages', []);
     }
 
     /**
@@ -80,7 +80,7 @@ END_TAGS;
      */
     public function getFlashNotices(): array
     {
-        return (array) $this->session->getFlash('notices');
+        return (array) $this->session->getFlash('notices', []);
     }
 
     /**
