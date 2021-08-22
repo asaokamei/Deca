@@ -4,9 +4,6 @@
 use App\Application\Handlers\HttpErrorHandler;
 use App\Application\Handlers\ShutdownHandler;
 use App\Application\Interfaces\ViewInterface;
-use App\Application\Session\SessionInterface;
-use App\Application\Twig\TwigExtension;
-use App\Application\Twig\TwigRuntimeLoader;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Slim\App;

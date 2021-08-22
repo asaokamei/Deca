@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Session;
+namespace App\Application\Interfaces;
 
 interface SessionInterface
 {

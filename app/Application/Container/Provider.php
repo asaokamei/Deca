@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\Application\Container;
 
 
+use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
+use App\Application\Services\AuraSession;
 use App\Application\Services\ViewTwig;
-use App\Application\Session\AuraSession;
-use App\Application\Session\SessionInterface;
 use Aura\Session\SessionFactory;
 use Monolog\Handler\FingersCrossedHandler;
 use Monolog\Handler\StreamHandler;
@@ -20,7 +20,6 @@ use Psr\Log\LoggerInterface;
 use Slim\App;
 use Slim\Csrf\Guard;
 use Slim\Views\Twig;
-use Twig\Loader\FilesystemLoader;
 use function DI\get;
 
 class Provider

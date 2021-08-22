@@ -2,8 +2,8 @@
 
 namespace App\Application\Services;
 
+use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
-use App\Application\Session\SessionInterface;
 use App\Application\Twig\TwigExtension;
 use App\Application\Twig\TwigRuntimeLoader;
 use Psr\Http\Message\ResponseInterface;

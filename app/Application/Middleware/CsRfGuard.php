@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
-use App\Application\Session\SessionInterface;
+use App\Application\Interfaces\SessionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

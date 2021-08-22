@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
 use App\Application\Middleware\AppMiddleware;
 use App\Application\Middleware\SessionMiddleware;
-use App\Application\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionException;

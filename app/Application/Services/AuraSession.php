@@ -1,9 +1,10 @@
 <?php
 
 
-namespace App\Application\Session;
+namespace App\Application\Services;
 
 
+use App\Application\Interfaces\SessionInterface;
 use Aura\Session\Segment;
 use Aura\Session\Session;
 use Aura\Session\SessionFactory;

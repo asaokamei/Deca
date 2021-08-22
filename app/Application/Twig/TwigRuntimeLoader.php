@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace App\Application\Twig;
 
-use App\Application\Session\SessionInterface;
+use App\Application\Interfaces\SessionInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Slim\App;
