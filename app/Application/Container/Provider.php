@@ -18,8 +18,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Slim\App;
-use Slim\Csrf\Guard;
-use Slim\Views\Twig;
 use function DI\get;
 
 class Provider

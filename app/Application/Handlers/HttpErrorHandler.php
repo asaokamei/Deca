@@ -10,7 +10,6 @@ use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpException;
 use Slim\Handlers\ErrorHandler;
 use Slim\Interfaces\CallableResolverInterface;
-use Slim\Views\Twig;
 use Throwable;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
@@ -18,7 +17,7 @@ use Whoops\Run;
 class HttpErrorHandler extends ErrorHandler
 {
     /**
-     * @var Twig
+     * @var ViewInterface
      */
     private $view;
 

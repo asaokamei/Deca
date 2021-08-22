@@ -14,7 +14,6 @@ use ReflectionMethod;
 use Slim\App;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpMethodNotAllowedException;
-use Slim\Views\Twig;
 
 abstract class AbstractController
 {
@@ -96,7 +95,7 @@ abstract class AbstractController
             $position = $arg->getPosition();
             $varName = $arg->getName();
             $optionValue = $arg->isOptional() ? $arg->getDefaultValue() : null;
-            $value = isset($this->args[$varName]) ? $this->args[$varName] : $optionValue;
+            $value = $this->args[$varName] ?? $optionValue;
             $arguments[$position] = $value;
         }
         $method->setAccessible(true);

@@ -7,7 +7,6 @@ use App\Application\Interfaces\ViewInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Slim\App;
-use Slim\Views\Twig;
 
 if (!isset($app) || !isset($request)) {
     return;
