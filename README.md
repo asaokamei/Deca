@@ -13,3 +13,4 @@ It is built from a set of reliable and (rather small) packages, such as,
 - Aura/Session
 - filp/whoops
 
+Please read more in [Japanese readme file](README.ja.md). 
