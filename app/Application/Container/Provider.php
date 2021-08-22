@@ -91,13 +91,16 @@ class Provider
         $tempDir = $settings['projectRoot'] . '/app/templates';
         $cacheDir = $settings['cacheDirectory'] . '/twig';
 
-        return new ViewTwig($tempDir, [
+        $view = new ViewTwig($tempDir, [
             'cache' => $cacheDir,
             'auto_reload' => true,
         ], [
             SessionInterface::class => $c->get(SessionInterface::class),
             App::class => $c->get(App::class),
         ]);
+        $view->add('settings', $settings);
+
+        return $view;
     }
 
     private function getSession(ContainerInterface $c)

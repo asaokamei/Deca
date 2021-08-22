@@ -23,7 +23,6 @@ if (!$app instanceof App){
 $app->get('/', function (Request $request, Response $response) {
     return $this->get(\App\Application\Interfaces\ViewInterface::class)->render($response, 'hello.twig', [
         'app_name' => $_ENV['APP_NAME'] ?? 'no-app-name-is-set!',
-        'settings' => $this->get('settings'),
     ]);
 })->setName('hello');
 
