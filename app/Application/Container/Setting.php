@@ -16,19 +16,25 @@ class Setting implements ArrayAccess, IteratorAggregate
      */
     private $settings;
 
-    public function __construct(array $settings)
+    /**
+     * @var array
+     */
+    private $env;
+
+    public function __construct(array $settings, array $env = [])
     {
         $this->settings = $settings;
+        $this->env = $env;
     }
 
-    public static function forge(string $settingFile): Setting
+    public static function forge(string $settingFile, array $env): Setting
     {
         if (!file_exists($settingFile)) {
-            return new self([]);
+            return new self([], $env);
         }
         $settings = parse_ini_file($settingFile);
         if (is_array($settings)) {
-            return new self($settings);
+            return new self($settings, $env);
         }
         throw new RuntimeException('Failed to parse a setting file: ' . $settingFile);
     }
@@ -56,8 +62,8 @@ class Setting implements ArrayAccess, IteratorAggregate
         if (array_key_exists($key, $this->settings)) {
             return $this->settings[$key];
         }
-        if (isset($_ENV[$key])) {
-            return $_ENV[$key];
+        if (isset($this->env[$key])) {
+            return $this->env[$key];
         }
         return null;
     }

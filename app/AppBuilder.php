@@ -94,7 +94,7 @@ class AppBuilder
 
     public function loadEnv(): AppBuilder
     {
-        $this->setting = Setting::forge($this->root . '/settings.ini');
+        $this->setting = Setting::forge($this->root . '/settings.ini', $_ENV);
 
         return $this;
     }
