@@ -6,7 +6,7 @@ namespace App\Application\Container;
 
 use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
-use App\Application\Services\AuraSession;
+use App\Application\Services\SessionAura;
 use App\Application\Services\ViewTwig;
 use Aura\Session\SessionFactory;
 use Monolog\Handler\FingersCrossedHandler;
@@ -105,6 +105,6 @@ class Provider
 
     private function getSession(ContainerInterface $c)
     {
-        return new AuraSession(new SessionFactory());
+        return new SessionAura(new SessionFactory());
     }
 }

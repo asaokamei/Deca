@@ -9,7 +9,7 @@ use Aura\Session\Segment;
 use Aura\Session\Session;
 use Aura\Session\SessionFactory;
 
-class AuraSession implements SessionInterface
+class SessionAura implements SessionInterface
 {
     /**
      * @var SessionFactory
