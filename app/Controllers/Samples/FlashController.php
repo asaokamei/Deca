@@ -11,8 +11,8 @@ class FlashController extends AbstractController
 {
     protected function determineMethod(): string
     {
-        if (isset($this->args['method'])) {
-            return $this->args['method'];
+        if (isset($this->getArgs()['method'])) {
+            return $this->getArgs()['method'];
         }
         return 'get';
     }

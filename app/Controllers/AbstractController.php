@@ -3,16 +3,17 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Application\Interfaces\ControllerArgFilterInterface;
 use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
 use App\Application\Middleware\AppMiddleware;
 use App\Application\Middleware\SessionMiddleware;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionException;
 use ReflectionMethod;
 use Slim\App;
-use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpMethodNotAllowedException;
 
 abstract class AbstractController
@@ -20,17 +21,22 @@ abstract class AbstractController
     /**
      * @var ServerRequestInterface
      */
-    protected $request;
+    private $request;
 
     /**
      * @var ResponseInterface
      */
-    protected $response;
+    private $response;
 
     /**
      * @var array
      */
-    protected $args;
+    private $args = [];
+
+    /**
+     * @var ControllerArgFilterInterface[]
+     */
+    private $argFilters = [];
 
     /**
      * @var App
@@ -40,7 +46,6 @@ abstract class AbstractController
     /**
      * @var SessionInterface
      */
-
     private $session;
 
     /**
@@ -56,16 +61,15 @@ abstract class AbstractController
         $this->request = $request;
         $this->response = $response;
         $this->app = $request->getAttribute(AppMiddleware::APP_NAME);
-        $this->args = $args + $request->getQueryParams();
         $this->session = $request->getAttribute(SessionMiddleware::SESSION_NAME);
-        $this->populateArgs();
+        $this->args = $this->filterArgs($args);
 
         if (method_exists($this, 'action')) {
-            return $this->_invokeMethod('action');
+            return $this->_invokeMethod('action', $this->args);
         }
         $method = 'on' . $this->determineMethod();
         if (method_exists($this, $method)) {
-            return $this->_invokeMethod($method);
+            return $this->_invokeMethod($method, $this->args);
         }
         throw new HttpMethodNotAllowedException($request);
     }
@@ -83,10 +87,11 @@ abstract class AbstractController
 
     /**
      * @param string $method
+     * @param array $inputs
      * @return ResponseInterface
      * @throws ReflectionException
      */
-    private function _invokeMethod(string $method): ResponseInterface
+    protected function _invokeMethod(string $method, array $inputs): ResponseInterface
     {
         $method = new ReflectionMethod($this, $method);
         $parameters = $method->getParameters();
@@ -95,43 +100,26 @@ abstract class AbstractController
             $position = $arg->getPosition();
             $varName = $arg->getName();
             $optionValue = $arg->isOptional() ? $arg->getDefaultValue() : null;
-            $value = $this->args[$varName] ?? $optionValue;
+            $value = $inputs[$varName] ?? $optionValue;
             $arguments[$position] = $value;
         }
         $method->setAccessible(true);
         return $method->invokeArgs($this, $arguments);
     }
 
-    /**
-     * alternate input arguments.
-     * add 'modKeyName' method to change its value.
-     * ex: user_id: '100' -> 'User100'
-     *
-     * return a value to override the original value.
-     * or, return an associated array to add new key/value pair.
-     * ex: ['user' => $user]
-     */
-    private function populateArgs()
+    protected function filterArgs(array $args): array
     {
-        foreach ($this->args as $key => $val) {
-            $modifier = 'arg' . $this->snakeToCarmel($key);
-            if (!method_exists($this, $modifier)) {
-                continue;
-            }
-            $return = $this->$modifier($val);
-            if (is_array($return)) {
-                foreach ($return as $k => $v) {
-                    $this->args[$k] = $v;
-                }
-            } else {
-                $this->args[$key] = $return;
-            }
+        $request = $this->request();
+        foreach ($this->argFilters as $filter) {
+            $args = $filter($request, $args);
         }
+
+        return $args;
     }
 
-    private function snakeToCarmel(string $key): string
+    protected function getArgs(): array
     {
-        return str_replace('_', '', ucwords($key, '_'));
+        return $this->args;
     }
 
     /**
@@ -146,24 +134,19 @@ abstract class AbstractController
         return $view->render($this->response, $template, $data);
     }
 
-    /**
-     * @param string $name
-     * @return mixed
-     * @throws HttpBadRequestException
-     * @noinspection PhpUnused
-     */
-    protected function resolveArg(string $name)
+    protected function request(): ServerRequestInterface
     {
-        if (!isset($this->args[$name])) {
-            throw new HttpBadRequestException($this->request, "Could not resolve argument `{$name}`.");
-        }
-
-        return $this->args[$name];
+        return $this->request;
     }
 
     protected function session(): SessionInterface
     {
         return $this->session;
+    }
+
+    protected function container(): ContainerInterface
+    {
+        return $this->app->getContainer();
     }
 
     protected function flashMessage($message)
