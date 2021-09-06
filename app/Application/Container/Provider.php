@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace App\Application\Container;
 
 
+use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
+use App\Application\Services\MessageAura;
 use App\Application\Services\SessionAura;
 use App\Application\Services\ViewTwig;
 use Aura\Session\SessionFactory;
@@ -30,6 +32,7 @@ class Provider
             LoggerInterface::class => 'getMonolog',
             ViewInterface::class => 'getView',
             SessionInterface::class => 'getSession',
+            MessageInterface::class => 'getMessage',
 
             'view' => get(ViewInterface::class),
         ];
@@ -106,5 +109,10 @@ class Provider
     private function getSession(ContainerInterface $c)
     {
         return new SessionAura(new SessionFactory());
+    }
+
+    private function getMessage(ContainerInterface $c)
+    {
+        return new MessageAura(new SessionFactory());
     }
 }

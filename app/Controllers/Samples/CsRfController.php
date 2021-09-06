@@ -16,7 +16,7 @@ class CsRfController extends AbstractController
 
     public function onPost(): ResponseInterface
     {
-        $this->flashMessage('Post accepted!<br>CSRF Token validated...');
+        $this->messages()->addSuccess('Post accepted!<br>CSRF Token validated...');
         return $this->view('samples/csrf.twig');
     }
 }

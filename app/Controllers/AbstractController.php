@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Application\Interfaces\ControllerArgFilterInterface;
+use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
 use App\Application\Middleware\AppMiddleware;
-use App\Application\Middleware\SessionMiddleware;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -44,9 +44,9 @@ abstract class AbstractController
     private $app;
 
     /**
-     * @var SessionInterface
+     * @var ContainerInterface|null
      */
-    private $session;
+    private $container;
 
     /**
      * @param ServerRequestInterface $request
@@ -61,7 +61,7 @@ abstract class AbstractController
         $this->request = $request;
         $this->response = $response;
         $this->app = $request->getAttribute(AppMiddleware::APP_NAME);
-        $this->session = $request->getAttribute(SessionMiddleware::SESSION_NAME);
+        $this->container = $this->app->getContainer();
         $this->args = $this->filterArgs($args);
 
         if (method_exists($this, 'action')) {
@@ -129,7 +129,7 @@ abstract class AbstractController
      */
     protected function view(string $template, array $data = []): ResponseInterface
     {
-        $this->session->clearFlash(); // rendering a view means ...
+        $this->session()->clearFlash(); // rendering a view means ...
         $view = $this->app->getContainer()->get(ViewInterface::class);
         return $view->render($this->response, $template, $data);
     }
@@ -141,26 +141,17 @@ abstract class AbstractController
 
     protected function session(): SessionInterface
     {
-        return $this->session;
+        return $this->container()->get(SessionInterface::class);
     }
 
     protected function container(): ContainerInterface
     {
-        return $this->app->getContainer();
+        return $this->container;
     }
 
-    protected function flashMessage($message)
+    protected function messages(): MessageInterface
     {
-        $messages = (array) $this->session->getFlash('messages', []);
-        $messages[] = $message;
-        $this->session->setFlash('messages', $messages);
-    }
-
-    protected function flashNotice($message)
-    {
-        $messages = (array) $this->session->getFlash('notices', []);
-        $messages[] = $message;
-        $this->session->setFlash('notices', $messages);
+        return $this->container()->get(MessageInterface::class);
     }
 
     protected function redirectToRoute(string $string, $options = [], $query = []): ResponseInterface
@@ -180,6 +171,6 @@ abstract class AbstractController
 
     protected function regenerateCsRfToken()
     {
-        $this->session->regenerateCsRfToken();
+        $this->session()->regenerateCsRfToken();
     }
 }

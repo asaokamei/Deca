@@ -1,15 +1,11 @@
 <?php
-/**
- * Slim Framework (http://slimframework.com)
- *
- * @license   https://github.com/slimphp/Twig-View/blob/master/LICENSE.md (MIT License)
- */
-
 declare(strict_types=1);
 
 namespace App\Application\Services\Twig;
 
+use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\SessionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Slim\App;
@@ -41,6 +37,10 @@ class TwigFunctions
      * @var UriInterface
      */
     protected $uri;
+    /**
+     * @var ContainerInterface|null
+     */
+    private $container;
 
     /**
      * @param App $app
@@ -56,6 +56,7 @@ class TwigFunctions
         $this->routeParser = $app->getRouteCollector()->getRouteParser();
         $this->basePath = $app->getBasePath();
         $this->session = $session;
+        $this->container = $app->getContainer();
     }
 
     public function getCsrfTokens(): string
@@ -72,7 +73,9 @@ END_TAGS;
      */
     public function getFlashMessages(): array
     {
-        return (array) $this->session->getFlash('messages', []);
+        /** @var MessageInterface $messages */
+        $messages = $this->container->get(MessageInterface::class);
+        return $messages->getMessages(MessageInterface::LEVEL_SUCCESS);
     }
 
     /**
@@ -80,7 +83,9 @@ END_TAGS;
      */
     public function getFlashNotices(): array
     {
-        return (array) $this->session->getFlash('notices', []);
+        /** @var MessageInterface $messages */
+        $messages = $this->container->get(MessageInterface::class);
+        return $messages->getMessages(MessageInterface::LEVEL_ERROR);
     }
 
     /**

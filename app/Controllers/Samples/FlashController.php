@@ -19,15 +19,15 @@ class FlashController extends AbstractController
 
     public function onGet(): ResponseInterface
     {
-        $this->flashNotice('This notice is set in onGet method.');
-        $this->flashMessage('This message is set in onGet method.');
+        $this->messages()->addError('This notice is set in onGet method.');
+        $this->messages()->addSuccess('This message is set in onGet method.');
         return $this->view('samples/flash.twig', []);
     }
 
     public function onPage(): ResponseInterface
     {
-        $this->flashNotice('This notice is set in onPage method.');
-        $this->flashMessage('This message is set in onPage method.');
+        $this->messages()->addError('This notice is set in onPage method.');
+        $this->messages()->addSuccess('This message is set in onPage method.');
         return $this->view('samples/flash.twig', [
             'method' => 'page',
         ]);
@@ -35,8 +35,8 @@ class FlashController extends AbstractController
 
     public function onBack(): ResponseInterface
     {
-        $this->flashNotice('This notice is set in onBack method.');
-        $this->flashMessage('This message is set in onBack method.');
+        $this->messages()->addError('This notice is set in onBack method.');
+        $this->messages()->addSuccess('This message is set in onBack method.');
         return $this->redirectToRoute('flashes');
     }
 }
