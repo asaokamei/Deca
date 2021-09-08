@@ -5,7 +5,6 @@ use App\Controllers\Samples\CsRfController;
 use App\Controllers\Samples\ErrorController;
 use App\Controllers\Samples\FlashController;
 use App\Controllers\Samples\FormController;
-use App\Controllers\Samples\SyntaxErrorController;
 use App\Controllers\Samples\WelcomeController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -42,5 +41,4 @@ $app->group('/errors', function(Group $group) {
     $group->get('/nonExist', NonExistController::class)->setName('nonExists');
     $group->any('/csrf', CsRfController::class)->setName('csrf');
     $group->any('/div0', ErrorController::class)->setName('div0');
-    $group->any('/syntax', SyntaxErrorController::class)->setName('syntaxError');
 });
