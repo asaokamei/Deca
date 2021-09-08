@@ -48,19 +48,13 @@ class HttpErrorHandler extends ErrorHandler
         $this->logger->error($title, ['file' => $exception->getFile(), 'line' => $exception->getLine()]);
 
         if ($this->displayErrorDetails) {
-            $whoops = new Run;
-            $whoops->pushHandler(new PrettyPageHandler);
+            $whoops = new Run();
+            $whoops->pushHandler(new PrettyPageHandler());
             $response->getBody()->write($whoops->handleException($exception));
             return $response;
         }
-        try {
-            return $this->view->render($response, 'error.twig', [
-                'title' => $title,
-            ]);
-        } catch (Throwable $e) {
-            $response->getBody()->write('<h1>error</h1>');
-            return $response
-                ->withStatus(500);
-        }
+        return $this->view->render($response, 'error.twig', [
+            'title' => $title,
+        ]);
     }
 }

@@ -17,14 +17,19 @@
     </ul>
 <h2>sample links...</h2>
 <ul>
-    <li><a href="{{ path('csrf') }}">CSRF Token Validation</a></li>
     <li><a href="{{ path('form') }}">form samples (not-yet-ready)</a></li>
     <li><a href="{{ path('welcome', {name:"YourName"}) }}">welcome (change your_name)</a></li>
     <li><a href="{{ path('flashes') }}">flash samples.</a></li>
-    <li><a href="/bad">not found error</a></li>
-    <li><a href="{{ path('nonExists') }}">calling a controller which does not exist</a></li>
 </ul>
 
+    <h2>Errors Samples</h2>
+    <ul>
+        <li><a href="/bad">not found error</a></li>
+        <li><a href="{{ path('nonExists') }}">calling a controller which does not exist</a></li>
+        <li><a href="{{ path('div0') }}">Divided by zero error</a></li>
+        <li><a href="{{ path('syntaxError') }}">Syntax Error</a></li>
+        <li><a href="{{ path('csrf') }}">CSRF Token Validation</a></li>
+    </ul>
     <h2>settings</h2>
     {{ settings|arrayToString }}
 

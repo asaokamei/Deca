@@ -1,83 +1,97 @@
 <?php
-declare(strict_types=1);
 
 namespace App\Application\Handlers;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\HttpInternalServerErrorException;
-use Slim\ResponseEmitter;
+use Throwable;
+use Whoops\Handler\PrettyPageHandler;
+use Whoops\Run;
 
 class ShutdownHandler
 {
     /**
-     * @var Request
+     * @var string
      */
-    private $request;
+    private $log_file;
 
     /**
-     * @var HttpErrorHandler
+     * @var string
      */
-    private $errorHandler;
+    private $raw_error_file;
 
     /**
      * @var bool
      */
-    private $displayErrorDetails;
+    private $displayErrorDetails = false;
 
     /**
-     * ShutdownHandler constructor.
-     *
-     * @param Request       $request
-     * @param $errorHandler $errorHandler
-     * @param bool          $displayErrorDetails
+     * @var bool
      */
-    public function __construct(
-        Request $request,
-        HttpErrorHandler $errorHandler,
-        bool $displayErrorDetails
-    ) {
-        $this->request = $request;
-        $this->errorHandler = $errorHandler;
+    private $debug = false;
+
+    public function __construct(string $raw_error_file, string $log_file = null, bool $displayErrorDetails = false)
+    {
+        $this->log_file = $log_file;
         $this->displayErrorDetails = $displayErrorDetails;
+        $this->raw_error_file = $raw_error_file;
     }
 
-    public function __invoke()
+    public static function forgeRaw(bool $displayErrorDetails = false): ShutdownHandler
     {
-        $error = error_get_last();
-        if ($error) {
-            $errorFile = $error['file'];
-            $errorLine = $error['line'];
-            $errorMessage = $error['message'];
-            $errorType = $error['type'];
-            $message = 'An error while processing your request. Please try again later.';
+        $raw_error_file = dirname(__DIR__, 2) . '/templates/raw-error.php';
+        $log_file = dirname(__DIR__, 3) . '/var/raw-error.log';
 
-            if ($this->displayErrorDetails) {
-                switch ($errorType) {
-                    case E_USER_ERROR:
-                        $message = "FATAL ERROR: {$errorMessage}. ";
-                        $message .= " on line {$errorLine} in file {$errorFile}.";
-                        break;
+        return new self($raw_error_file, $log_file, $displayErrorDetails);
+    }
 
-                    case E_USER_WARNING:
-                        $message = "WARNING: {$errorMessage}";
-                        break;
+    public function setDebug(bool $debug = false): ShutdownHandler
+    {
+        $this->debug = $debug;
+        return $this;
+    }
 
-                    case E_USER_NOTICE:
-                        $message = "NOTICE: {$errorMessage}";
-                        break;
+    public function setDisplayErrorDetails(bool $displayErrorDetails = false): ShutdownHandler
+    {
+        $this->displayErrorDetails = $displayErrorDetails;
+        return $this;
+    }
 
-                    default:
-                        $message = "ERROR: {$errorMessage}";
-                        $message .= " on line {$errorLine} in file {$errorFile}.";
-                        break;
-                }
-            }
+    public function __invoke(Throwable $throwable)
+    {
+        $this->log($throwable);
+        if ($this->debug) {
+            $this->whoops($throwable);
+            return;
+        } elseif($this->displayErrorDetails) {
+            $this->rawError($throwable);
+            return;
+        }
+        $this->rawError(null);
+    }
 
-            $exception = new HttpInternalServerErrorException($this->request, $message);
-            $response = $this->errorHandler->__invoke($this->request, $exception, $this->displayErrorDetails, false, false);
+    private function rawError(Throwable $throwable = null)
+    {
+        include $this->raw_error_file;
+    }
 
-            $responseEmitter = new ResponseEmitter();
-            $responseEmitter->emit($response);
+    private function whoops(Throwable $throwable)
+    {
+        $whoops = new Run();
+        $whoops->pushHandler(new PrettyPageHandler());
+        echo $whoops->handleException($throwable);
+    }
+
+    private function log(Throwable $throwable)
+    {
+        if ($this->log_file) {
+            $now = date('Y-m-d H:i:s');
+            $message = <<<END_TEXT
+------------
+{$now}
+{$throwable->__toString()}
+
+END_TEXT;
+
+            file_put_contents($this->log_file, $message, FILE_APPEND | LOCK_EX);
         }
     }
 }
