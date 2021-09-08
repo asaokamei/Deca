@@ -53,7 +53,7 @@ class HttpErrorHandler extends ErrorHandler
             $response->getBody()->write($whoops->handleException($exception));
             return $response;
         }
-        return $this->view->render($response, 'error.twig', [
+        return $this->view->render($response, 'layouts/error.twig', [
             'title' => $title,
         ]);
     }
