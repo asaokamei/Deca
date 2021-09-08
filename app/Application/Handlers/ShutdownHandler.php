@@ -28,19 +28,18 @@ class ShutdownHandler
      */
     private $debug = false;
 
-    public function __construct(string $raw_error_file, string $log_file = null, bool $displayErrorDetails = false)
+    public function __construct(string $raw_error_file, string $log_file = null)
     {
         $this->log_file = $log_file;
-        $this->displayErrorDetails = $displayErrorDetails;
         $this->raw_error_file = $raw_error_file;
     }
 
-    public static function forgeRaw(bool $displayErrorDetails = false): ShutdownHandler
+    public static function forgeRaw(): ShutdownHandler
     {
         $raw_error_file = dirname(__DIR__, 2) . '/templates/raw-error.php';
         $log_file = dirname(__DIR__, 3) . '/var/raw-error.log';
 
-        return new self($raw_error_file, $log_file, $displayErrorDetails);
+        return new self($raw_error_file, $log_file);
     }
 
     public function setDebug(bool $debug = false): ShutdownHandler
