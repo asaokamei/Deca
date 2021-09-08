@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Application\Interfaces\ViewInterface;
 use App\Controllers\Samples\CsRfController;
 use App\Controllers\Samples\ErrorController;
 use App\Controllers\Samples\FlashController;
@@ -22,7 +23,7 @@ if (!$app instanceof App){
  * set up routes
  */
 $app->get('/', function (Request $request, Response $response) {
-    return $this->get(\App\Application\Interfaces\ViewInterface::class)->render($response, 'hello.twig', [
+    return $this->get(ViewInterface::class)->render($response, 'hello.twig', [
         'app_name' => $_ENV['APP_NAME'] ?? 'no-app-name-is-set!',
     ]);
 })->setName('hello');

@@ -10,7 +10,6 @@ use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpException;
 use Slim\Handlers\ErrorHandler;
 use Slim\Interfaces\CallableResolverInterface;
-use Throwable;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 
