@@ -25,25 +25,26 @@ $container = $app->getContainer();
 $setting = $container->get('settings');
 
 /** @var bool $displayErrorDetails */
-$displayErrorDetails = $setting['displayErrorDetails'] ?? false;
+$displayErrorDetails = $setting['display_errors'] ?? false;
 $logger = $container->get(LoggerInterface::class);
 
-// Create Error Handler
+/**
+ * Create Error Handler
+ */
 $responseFactory = $app->getResponseFactory();
 $callableResolver = $app->getCallableResolver();
 $errorHandler = new ErrorHandler($callableResolver, $responseFactory, $logger);
 if ($setting->isDebug()) {
-    $errorHandler->registerErrorRenderer('text/html', new ErrorWhoopsRenderer());
+    $errorHandler->registerErrorRenderer('text/html', $container->get(ErrorWhoopsRenderer::class));
 } else {
-    $viewer = $container->get(ViewInterface::class);
-    $errorHandler->registerErrorRenderer('text/html', new ErrorTwigRenderer($viewer));
+    $errorHandler->registerErrorRenderer('text/html', $container->get(ErrorTwigRenderer::class));
 }
 
 // Add Routing Middleware
 $app->addRoutingMiddleware();
 
 // Add Error Middleware
-$errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, true, false);
+$errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, true, true);
 $errorMiddleware->setDefaultErrorHandler($errorHandler);
 
 /**
