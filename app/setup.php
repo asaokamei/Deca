@@ -1,11 +1,14 @@
 <?php
 
 
-use App\Application\Handlers\HttpErrorHandler;
+use App\Application\Container\Setting;
+use App\Application\Handlers\ErrorTwigRenderer;
+use App\Application\Handlers\ErrorWhoopsRenderer;
 use App\Application\Interfaces\ViewInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Slim\App;
+use Slim\Handlers\ErrorHandler;
 
 if (!isset($app) || !isset($request)) {
     return;
@@ -17,24 +20,35 @@ if (!$request instanceof ServerRequestInterface){
     return;
 }
 
+/** @var Setting $setting */
+$container = $app->getContainer();
+$setting = $container->get('settings');
+
 /** @var bool $displayErrorDetails */
-$displayErrorDetails = $app->getContainer()->get('settings')['displayErrorDetails'] ?? false;
+$displayErrorDetails = $setting['displayErrorDetails'] ?? false;
+$logger = $container->get(LoggerInterface::class);
 
 // Create Error Handler
 $responseFactory = $app->getResponseFactory();
 $callableResolver = $app->getCallableResolver();
-$errorHandler = new HttpErrorHandler($callableResolver, $responseFactory, $app->getContainer()->get('view'), $app->getContainer()->get(LoggerInterface::class));
+$errorHandler = new ErrorHandler($callableResolver, $responseFactory, $logger);
+if ($setting->isDebug()) {
+    $errorHandler->registerErrorRenderer('text/html', new ErrorWhoopsRenderer());
+} else {
+    $viewer = $container->get(ViewInterface::class);
+    $errorHandler->registerErrorRenderer('text/html', new ErrorTwigRenderer($viewer));
+}
 
 // Add Routing Middleware
 $app->addRoutingMiddleware();
 
 // Add Error Middleware
-$errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, false, false);
+$errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, true, false);
 $errorMiddleware->setDefaultErrorHandler($errorHandler);
 
 /**
  * set up Twig extension
  */
 /** @var ViewInterface $twig */
-$twig = $app->getContainer()->get(ViewInterface::class);
+$twig = $container->get(ViewInterface::class);
 $twig->setRequest($request);

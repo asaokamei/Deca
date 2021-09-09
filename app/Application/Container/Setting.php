@@ -8,8 +8,10 @@ use RuntimeException;
 
 class Setting implements ArrayAccess, IteratorAggregate
 {
-    const APP_ENV = 'APP_ENV';
-    const PRODUCTION = 'production';
+    private const APP_ENV = 'APP_ENV';
+    private const APP_DEBUG = 'APP_DEBUG';
+
+    private const PRODUCTION = 'production';
 
     /**
      * @var array|false
@@ -100,6 +102,11 @@ class Setting implements ArrayAccess, IteratorAggregate
     public function isProduction(): bool
     {
         return $this->getEnv() === self::PRODUCTION;
+    }
+
+    public function isDebug(): bool
+    {
+        return (bool) ($this->get(self::APP_DEBUG) ?? false);
     }
 
     public function offsetExists($offset)
