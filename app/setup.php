@@ -36,8 +36,10 @@ $callableResolver = $app->getCallableResolver();
 $errorHandler = new ErrorHandler($callableResolver, $responseFactory, $logger);
 if ($setting->isDebug()) {
     $errorHandler->registerErrorRenderer('text/html', $container->get(ErrorWhoopsRenderer::class));
+    $errorHandler->setDefaultErrorRenderer('text/html', $container->get(ErrorWhoopsRenderer::class));
 } else {
     $errorHandler->registerErrorRenderer('text/html', $container->get(ErrorTwigRenderer::class));
+    $errorHandler->setDefaultErrorRenderer('text/html', $container->get(ErrorTwigRenderer::class));
 }
 
 // Add Routing Middleware
