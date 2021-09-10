@@ -26,7 +26,7 @@ class TopPageTest extends TestCase
     {
         return AppBuilder::forge(dirname(__DIR__, 2))
             ->setUseCache(false)
-            ->loadEnv(__DIR__.'/settings.test.ini')
+            ->loadSettings(__DIR__.'/settings.test.ini')
             ->loadContainer(false)
             ->build($request);
     }

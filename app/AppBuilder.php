@@ -92,7 +92,7 @@ class AppBuilder
         require __DIR__ . '/setup.php';
     }
 
-    public function loadEnv(?string $iniPath = null): AppBuilder
+    public function loadSettings(?string $iniPath = null): AppBuilder
     {
         if ($iniPath === null) {
             $iniPath = $this->root . '/settings.ini';
