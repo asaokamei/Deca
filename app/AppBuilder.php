@@ -92,9 +92,12 @@ class AppBuilder
         require __DIR__ . '/setup.php';
     }
 
-    public function loadEnv(): AppBuilder
+    public function loadEnv(?string $iniPath = null): AppBuilder
     {
-        $this->setting = Setting::forge($this->root . '/settings.ini', $_ENV);
+        if ($iniPath === null) {
+            $iniPath = $this->root . '/settings.ini';
+        }
+        $this->setting = Setting::forge($iniPath, $_ENV);
 
         return $this;
     }

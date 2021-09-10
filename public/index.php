@@ -25,7 +25,7 @@ $request = ServerRequestCreatorFactory::create()
 
 $app = AppBuilder::forge(realpath(__DIR__.'/../'))
     ->setUseCache(false)
-    ->loadEnv(true)
+    ->loadEnv()
     ->loadContainer(false)
     ->build($request);
 
