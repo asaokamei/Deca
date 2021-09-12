@@ -25,7 +25,6 @@ class TopPageTest extends TestCase
     private function createApp(ServerRequestInterface $request): App
     {
         return AppBuilder::forge(dirname(__DIR__, 2))
-            ->setUseCache(false)
             ->loadSettings(__DIR__.'/settings.test.ini')
             ->loadContainer(false)
             ->build($request);

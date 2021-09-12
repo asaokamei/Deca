@@ -6,7 +6,6 @@ namespace App;
 use App\Application\Container\BootContainer;
 use App\Application\Container\Setting;
 use DI\Container;
-use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -15,11 +14,6 @@ use Slim\Factory\AppFactory;
 
 class AppBuilder
 {
-    /**
-     * @var bool
-     */
-    private $useCache = false;
-
     /**
      * @var string
      */
@@ -52,16 +46,9 @@ class AppBuilder
         return new self($root, $cache);
     }
 
-    public function setUseCache($useCache): AppBuilder
-    {
-        $this->useCache = $useCache;
-        return $this;
-    }
-
     /**
      * @param ServerRequestInterface|null $request
      * @return App
-     * @throws Exception
      */
     public function build(ServerRequestInterface $request = null): App
     {
@@ -102,11 +89,14 @@ class AppBuilder
         return $this;
     }
 
-    public function loadContainer(?bool $useCache = null): AppBuilder
+    /**
+     * @param bool $useCache
+     * @return $this
+     * @noinspection PhpUnhandledExceptionInspection
+     * @noinspection PhpDocMissingThrowsInspection
+     */
+    public function loadContainer(bool $useCache = false): AppBuilder
     {
-        if ($useCache === null) {
-            $useCache = $this->useCache;
-        }
         $this->setting->addSettings([
             'projectRoot' => $this->root,
             'cacheDirectory' => $this->cache,
@@ -115,15 +105,15 @@ class AppBuilder
         // Build PHP-DI Container instance
 
         $this->container = BootContainer::forge($this->setting, $this->cache)
-            ->setUseCache($useCache)
-            ->build();
+            ->build($useCache);
 
         return $this;
     }
 
     /**
      * @return App
-     * @throws Exception
+     * @noinspection PhpUnhandledExceptionInspection
+     * @noinspection PhpDocMissingThrowsInspection
      */
     private function makeApp(): App
     {

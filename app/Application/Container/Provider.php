@@ -20,43 +20,35 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Slim\App;
-use function DI\get;
+use DI;
 
 class Provider
 {
     public function getDefinitions(): array
     {
-        $list = [
-            ResponseFactoryInterface::class => get(Psr17Factory::class),
-            Psr17Factory::class => 'getPsr17Factory',
-            LoggerInterface::class => 'getMonolog',
-            ViewInterface::class => 'getView',
-            SessionInterface::class => 'getSession',
-            MessageInterface::class => 'getMessage',
+        return [
+            // define real objects
+            Psr17Factory::class => DI\create(Psr17Factory::class),
+            Logger::class => DI\factory([self::class, 'getMonolog']),
+            ViewTwig::class => DI\factory([self::class, 'getView']),
+            SessionAura::class => DI\factory([self::class, 'getSession']),
+            MessageAura::class => DI\factory([self::class, 'getMessage']),
 
-            'view' => get(ViewInterface::class),
+            // define interfaces
+            ResponseFactoryInterface::class => DI\get(Psr17Factory::class),
+            LoggerInterface::class => DI\get(Logger::class),
+            ViewInterface::class => DI\get(ViewTwig::class),
+            SessionInterface::class => DI\get(SessionAura::class),
+            MessageInterface::class => DI\get(MessageAura::class),
+
+            // define shortcut entries
+            'view' => DI\get(ViewInterface::class),
+            'session' => DI\get(SessionInterface::class),
+            'message' => DI\get(MessageInterface::class),
         ];
-        return $this->prepare($list);
     }
 
-    private function prepare(array $list): array
-    {
-        foreach ($list as $key => $item) {
-            if (is_string($item)) {
-                $list[$key] = function(ContainerInterface $c) use($item) {
-                    return $this->$item($c);
-                };
-            }
-        }
-        return $list;
-    }
-
-    private function getPsr17Factory()
-    {
-        return new Psr17Factory();
-    }
-
-    private function getMonolog(ContainerInterface $c): LoggerInterface
+    public static function getMonolog(ContainerInterface $c): Logger
     {
         /** @var Setting $settings */
         $settings = $c->get('settings');
@@ -86,7 +78,7 @@ class Provider
         return $logger;
     }
 
-    private function getView(ContainerInterface $c): ViewInterface
+    public static function getView(ContainerInterface $c): ViewTwig
     {
         /** @var Setting $settings */
         $settings = $c->get('settings');
@@ -106,14 +98,14 @@ class Provider
         return $view;
     }
 
-    private function getSession(ContainerInterface $c)
+    public static function getSession(ContainerInterface $c): SessionAura
     {
         $session = new SessionAura($c->get(SessionFactory::class));
         $session->setCsrfTokenName('_csrf_token');
         return $session;
     }
 
-    private function getMessage(ContainerInterface $c)
+    public static function getMessage(ContainerInterface $c): MessageAura
     {
         return new MessageAura($c->get(SessionFactory::class));
     }
