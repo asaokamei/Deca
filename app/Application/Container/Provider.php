@@ -108,13 +108,13 @@ class Provider
 
     private function getSession(ContainerInterface $c)
     {
-        $session = new SessionAura(new SessionFactory());
+        $session = new SessionAura($c->get(SessionFactory::class));
         $session->setCsrfTokenName('_csrf_token');
         return $session;
     }
 
     private function getMessage(ContainerInterface $c)
     {
-        return new MessageAura(new SessionFactory());
+        return new MessageAura($c->get(SessionFactory::class));
     }
 }
