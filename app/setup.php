@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 
 use App\Application\Container\Setting;
@@ -24,8 +25,7 @@ if (!$request instanceof ServerRequestInterface){
 $container = $app->getContainer();
 $setting = $container->get('settings');
 
-/** @var bool $displayErrorDetails */
-$displayErrorDetails = $setting['display_errors'] ?? false;
+$displayErrorDetails = (bool) ($setting['display_errors'] ?? false);
 $logger = $container->get(LoggerInterface::class);
 
 /**
