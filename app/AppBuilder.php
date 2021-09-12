@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Application\Container\BootContainer;
+use App\Application\Container\Provider;
 use App\Application\Container\Setting;
-use DI\Container;
-use Psr\Container\ContainerInterface;
+use App\Application\Interfaces\ProviderInterface;
+use DI\ContainerBuilder;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
@@ -30,9 +30,9 @@ class AppBuilder
     private $setting;
 
     /**
-     * @var Container|ContainerInterface
+     * @var ContainerBuilder
      */
-    private $container;
+    private $containerBuilder;
 
     public function __construct(string $root, string $cache)
     {
@@ -85,6 +85,10 @@ class AppBuilder
             $iniPath = $this->root . '/settings.ini';
         }
         $this->setting = Setting::forge($iniPath, $_ENV);
+        $this->setting->addSettings([
+            'projectRoot' => $this->root,
+            'cacheDirectory' => $this->cache,
+        ]);
 
         return $this;
     }
@@ -97,17 +101,34 @@ class AppBuilder
      */
     public function loadContainer(bool $useCache = false): AppBuilder
     {
-        $this->setting->addSettings([
-            'projectRoot' => $this->root,
-            'cacheDirectory' => $this->cache,
-        ]);
-
-        // Build PHP-DI Container instance
-
-        $this->container = BootContainer::forge($this->setting, $this->cache)
-            ->build($useCache);
+        $this->prepareContainer($useCache);
+        $this->containerBuilder->addDefinitions(Provider::getDefinitions());
 
         return $this;
+    }
+
+    /**
+     * @param string|ProviderInterface $provider
+     * @return $this
+     */
+    public function loadProvider(string $provider): AppBuilder
+    {
+        $this->containerBuilder->addDefinitions($provider::getDefinitions());
+        return $this;
+    }
+
+    private function prepareContainer(bool $useCache)
+    {
+        if ($this->containerBuilder) return;
+
+        $this->containerBuilder = new ContainerBuilder();
+        if ($useCache && $this->cache) { // compilation not working, yet
+            $this->containerBuilder->enableCompilation($this->cache);
+        }
+        $this->containerBuilder->addDefinitions([
+            Setting::class => $this->setting,
+            'settings' => $this->setting,
+        ]);
     }
 
     /**
@@ -117,11 +138,12 @@ class AppBuilder
      */
     private function makeApp(): App
     {
-        AppFactory::setContainer($this->container);
-        AppFactory::setResponseFactory($this->container->get(ResponseFactoryInterface::class));
+        $container = $this->containerBuilder->build();
+        AppFactory::setContainer($container);
+        AppFactory::setResponseFactory($container->get(ResponseFactoryInterface::class));
 
         $app = AppFactory::create();
-        $this->container->set(App::class, $app); // register $app self.
+        $container->set(App::class, $app); // register $app self.
 
         return $app;
     }

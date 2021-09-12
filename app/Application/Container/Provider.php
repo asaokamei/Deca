@@ -5,6 +5,7 @@ namespace App\Application\Container;
 
 
 use App\Application\Interfaces\MessageInterface;
+use App\Application\Interfaces\ProviderInterface;
 use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
 use App\Application\Services\MessageAura;
@@ -22,9 +23,9 @@ use Psr\Log\LoggerInterface;
 use Slim\App;
 use DI;
 
-class Provider
+class Provider implements ProviderInterface
 {
-    public function getDefinitions(): array
+    public static function getDefinitions(): array
     {
         return [
             // define real objects
