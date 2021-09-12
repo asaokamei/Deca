@@ -7,6 +7,7 @@ use App\Application\Container\Provider;
 use App\Application\Container\Setting;
 use App\Application\Interfaces\ProviderInterface;
 use DI\ContainerBuilder;
+use PHPUnit\Framework\MockObject\RuntimeException;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
@@ -48,35 +49,33 @@ class AppBuilder
 
     /**
      * @param ServerRequestInterface|null $request
+     * @param string[] $extraFiles
      * @return App
      */
-    public function build(ServerRequestInterface $request = null): App
+    public function build(ServerRequestInterface $request = null, array $extraFiles = []): App
     {
         $app = $this->makeApp();
-
-        $this->middleware($app, $request);
-        $this->routes($app, $request);
-        $this->setup($app, $request);
+        $files = [
+            __DIR__ . '/middleware.php',
+            __DIR__ . '/routes.php',
+            __DIR__ . '/setup.php',
+        ];
+        $files += $extraFiles;
+        foreach ($files as $file) {
+            $this->loadFile($file, $app, $request);
+        }
 
         return $app;
     }
 
     /** @noinspection PhpUnusedParameterInspection */
-    private function middleware(App $app, ServerRequestInterface $request = null)
+    private function loadFile(string $file, App $app, ServerRequestInterface $request = null)
     {
-        require __DIR__ . '/middleware.php';
-    }
-
-    /** @noinspection PhpUnusedParameterInspection */
-    private function routes(App $app, ServerRequestInterface $request = null)
-    {
-        require __DIR__ . '/routes.php';
-    }
-
-    /** @noinspection PhpUnusedParameterInspection */
-    private function setup(App $app, ServerRequestInterface $request = null)
-    {
-        require __DIR__ . '/setup.php';
+        try {
+            require $file;
+        } catch (\Throwable $e) {
+            throw new RuntimeException('failed to load a file: ' . $file, $e->getCode(), $e);
+        }
     }
 
     public function loadSettings(?string $iniPath = null): AppBuilder
