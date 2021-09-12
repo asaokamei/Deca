@@ -15,7 +15,6 @@ if (php_sapi_name() == 'cli-server') {
 SERVER:
 
 require __DIR__ . '/../vendor/autoload.php';
-session_start();
 
 require_once dirname(__DIR__) . '/app/error.php';
 
