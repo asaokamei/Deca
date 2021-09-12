@@ -108,7 +108,9 @@ class Provider
 
     private function getSession(ContainerInterface $c)
     {
-        return new SessionAura(new SessionFactory());
+        $session = new SessionAura(new SessionFactory());
+        $session->setCsrfTokenName('_csrf_token');
+        return $session;
     }
 
     private function getMessage(ContainerInterface $c)

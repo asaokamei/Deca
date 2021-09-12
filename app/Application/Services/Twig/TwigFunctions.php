@@ -61,7 +61,7 @@ class TwigFunctions
 
     public function getCsrfTokens(): string
     {
-        $name = SessionInterface::POST_TOKEN_NAME;
+        $name = $this->session->getCsRfTokenName();
         $value = $this->session->getCsRfToken();
         return <<< END_TAGS
 <input type="hidden" name="{$name}" value="{$value}">

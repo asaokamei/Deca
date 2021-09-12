@@ -11,6 +11,7 @@ use Aura\Session\SessionFactory;
 
 class SessionAura implements SessionInterface
 {
+    private $csrf_token_name = '_csrf_token';
     /**
      * @var SessionFactory
      */
@@ -41,6 +42,11 @@ class SessionAura implements SessionInterface
         return $this->session->getCsrfToken()->getValue();
     }
 
+    public function getCsRfTokenName(): string
+    {
+        return $this->csrf_token_name;
+    }
+
     public function regenerateCsRfToken(): void
     {
         $this->session->getCsrfToken()->regenerateValue();
@@ -69,5 +75,15 @@ class SessionAura implements SessionInterface
     public function load($key)
     {
         return $this->segment->get($key);
+    }
+
+    /**
+     * @param string $csrf_token_name
+     * @return SessionAura
+     */
+    public function setCsrfTokenName(string $csrf_token_name): SessionAura
+    {
+        $this->csrf_token_name = $csrf_token_name;
+        return $this;
     }
 }

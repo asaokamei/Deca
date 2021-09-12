@@ -10,6 +10,8 @@ interface SessionInterface
 
     public function getCsRfToken(): string;
 
+    public function getCsRfTokenName(): string;
+
     public function regenerateCsRfToken(): void;
 
     public function getFlash(string $key, $default = null);

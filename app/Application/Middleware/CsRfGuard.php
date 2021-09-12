@@ -43,7 +43,7 @@ class CsRfGuard implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($request->getMethod() === 'POST') {
-            $token = $request->getParsedBody()[SessionInterface::POST_TOKEN_NAME] ?? '';
+            $token = $request->getParsedBody()[$this->session->getCsRfTokenName()] ?? '';
             if (!$this->session->validateCsRfToken($token)) {
                 if ($this->errorHandler) {
                     return call_user_func($this->errorHandler, $request);
@@ -53,13 +53,5 @@ class CsRfGuard implements MiddlewareInterface
             }
         }
         return $handler->handle($request);
-    }
-
-    /**
-     * @return string
-     */
-    public function getTokenName(): string
-    {
-        return $this->tokenName;
     }
 }
