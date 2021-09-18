@@ -52,7 +52,7 @@ class Provider implements ProviderInterface
     public static function getMonolog(ContainerInterface $c): Logger
     {
         /** @var Setting $settings */
-        $settings = $c->get('settings');
+        $settings = $c->get(Setting::class);
         $isProduction = $settings->isProduction();
 
         $logger = new Logger($settings['app_name']??'decaApp');
@@ -82,7 +82,7 @@ class Provider implements ProviderInterface
     public static function getView(ContainerInterface $c): ViewTwig
     {
         /** @var Setting $settings */
-        $settings = $c->get('settings');
+        $settings = $c->get(Setting::class);
 
         $tempDir = $settings['projectRoot'] . '/app/templates';
         $cacheDir = $settings['cacheDirectory'] . '/twig';

@@ -126,7 +126,6 @@ class AppBuilder
         }
         $this->containerBuilder->addDefinitions([
             Setting::class => $this->setting,
-            'settings' => $this->setting,
         ]);
     }
 

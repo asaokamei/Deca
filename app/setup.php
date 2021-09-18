@@ -23,7 +23,7 @@ if (!$request instanceof ServerRequestInterface){
 
 /** @var Setting $setting */
 $container = $app->getContainer();
-$setting = $container->get('settings');
+$setting = $container->get(Setting::class);
 
 $displayErrorDetails = (bool) ($setting['display_errors'] ?? false);
 $logger = $container->get(LoggerInterface::class);
