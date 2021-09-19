@@ -60,7 +60,7 @@ class Provider implements ProviderInterface
         $processor = new UidProcessor();
         $logger->pushProcessor($processor);
 
-        $path = $settings['projectRoot'] . '/var/app.log';
+        $path = $settings->projectRoot . '/var/app.log';
 
         if ($isProduction) {
             $handler = new FingersCrossedHandler(
@@ -84,8 +84,8 @@ class Provider implements ProviderInterface
         /** @var Setting $settings */
         $settings = $c->get(Setting::class);
 
-        $tempDir = $settings['projectRoot'] . '/app/templates';
-        $cacheDir = $settings['cacheDirectory'] . '/twig';
+        $tempDir = $settings->projectRoot . '/app/templates';
+        $cacheDir = $settings->cacheDirectory . '/twig';
 
         $view = new ViewTwig($tempDir, [
             'cache' => $cacheDir,

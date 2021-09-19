@@ -7,6 +7,11 @@ use ArrayAccess;
 use IteratorAggregate;
 use RuntimeException;
 
+/**
+ *
+ * @property string $projectRoot
+ * @property string $cacheDirectory
+ */
 class Setting implements ArrayAccess, IteratorAggregate
 {
     private const APP_ENV = 'APP_ENV';
