@@ -14,15 +14,14 @@ if (php_sapi_name() == 'cli-server') {
 }
 SERVER:
 
-require __DIR__ . '/../vendor/autoload.php';
-
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 require_once dirname(__DIR__) . '/app/error.php';
 
 // Create Request object from globals
 $request = ServerRequestCreatorFactory::create()
     ->createServerRequestFromGlobals();
 
-$app = AppBuilder::forge(realpath(__DIR__.'/../'))
+$app = AppBuilder::forge(dirname(__DIR__))
     ->loadSettings()
     ->loadContainer(true)
     ->build($request);
