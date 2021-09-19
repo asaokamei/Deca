@@ -1,0 +1,36 @@
+{% extends('layouts/layout.html.twig') %}
+
+{% block contents %}
+<h1>Deca Demo</h1>
+
+    <p>This is Deca PHP...</p>
+    <p>App Name: {{ app_name }}</p>
+
+    <h2>Packages</h2>
+    <ul>
+        <li>Slim4, http/csrf/slim/twig-view</li>
+        <li>nyholm/psr7, nyholm/psr7-server</li>
+        <li>monolog</li>
+        <li>php-di/php-di</li>
+        <li>filp/whoops</li>
+        <li>aura/session</li>
+    </ul>
+<h2>sample links...</h2>
+<ul>
+    <li><a href="{{ path('form') }}">form samples (not-yet-ready)</a></li>
+    <li><a href="{{ path('welcome', {name:"YourName"}) }}">welcome (change your_name)</a></li>
+    <li><a href="{{ path('flashes') }}">flash samples.</a></li>
+</ul>
+
+    <h2>Errors Samples</h2>
+    <ul>
+        <li><a href="{{ path('phpinfo') }}">php info</a></li>
+        <li><a href="/bad">not found error</a></li>
+        <li><a href="{{ path('nonExists') }}">calling a controller which does not exist</a></li>
+        <li><a href="{{ path('div0') }}">Divided by zero error</a></li>
+        <li><a href="{{ path('csrf') }}">CSRF Token Validation</a></li>
+    </ul>
+    <h2>settings</h2>
+    {{ settings|arrayToString }}
+
+{% endblock %}

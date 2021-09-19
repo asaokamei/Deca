@@ -1,0 +1,19 @@
+{% extends('layouts/layout.html.twig') %}
+
+{% block contents %}
+
+<h1>Form Samples</h1>
+
+<p>This is form sample...</p>
+
+{{ form }}
+{{ hidden_csrf_token() }}
+
+{% if data is defined %}
+    <h2>form submitted...</h2>
+    {% for key, val in data %}
+        {{ key }}: {{ val }}<br>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}
