@@ -10,9 +10,9 @@ use Psr\Http\Message\ResponseInterface;
 
 class FormController extends AbstractController
 {
-    public function __construct()
+    public function __construct(PostArray $postArray)
     {
-        $this->addArgFilter(new PostArray());
+        $this->addArgFilter($postArray);
     }
 
     public function onGet(): ResponseInterface
