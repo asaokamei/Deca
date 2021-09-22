@@ -6,6 +6,7 @@ A PHP framework I can use for a decade, hopefully.
 It is built from a set of reliable and (rather small) packages, such as,
 
 - Slim4, PHP-DI, nyholm/psr7, monolog, Twig, Aura/Session, filp/whoops, etc.
+- project started based on slim-skeleton with  slim-view. 
 
 Please read more in [Japanese readme file](README.ja.md). 
 
@@ -19,8 +20,9 @@ $ git clone https://github.com/asaokamei/Deca.git
 
 ```
 $ git clone https://github.com/asaokamei/Deca.git
-$ cd Deca/public
+$ cd Deca
 $ composer install
+$ cd public
 $ php -S 127.0.0.1:8000 index.php
 ```
 
