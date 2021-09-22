@@ -117,6 +117,11 @@ abstract class AbstractController
         return $args;
     }
 
+    protected function addArgFilter(ControllerArgFilterInterface $filter)
+    {
+        $this->argFilters[] = $filter;
+    }
+
     protected function getArgs(): array
     {
         return $this->args;
