@@ -3,24 +3,15 @@
 {% block contents %}
 <h1>Deca Demo</h1>
 
-    <p>This is Deca PHP...</p>
+    <p>This is <a href="https://github.com/asaokamei/Deca">Deca PHP</a>...</p>
     <p>App Name: {{ app_name }}</p>
 
-    <h2>Packages</h2>
+    <h2>Samples...</h2>
     <ul>
-        <li>Slim4, http/csrf/slim/twig-view</li>
-        <li>nyholm/psr7, nyholm/psr7-server</li>
-        <li>monolog</li>
-        <li>php-di/php-di</li>
-        <li>filp/whoops</li>
-        <li>aura/session</li>
+        <li><a href="{{ path('form') }}">form samples (not-yet-ready)</a></li>
+        <li><a href="{{ path('welcome', {name:"YourName"}) }}">welcome (change your_name)</a></li>
+        <li><a href="{{ path('flashes') }}">flash samples.</a></li>
     </ul>
-<h2>sample links...</h2>
-<ul>
-    <li><a href="{{ path('form') }}">form samples (not-yet-ready)</a></li>
-    <li><a href="{{ path('welcome', {name:"YourName"}) }}">welcome (change your_name)</a></li>
-    <li><a href="{{ path('flashes') }}">flash samples.</a></li>
-</ul>
 
     <h2>Errors Samples</h2>
     <ul>
