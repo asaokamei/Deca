@@ -3,7 +3,11 @@
 {% block contents %}
     <h1>Resource Controller Samples</h1>
 
-    <a href="{{ path('resource') }}">back to resource sample</a>
+    {% if id %}
+        <a href="{{ path('resource', {action:'show', id:id}) }}">back to id: {{ id }}</a>
+    {% else %}
+        <a href="{{ path('resource') }}">back to resource sample</a>
+    {% endif %}
 
     <h2>Controller::{{ method }}{% if id %}, id={{ id }}{% endif %}</h2>
 
@@ -22,6 +26,7 @@
     {% elseif method == 'onCreateForm' %}
         <form action="" method="post">
             {{ hidden_csrf_token()|raw }}
+            id: <input type="number" name="id" value="123">
             <input type="submit" value="Create">
         </form>
     {% endif %}
@@ -29,12 +34,11 @@
 
     {% if method == 'onShow' %}
         <ul>
-            <li><a href="{{ path('resource', {action: 'update', id: 101}) }}">update form</a></li>
-            <li><a href="{{ path('resource', {action: 'delete', id: 101}) }}">delete form</a></li>
+            <li><a href="{{ path('resource', {action: 'update', id: id}) }}">update form</a></li>
+            <li><a href="{{ path('resource', {action: 'delete', id: id}) }}">delete form</a></li>
         </ul>
     {% elseif method == 'onList' %}
         <ul>
-            <li><a href="{{ path('resource', {action: 'show', id: 101}) }}">show #101</a></li>
             <li><a href="{{ path('resource', {action: 'create'}) }}">create form</a></li>
         </ul>
     {% endif %}

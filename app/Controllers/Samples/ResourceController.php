@@ -3,16 +3,22 @@
 namespace App\Controllers\Samples;
 
 use App\Controllers\AbstractController;
+use App\Controllers\Filters\PostArray;
 use Psr\Http\Message\ResponseInterface;
 
 class ResourceController extends AbstractController
 {
+    public function __construct(PostArray $postArray)
+    {
+        $this->addArgFilter($postArray);
+    }
+
     protected function determineMethod(): string
     {
         $method = $this->request()->getParsedBody()['_method'] ?? $this->request()->getMethod();
         $method = strtoupper($method);
         $action = $this->getArgs()['action'] ?? '';
-        $id = $this->getArgs()['id'] ?? null;
+        $id = (int) ($this->getArgs()['id'] ?? null);
 
         if ($action === 'create') {
             return $method === 'POST' ? 'create' : 'createForm';
@@ -49,12 +55,19 @@ class ResourceController extends AbstractController
         ]);
     }
 
-    public function onCreate(): ResponseInterface
+    public function onCreate($posts): ResponseInterface
     {
-        $this->messages()->addSuccess('executed onCreate');
+        $id = (int) ($posts['id'] ?? null);
+        if (!$id) {
+            $this->messages()->addError('Please specify ID to create');
+            return $this->redirectToRoute('resource', [
+                'action' => 'create',
+            ]);
+        }
+        $this->messages()->addSuccess('Created a new resource ID: ' . $id);
         return $this->redirectToRoute('resource', [
             'action' => 'show',
-            'id' => 101,
+            'id' => $id,
         ]);
     }
 
@@ -68,10 +81,10 @@ class ResourceController extends AbstractController
 
     public function onUpdate($id): ResponseInterface
     {
-        $this->messages()->addSuccess('executed onUpdate');
+        $this->messages()->addSuccess('Updated ID:'.$id);
         return $this->redirectToRoute('resource', [
             'action' => 'show',
-            'id' => 101,
+            'id' => $id,
         ]);
     }
 
@@ -85,7 +98,7 @@ class ResourceController extends AbstractController
 
     public function onDelete($id): ResponseInterface
     {
-        $this->messages()->addSuccess('executed onDelete');
+        $this->messages()->addSuccess('Deleted ID:'.$id);
         return $this->redirectToRoute('resource');
     }
 }
