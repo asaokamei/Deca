@@ -9,6 +9,7 @@ use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
 use App\Application\Middleware\AppMiddleware;
 use App\Controllers\Filters\Redirect;
+use App\Controllers\Filters\Respond;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -128,18 +129,6 @@ abstract class AbstractController
         return $this->args;
     }
 
-    /**
-     * @param string $template
-     * @param array $data
-     * @return ResponseInterface
-     */
-    protected function view(string $template, array $data = []): ResponseInterface
-    {
-        $this->getSession()->clearFlash(); // rendering a view means ...
-        $view = $this->app->getContainer()->get(ViewInterface::class);
-        return $view->render($this->response, $template, $data);
-    }
-
     protected function getRequest(): ServerRequestInterface
     {
         return $this->request;
@@ -163,6 +152,16 @@ abstract class AbstractController
     protected function redirect(): Redirect
     {
         return new Redirect($this->app, $this->response);
+    }
+
+    protected function respond(): Respond
+    {
+        return new Respond($this->app, $this->container, $this->response);
+    }
+
+    protected function view(string $template, array $data = []): ResponseInterface
+    {
+        return $this->respond()->view($template, $data);
     }
 
     protected function regenerateCsRfToken()
