@@ -60,12 +60,12 @@ class ResourceController extends AbstractController
         $id = (int) ($posts['id'] ?? null);
         if (!$id) {
             $this->messages()->addError('Please specify ID to create');
-            return $this->redirectToRoute('resource', [
+            return $this->redirect()->toRoute('resource', [
                 'action' => 'create',
             ]);
         }
         $this->messages()->addSuccess('Created a new resource ID: ' . $id);
-        return $this->redirectToRoute('resource', [
+        return $this->redirect()->toRoute('resource', [
             'action' => 'show',
             'id' => $id,
         ]);
@@ -82,7 +82,7 @@ class ResourceController extends AbstractController
     public function onUpdate($id): ResponseInterface
     {
         $this->messages()->addSuccess('Updated ID:'.$id);
-        return $this->redirectToRoute('resource', [
+        return $this->redirect()->toRoute('resource', [
             'action' => 'show',
             'id' => $id,
         ]);
@@ -99,6 +99,6 @@ class ResourceController extends AbstractController
     public function onDelete($id): ResponseInterface
     {
         $this->messages()->addSuccess('Deleted ID:'.$id);
-        return $this->redirectToRoute('resource');
+        return $this->redirect()->toRoute('resource');
     }
 }

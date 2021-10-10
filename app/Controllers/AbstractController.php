@@ -8,6 +8,7 @@ use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
 use App\Application\Middleware\AppMiddleware;
+use App\Controllers\Filters\Redirect;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -159,19 +160,9 @@ abstract class AbstractController
         return $this->container()->get(MessageInterface::class);
     }
 
-    protected function redirectToRoute(string $string, $options = [], $query = []): ResponseInterface
+    protected function redirect(): Redirect
     {
-        $url = $this->urlFor($string, $options, $query);
-
-        return $this->response
-            ->withHeader('Location', $url)
-            ->withStatus(302);
-    }
-
-    protected function urlFor(string $string, $options = [], $query = []): string
-    {
-        $routeParser = $this->app->getRouteCollector()->getRouteParser();
-        return $routeParser->urlFor($string, $options, $query);
+        return new Redirect($this->app, $this->response);
     }
 
     protected function regenerateCsRfToken()
