@@ -6,7 +6,7 @@ namespace App\Application\Services;
 use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\SessionInterface;
 
-class MessageAura implements MessageInterface
+class Messages implements MessageInterface
 {
     /**
      * @var SessionInterface

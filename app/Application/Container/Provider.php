@@ -8,7 +8,7 @@ use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\ProviderInterface;
 use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
-use App\Application\Services\MessageAura;
+use App\Application\Services\Messages;
 use App\Application\Services\SessionAura;
 use App\Application\Services\ViewTwig;
 use Aura\Session\SessionFactory;
@@ -33,14 +33,14 @@ class Provider implements ProviderInterface
             Logger::class => DI\factory([self::class, 'getMonolog']),
             ViewTwig::class => DI\factory([self::class, 'getView']),
             SessionAura::class => DI\factory([self::class, 'getSessionAura']),
-            MessageAura::class => DI\factory([self::class, 'getMessageAura']),
+            Messages::class => DI\factory([self::class, 'getMessageAura']),
 
             // define interfaces
             ResponseFactoryInterface::class => DI\get(Psr17Factory::class),
             LoggerInterface::class => DI\get(Logger::class),
             ViewInterface::class => DI\get(ViewTwig::class),
             SessionInterface::class => DI\get(SessionAura::class),
-            MessageInterface::class => DI\get(MessageAura::class),
+            MessageInterface::class => DI\get(Messages::class),
 
             // define shortcut entries
             'view' => DI\get(ViewInterface::class),
@@ -106,8 +106,8 @@ class Provider implements ProviderInterface
         return $session;
     }
 
-    public static function getMessageAura(ContainerInterface $c): MessageAura
+    public static function getMessageAura(ContainerInterface $c): Messages
     {
-        return new MessageAura($c->get(SessionInterface::class));
+        return new Messages($c->get(SessionInterface::class));
     }
 }
