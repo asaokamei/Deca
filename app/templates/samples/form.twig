@@ -6,12 +6,15 @@
 
 <p>This is form sample...</p>
 
-{{ form }}
-{{ hidden_csrf_token() }}
+    <form action="" method="post">
+        {{ hidden_csrf_token()|raw }}
+        <input type="text" name="name" value="Deca framework">
+        <input type="submit" value="Post It">
+    </form>
 
-{% if data is defined %}
+{% if posts is defined %}
     <h2>form submitted...</h2>
-    {% for key, val in data %}
+    {% for key, val in posts %}
         {{ key }}: {{ val }}<br>
     {% endfor %}
 {% endif %}

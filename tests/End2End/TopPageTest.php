@@ -49,7 +49,7 @@ class TopPageTest extends TestCase
         $html = $this->getHtml('/');
 
         $this->assertStringContainsString('<h1>Deca Demo</h1>', $html);
-        $this->assertStringContainsString('<p>This is Deca PHP...</p>', $html);
+        $this->assertStringContainsString('This is Deca PHP;', $html);
     }
 
     public function test404NotFound()

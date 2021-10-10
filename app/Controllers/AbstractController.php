@@ -8,6 +8,8 @@ use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
 use App\Application\Middleware\AppMiddleware;
+use App\Controllers\Filters\Redirect;
+use App\Controllers\Filters\Respond;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -109,7 +111,7 @@ abstract class AbstractController
 
     protected function filterArgs(array $args): array
     {
-        $request = $this->request();
+        $request = $this->getRequest();
         foreach ($this->argFilters as $filter) {
             $args = $filter($request, $args);
         }
@@ -117,60 +119,53 @@ abstract class AbstractController
         return $args;
     }
 
+    protected function addArgFilter(ControllerArgFilterInterface $filter)
+    {
+        $this->argFilters[] = $filter;
+    }
+
     protected function getArgs(): array
     {
         return $this->args;
     }
 
-    /**
-     * @param string $template
-     * @param array $data
-     * @return ResponseInterface
-     */
-    protected function view(string $template, array $data = []): ResponseInterface
-    {
-        $this->session()->clearFlash(); // rendering a view means ...
-        $view = $this->app->getContainer()->get(ViewInterface::class);
-        return $view->render($this->response, $template, $data);
-    }
-
-    protected function request(): ServerRequestInterface
+    protected function getRequest(): ServerRequestInterface
     {
         return $this->request;
     }
 
-    protected function session(): SessionInterface
+    protected function getSession(): SessionInterface
     {
-        return $this->container()->get(SessionInterface::class);
+        return $this->getContainer()->get(SessionInterface::class);
     }
 
-    protected function container(): ContainerInterface
+    protected function getContainer(): ContainerInterface
     {
         return $this->container;
     }
 
-    protected function messages(): MessageInterface
+    protected function getMessages(): MessageInterface
     {
-        return $this->container()->get(MessageInterface::class);
+        return $this->getContainer()->get(MessageInterface::class);
     }
 
-    protected function redirectToRoute(string $string, $options = [], $query = []): ResponseInterface
+    protected function redirect(): Redirect
     {
-        $url = $this->urlFor($string, $options, $query);
-
-        return $this->response
-            ->withHeader('Location', $url)
-            ->withStatus(302);
+        return new Redirect($this->app, $this->response);
     }
 
-    protected function urlFor(string $string, $options = [], $query = []): string
+    protected function respond(): Respond
     {
-        $routeParser = $this->app->getRouteCollector()->getRouteParser();
-        return $routeParser->urlFor($string, $options, $query);
+        return new Respond($this->app, $this->container, $this->response);
+    }
+
+    protected function view(string $template, array $data = []): ResponseInterface
+    {
+        return $this->respond()->view($template, $data);
     }
 
     protected function regenerateCsRfToken()
     {
-        $this->session()->regenerateCsRfToken();
+        $this->getSession()->regenerateCsRfToken();
     }
 }

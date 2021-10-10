@@ -23,7 +23,7 @@ $request = ServerRequestCreatorFactory::create()
 
 $app = AppBuilder::forge(dirname(__DIR__))
     ->loadSettings()
-    ->loadContainer(true)
+    ->loadContainer(false)
     ->build($request);
 
 // Run App & Emit Response

@@ -6,6 +6,7 @@ use App\Controllers\Samples\CsRfController;
 use App\Controllers\Samples\ErrorController;
 use App\Controllers\Samples\FlashController;
 use App\Controllers\Samples\FormController;
+use App\Controllers\Samples\ResourceController;
 use App\Controllers\Samples\WelcomeController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -39,6 +40,7 @@ $app->group('/samples', function (Group $group) {
     $group->any('/form', FormController::class)->setName('form');
     $group->any('/welcome/{name:.*}', WelcomeController::class)->setName('welcome');
     $group->any('/flashes/[{method}]', FlashController::class)->setName('flashes');
+    $group->any('/resource/[{action}[/{id}]]', ResourceController::class)->setName('resource');
 });
 
 $app->group('/errors', function(Group $group) {

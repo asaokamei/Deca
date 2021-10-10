@@ -5,21 +5,26 @@ namespace App\Controllers\Samples;
 
 
 use App\Controllers\AbstractController;
+use App\Controllers\Filters\PostArray;
 use Psr\Http\Message\ResponseInterface;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 class FormController extends AbstractController
 {
-    /**
-     * @return ResponseInterface
-     */
-    protected function onGet(): ResponseInterface
+    public function __construct(PostArray $postArray)
+    {
+        $this->addArgFilter($postArray);
+    }
+
+    public function onGet(): ResponseInterface
     {
         return $this->view('samples/form.twig', [
-            'form' => 'not yet ready',
         ]);
     }
 
+    public function onPost($posts): ResponseInterface
+    {
+        return $this->view('samples/form.twig', [
+            'posts' => $posts
+        ]);
+    }
 }

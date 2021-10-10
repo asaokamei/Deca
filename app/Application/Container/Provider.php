@@ -8,7 +8,7 @@ use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\ProviderInterface;
 use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
-use App\Application\Services\MessageAura;
+use App\Application\Services\Messages;
 use App\Application\Services\SessionAura;
 use App\Application\Services\ViewTwig;
 use Aura\Session\SessionFactory;
@@ -32,15 +32,15 @@ class Provider implements ProviderInterface
             Psr17Factory::class => DI\create(Psr17Factory::class),
             Logger::class => DI\factory([self::class, 'getMonolog']),
             ViewTwig::class => DI\factory([self::class, 'getView']),
-            SessionAura::class => DI\factory([self::class, 'getSession']),
-            MessageAura::class => DI\factory([self::class, 'getMessage']),
+            SessionAura::class => DI\factory([self::class, 'getSessionAura']),
+            Messages::class => DI\factory([self::class, 'getMessageAura']),
 
             // define interfaces
             ResponseFactoryInterface::class => DI\get(Psr17Factory::class),
             LoggerInterface::class => DI\get(Logger::class),
             ViewInterface::class => DI\get(ViewTwig::class),
             SessionInterface::class => DI\get(SessionAura::class),
-            MessageInterface::class => DI\get(MessageAura::class),
+            MessageInterface::class => DI\get(Messages::class),
 
             // define shortcut entries
             'view' => DI\get(ViewInterface::class),
@@ -99,15 +99,15 @@ class Provider implements ProviderInterface
         return $view;
     }
 
-    public static function getSession(ContainerInterface $c): SessionAura
+    public static function getSessionAura(ContainerInterface $c): SessionAura
     {
         $session = new SessionAura($c->get(SessionFactory::class));
         $session->setCsrfTokenName('_csrf_token');
         return $session;
     }
 
-    public static function getMessage(ContainerInterface $c): MessageAura
+    public static function getMessageAura(ContainerInterface $c): Messages
     {
-        return new MessageAura($c->get(SessionFactory::class));
+        return new Messages($c->get(SessionInterface::class));
     }
 }

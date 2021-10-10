@@ -4,19 +4,18 @@ declare(strict_types=1);
 namespace App\Application\Services;
 
 use App\Application\Interfaces\MessageInterface;
-use Aura\Session\Segment;
-use Aura\Session\SessionFactory;
+use App\Application\Interfaces\SessionInterface;
 
-class MessageAura implements MessageInterface
+class Messages implements MessageInterface
 {
     /**
-     * @var Segment
+     * @var SessionInterface
      */
     private $session;
 
-    public function __construct(SessionFactory $sessionFactory)
+    public function __construct(SessionInterface $sessionFactory)
     {
-        $this->session = $sessionFactory->newInstance($_COOKIE)->getSegment('message');
+        $this->session = $sessionFactory;
     }
 
     public function addMessage(string $level, string $message)
