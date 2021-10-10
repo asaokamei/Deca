@@ -15,7 +15,7 @@ class ResourceController extends AbstractController
 
     protected function determineMethod(): string
     {
-        $method = $this->request()->getParsedBody()['_method'] ?? $this->request()->getMethod();
+        $method = $this->getRequest()->getParsedBody()['_method'] ?? $this->getRequest()->getMethod();
         $method = strtoupper($method);
         $action = $this->getArgs()['action'] ?? '';
         $id = (int) ($this->getArgs()['id'] ?? null);
@@ -59,12 +59,12 @@ class ResourceController extends AbstractController
     {
         $id = (int) ($posts['id'] ?? null);
         if (!$id) {
-            $this->messages()->addError('Please specify ID to create');
+            $this->getMessages()->addError('Please specify ID to create');
             return $this->redirect()->toRoute('resource', [
                 'action' => 'create',
             ]);
         }
-        $this->messages()->addSuccess('Created a new resource ID: ' . $id);
+        $this->getMessages()->addSuccess('Created a new resource ID: ' . $id);
         return $this->redirect()->toRoute('resource', [
             'action' => 'show',
             'id' => $id,
@@ -81,7 +81,7 @@ class ResourceController extends AbstractController
 
     public function onUpdate($id): ResponseInterface
     {
-        $this->messages()->addSuccess('Updated ID:'.$id);
+        $this->getMessages()->addSuccess('Updated ID:'.$id);
         return $this->redirect()->toRoute('resource', [
             'action' => 'show',
             'id' => $id,
@@ -98,7 +98,7 @@ class ResourceController extends AbstractController
 
     public function onDelete($id): ResponseInterface
     {
-        $this->messages()->addSuccess('Deleted ID:'.$id);
+        $this->getMessages()->addSuccess('Deleted ID:'.$id);
         return $this->redirect()->toRoute('resource');
     }
 }

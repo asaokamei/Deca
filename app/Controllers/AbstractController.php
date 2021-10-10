@@ -110,7 +110,7 @@ abstract class AbstractController
 
     protected function filterArgs(array $args): array
     {
-        $request = $this->request();
+        $request = $this->getRequest();
         foreach ($this->argFilters as $filter) {
             $args = $filter($request, $args);
         }
@@ -135,29 +135,29 @@ abstract class AbstractController
      */
     protected function view(string $template, array $data = []): ResponseInterface
     {
-        $this->session()->clearFlash(); // rendering a view means ...
+        $this->getSession()->clearFlash(); // rendering a view means ...
         $view = $this->app->getContainer()->get(ViewInterface::class);
         return $view->render($this->response, $template, $data);
     }
 
-    protected function request(): ServerRequestInterface
+    protected function getRequest(): ServerRequestInterface
     {
         return $this->request;
     }
 
-    protected function session(): SessionInterface
+    protected function getSession(): SessionInterface
     {
-        return $this->container()->get(SessionInterface::class);
+        return $this->getContainer()->get(SessionInterface::class);
     }
 
-    protected function container(): ContainerInterface
+    protected function getContainer(): ContainerInterface
     {
         return $this->container;
     }
 
-    protected function messages(): MessageInterface
+    protected function getMessages(): MessageInterface
     {
-        return $this->container()->get(MessageInterface::class);
+        return $this->getContainer()->get(MessageInterface::class);
     }
 
     protected function redirect(): Redirect
@@ -167,6 +167,6 @@ abstract class AbstractController
 
     protected function regenerateCsRfToken()
     {
-        $this->session()->regenerateCsRfToken();
+        $this->getSession()->regenerateCsRfToken();
     }
 }
