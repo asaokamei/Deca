@@ -115,27 +115,27 @@ class Setting implements ArrayAccess, IteratorAggregate
         return (bool) ($this->get(self::APP_DEBUG) ?? false);
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $this->has($offset);
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->get($offset);
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new RuntimeException('Cannot set an offset!');
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new RuntimeException('Cannot unset an offset!');
     }
 
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->settings);
     }

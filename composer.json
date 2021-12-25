@@ -18,8 +18,7 @@
         "php-di/php-di": "^6.1",
         "filp/whoops": "^2.7",
         "aura/session": "^2.1",
-        "twig/twig": "3.0",
-        "ext-http": "*",
+        "twig/twig": "^3.0",
         "ext-json": "*"
     },
     "require-dev": {

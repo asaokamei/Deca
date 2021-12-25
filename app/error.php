@@ -14,7 +14,7 @@ set_error_handler(
 /**
  * @throws ErrorException
  */
-    function ($error_no, $error_msg, $error_file, $error_line, $error_vars) {
+    function ($error_no, $error_msg, $error_file, $error_line) {
         if (error_reporting() === 0) {
             return;
         }
