@@ -3,11 +3,8 @@ declare(strict_types=1);
 
 
 use App\Application\Container\Setting;
-use App\Application\Handlers\ErrorTwigRenderer;
-use App\Application\Handlers\ErrorWhoopsRenderer;
 use App\Application\Interfaces\ViewInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 use Slim\App;
 use Slim\Handlers\ErrorHandler;
 
@@ -23,21 +20,20 @@ if (!$request instanceof ServerRequestInterface){
 
 /** @var Setting $setting */
 $container = $app->getContainer();
-$setting = $container->get(Setting::class);
-
-$displayErrorDetails = (bool) ($setting['display_errors'] ?? false);
-$logger = $container->get(LoggerInterface::class);
 
 /**
- * Create Error Handler
+ * Add Routing Middleware
  */
-$errorHandler = $container->get(ErrorHandler::class);
-
-// Add Routing Middleware
 $app->addRoutingMiddleware();
 
-// Add Error Middleware
+/**
+ * Add Error Middleware
+ */
+$setting = $container->get(Setting::class);
+$displayErrorDetails = (bool) ($setting['display_errors'] ?? false);
 $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, true, true);
+
+$errorHandler = $container->get(ErrorHandler::class);
 $errorMiddleware->setDefaultErrorHandler($errorHandler);
 
 /**
