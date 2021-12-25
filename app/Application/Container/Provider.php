@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Application\Container;
 
 
+use App\Application\Handlers\ErrorTwigRenderer;
+use App\Application\Handlers\ErrorWhoopsRenderer;
 use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\ProviderInterface;
 use App\Application\Interfaces\SessionInterface;
@@ -22,6 +24,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Slim\App;
 use DI;
+use Slim\Handlers\ErrorHandler;
 
 class Provider implements ProviderInterface
 {
@@ -34,6 +37,7 @@ class Provider implements ProviderInterface
             ViewTwig::class => DI\factory([self::class, 'getView']),
             SessionAura::class => DI\factory([self::class, 'getSessionAura']),
             Messages::class => DI\factory([self::class, 'getMessageAura']),
+            ErrorHandler::class => DI\factory([self::class, 'getErrorHandler']),
 
             // define interfaces
             ResponseFactoryInterface::class => DI\get(Psr17Factory::class),
@@ -47,6 +51,24 @@ class Provider implements ProviderInterface
             'session' => DI\get(SessionInterface::class),
             'message' => DI\get(MessageInterface::class),
         ];
+    }
+
+    public static function getErrorHandler(ContainerInterface $c): ErrorHandler
+    {
+        $app = $c->get(App::class);
+        $setting = $c->get(Setting::class);
+
+        $responseFactory = $app->getResponseFactory();
+        $callableResolver = $app->getCallableResolver();
+        $errorHandler = new ErrorHandler($callableResolver, $responseFactory, $c->get(LoggerInterface::class));
+        if ($setting->isDebug()) {
+            $errorHandler->registerErrorRenderer('text/html', $c->get(ErrorWhoopsRenderer::class));
+            $errorHandler->setDefaultErrorRenderer('text/html', $c->get(ErrorWhoopsRenderer::class));
+        } else {
+            $errorHandler->registerErrorRenderer('text/html', $c->get(ErrorTwigRenderer::class));
+            $errorHandler->setDefaultErrorRenderer('text/html', $c->get(ErrorTwigRenderer::class));
+        }
+        return $errorHandler;
     }
 
     public static function getMonolog(ContainerInterface $c): Logger

@@ -31,16 +31,7 @@ $logger = $container->get(LoggerInterface::class);
 /**
  * Create Error Handler
  */
-$responseFactory = $app->getResponseFactory();
-$callableResolver = $app->getCallableResolver();
-$errorHandler = new ErrorHandler($callableResolver, $responseFactory, $logger);
-if ($setting->isDebug()) {
-    $errorHandler->registerErrorRenderer('text/html', $container->get(ErrorWhoopsRenderer::class));
-    $errorHandler->setDefaultErrorRenderer('text/html', $container->get(ErrorWhoopsRenderer::class));
-} else {
-    $errorHandler->registerErrorRenderer('text/html', $container->get(ErrorTwigRenderer::class));
-    $errorHandler->setDefaultErrorRenderer('text/html', $container->get(ErrorTwigRenderer::class));
-}
+$errorHandler = $container->get(ErrorHandler::class);
 
 // Add Routing Middleware
 $app->addRoutingMiddleware();
