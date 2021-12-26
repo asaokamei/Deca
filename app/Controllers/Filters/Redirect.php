@@ -3,29 +3,28 @@
 namespace App\Controllers\Filters;
 
 use Psr\Http\Message\ResponseInterface;
-use Slim\App;
+use Slim\Interfaces\RouteParserInterface;
 
 class Redirect
 {
     /**
-     * @var App
-     */
-    private $app;
-    /**
      * @var ResponseInterface
      */
     private $response;
+    /**
+     * @var RouteParserInterface
+     */
+    private $routeParser;
 
-    public function __construct(App $app, ResponseInterface $response)
+    public function __construct(RouteParserInterface $routeParser, ResponseInterface $response)
     {
-        $this->app = $app;
         $this->response = $response;
+        $this->routeParser = $routeParser;
     }
 
     public function getUrlFor(string $string, $options = [], $query = []): string
     {
-        $routeParser = $this->app->getRouteCollector()->getRouteParser();
-        return $routeParser->urlFor($string, $options, $query);
+        return $this->routeParser->urlFor($string, $options, $query);
     }
 
     public function toUrl(string $url, array $query = []): ResponseInterface

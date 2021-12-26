@@ -6,16 +6,11 @@ use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
-use Slim\App;
 
 class Respond
 {
     const OK = 200;
 
-    /**
-     * @var App
-     */
-    private $app;
     /**
      * @var ContainerInterface
      */
@@ -25,16 +20,10 @@ class Respond
      */
     private $response;
 
-    public function __construct(App $app, ContainerInterface $container, ResponseInterface $response)
+    public function __construct(ContainerInterface $container, ResponseInterface $response)
     {
-        $this->app = $app;
         $this->container = $container;
         $this->response = $response;
-    }
-
-    protected function getSession(): SessionInterface
-    {
-        return $this->container->get(SessionInterface::class);
     }
 
     public function response(string $input, int $status, array $header = []): ResponseInterface
@@ -50,8 +39,8 @@ class Respond
 
     public function view(string $template, array $data = []): ResponseInterface
     {
-        $this->getSession()->clearFlash(); // rendering a view means ...
-        $view = $this->app->getContainer()->get(ViewInterface::class);
+        $this->container->get(SessionInterface::class)->clearFlash(); // rendering a view means ...
+        $view = $this->container->get(ViewInterface::class);
         return $view->render($this->response, $template, $data);
     }
 

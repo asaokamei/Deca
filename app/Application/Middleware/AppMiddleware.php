@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Application\Middleware;
 
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface as Middleware;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Psr\Log\LoggerInterface;
 use Slim\App;
+use Slim\Interfaces\RouteParserInterface;
 
 class AppMiddleware implements Middleware
 {
-    const APP_NAME = 'app';
-
     /**
      * @var App
      */
@@ -45,7 +45,9 @@ class AppMiddleware implements Middleware
             }
         }
 
-        $request = $request->withAttribute(self::APP_NAME, $this->app);
+        $request = $request
+            ->withAttribute(ContainerInterface::class, $this->app->getContainer())
+            ->withAttribute(RouteParserInterface::class, $this->app->getRouteCollector()->getRouteParser());
 
         return $handler->handle($request);
     }

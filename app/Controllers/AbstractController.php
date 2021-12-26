@@ -6,8 +6,6 @@ namespace App\Controllers;
 use App\Application\Interfaces\ControllerArgFilterInterface;
 use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\SessionInterface;
-use App\Application\Interfaces\ViewInterface;
-use App\Application\Middleware\AppMiddleware;
 use App\Controllers\Filters\Redirect;
 use App\Controllers\Filters\Respond;
 use Psr\Container\ContainerInterface;
@@ -15,8 +13,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionException;
 use ReflectionMethod;
-use Slim\App;
 use Slim\Exception\HttpMethodNotAllowedException;
+use Slim\Interfaces\RouteParserInterface;
 
 abstract class AbstractController
 {
@@ -41,11 +39,6 @@ abstract class AbstractController
     private $argFilters = [];
 
     /**
-     * @var App
-     */
-    private $app;
-
-    /**
      * @var ContainerInterface|null
      */
     private $container;
@@ -62,8 +55,7 @@ abstract class AbstractController
     {
         $this->request = $request;
         $this->response = $response;
-        $this->app = $request->getAttribute(AppMiddleware::APP_NAME);
-        $this->container = $this->app->getContainer();
+        $this->container = $request->getAttribute(ContainerInterface::class);
         $this->args = $this->filterArgs($args);
 
         if (method_exists($this, 'action')) {
@@ -151,12 +143,12 @@ abstract class AbstractController
 
     protected function redirect(): Redirect
     {
-        return new Redirect($this->app, $this->response);
+        return new Redirect($this->request->getAttribute(RouteParserInterface::class), $this->response);
     }
 
     protected function respond(): Respond
     {
-        return new Respond($this->app, $this->container, $this->response);
+        return new Respond($this->container, $this->response);
     }
 
     protected function view(string $template, array $data = []): ResponseInterface
