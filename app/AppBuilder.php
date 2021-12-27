@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Application\Container\Builder;
 use App\Application\Container\Provider;
 use App\Application\Container\Setting;
 use App\Application\Interfaces\ProviderInterface;
-use DI\ContainerBuilder;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
@@ -32,7 +32,7 @@ class AppBuilder
     private $setting;
 
     /**
-     * @var ContainerBuilder
+     * @var Builder
      */
     private $containerBuilder;
 
@@ -121,7 +121,7 @@ class AppBuilder
     {
         if ($this->containerBuilder) return;
 
-        $this->containerBuilder = new ContainerBuilder();
+        $this->containerBuilder = new Builder();
         if ($useCache && $this->cache) { // compilation not working, yet
             $this->containerBuilder->enableCompilation($this->cache);
         }
@@ -142,7 +142,7 @@ class AppBuilder
         AppFactory::setResponseFactory($container->get(ResponseFactoryInterface::class));
 
         $app = AppFactory::create();
-        $container->set(App::class, $app); // register $app self.
+        $this->containerBuilder->set(App::class, $app); // register $app self.
 
         return $app;
     }
