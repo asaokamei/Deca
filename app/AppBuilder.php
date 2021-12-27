@@ -7,11 +7,12 @@ use App\Application\Container\Provider;
 use App\Application\Container\Setting;
 use App\Application\Interfaces\ProviderInterface;
 use DI\ContainerBuilder;
-use PHPUnit\Framework\MockObject\RuntimeException;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use RuntimeException;
 use Slim\App;
 use Slim\Factory\AppFactory;
+use Throwable;
 
 class AppBuilder
 {
@@ -73,7 +74,7 @@ class AppBuilder
     {
         try {
             require $file;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new RuntimeException('failed to load a file: ' . $file, $e->getCode(), $e);
         }
     }
@@ -101,7 +102,7 @@ class AppBuilder
     public function loadContainer(bool $useCache = false): AppBuilder
     {
         $this->prepareContainer($useCache);
-        $this->containerBuilder->addDefinitions(Provider::getDefinitions());
+        $this->loadProvider(Provider::class);
 
         return $this;
     }
