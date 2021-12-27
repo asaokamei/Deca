@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controllers\Samples;
+namespace App\Routes\Controllers\Samples;
 
-use App\Controllers\AbstractController;
-use App\Controllers\Filters\PostArray;
+use App\Routes\AbstractController;
+use App\Routes\Filters\PostArray;
 use Psr\Http\Message\ResponseInterface;
 
 class ResourceController extends AbstractController

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Filters;
+namespace App\Routes\Filters;
 
 use Psr\Http\Message\ResponseInterface;
 use Slim\Interfaces\RouteParserInterface;

@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controllers;
+namespace App\Routes;
 
 use App\Application\Interfaces\ControllerArgFilterInterface;
 use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\SessionInterface;
-use App\Controllers\Filters\Redirect;
-use App\Controllers\Filters\Respond;
+use App\Routes\Filters\Redirect;
+use App\Routes\Filters\Respond;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

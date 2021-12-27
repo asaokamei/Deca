@@ -56,9 +56,9 @@ class AppBuilder
     {
         $app = $this->makeApp();
         $files = [
-            __DIR__ . '/middleware.php',
+            __DIR__ . '/Application/middleware.php',
             __DIR__ . '/routes.php',
-            __DIR__ . '/setup.php',
+            __DIR__ . '/Application/setup.php',
         ];
         $files += $extraFiles;
         foreach ($files as $file) {
