@@ -2,12 +2,12 @@
 declare(strict_types=1);
 
 use App\Application\Interfaces\ViewInterface;
-use App\Controllers\Samples\CsRfController;
-use App\Controllers\Samples\ErrorController;
-use App\Controllers\Samples\FlashController;
-use App\Controllers\Samples\FormController;
-use App\Controllers\Samples\ResourceController;
-use App\Controllers\Samples\WelcomeController;
+use App\Routes\Controllers\Samples\CsRfController;
+use App\Routes\Controllers\Samples\ErrorController;
+use App\Routes\Controllers\Samples\FlashController;
+use App\Routes\Controllers\Samples\FormController;
+use App\Routes\Controllers\Samples\ResourceController;
+use App\Routes\Controllers\Samples\WelcomeController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
