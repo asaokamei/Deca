@@ -36,9 +36,8 @@ class Provider implements ProviderInterface
             // define real objects
             Psr17Factory::class => DI\create(Psr17Factory::class),
             Logger::class => DI\factory([self::class, 'getMonolog']),
-            ViewTwig::class => DI\factory([self::class, 'getView']),
+            ViewTwig::class => DI\factory([self::class, 'getViewTwig']),
             SessionAura::class => DI\factory([self::class, 'getSessionAura']),
-            Messages::class => DI\factory([self::class, 'getMessageAura']),
             ErrorHandler::class => DI\factory([self::class, 'getErrorHandler']),
 
             // define interfaces
@@ -104,7 +103,7 @@ class Provider implements ProviderInterface
         return $logger;
     }
 
-    public static function getView(ContainerInterface $c): ViewTwig
+    public static function getViewTwig(ContainerInterface $c): ViewTwig
     {
         /** @var Setting $settings */
         $settings = $c->get(Setting::class);
@@ -129,10 +128,5 @@ class Provider implements ProviderInterface
         $session = new SessionAura($c->get(SessionFactory::class));
         $session->setCsrfTokenName('_csrf_token');
         return $session;
-    }
-
-    public static function getMessageAura(ContainerInterface $c): Messages
-    {
-        return new Messages($c->get(SessionInterface::class));
     }
 }

@@ -6,7 +6,6 @@ namespace App\Routes;
 use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\RoutingInterface;
 use App\Application\Interfaces\SessionInterface;
-use App\Application\Services\Routing;
 use App\Routes\Filters\ControllerArgFilterInterface;
 use App\Routes\Utils\Redirect;
 use App\Routes\Utils\Respond;
