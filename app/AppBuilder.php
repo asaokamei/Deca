@@ -12,6 +12,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use Slim\App;
 use Slim\Factory\AppFactory;
+use Slim\Interfaces\RouteCollectorInterface;
 use Throwable;
 
 class AppBuilder
@@ -143,6 +144,7 @@ class AppBuilder
 
         $app = AppFactory::create();
         $this->containerBuilder->set(App::class, $app); // register $app self.
+        $this->containerBuilder->set(RouteCollectorInterface::class, $app->getRouteCollector()); // register $app self.
 
         return $app;
     }

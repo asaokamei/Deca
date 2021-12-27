@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Routes;
 
 use App\Application\Interfaces\MessageInterface;
+use App\Application\Interfaces\RoutingInterface;
 use App\Application\Interfaces\SessionInterface;
+use App\Application\Services\Routing;
 use App\Routes\Filters\ControllerArgFilterInterface;
 use App\Routes\Utils\Redirect;
 use App\Routes\Utils\Respond;
@@ -14,7 +16,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use ReflectionException;
 use ReflectionMethod;
 use Slim\Exception\HttpMethodNotAllowedException;
-use Slim\Interfaces\RouteParserInterface;
 
 abstract class AbstractController
 {
@@ -143,7 +144,7 @@ abstract class AbstractController
 
     protected function redirect(): Redirect
     {
-        return new Redirect($this->request->getAttribute(RouteParserInterface::class), $this->response);
+        return new Redirect($this->container->get(RoutingInterface::class), $this->response);
     }
 
     protected function respond(): Respond

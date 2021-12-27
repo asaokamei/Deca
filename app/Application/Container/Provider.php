@@ -8,9 +8,11 @@ use App\Application\Handlers\ErrorTwigRenderer;
 use App\Application\Handlers\ErrorWhoopsRenderer;
 use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\ProviderInterface;
+use App\Application\Interfaces\RoutingInterface;
 use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
 use App\Application\Services\Messages;
+use App\Application\Services\Routing;
 use App\Application\Services\SessionAura;
 use App\Application\Services\ViewTwig;
 use Aura\Session\SessionFactory;
@@ -45,6 +47,7 @@ class Provider implements ProviderInterface
             ViewInterface::class => DI\get(ViewTwig::class),
             SessionInterface::class => DI\get(SessionAura::class),
             MessageInterface::class => DI\get(Messages::class),
+            RoutingInterface::class => DI\get(Routing::class),
 
             // define shortcut entries
             'view' => DI\get(ViewInterface::class),
