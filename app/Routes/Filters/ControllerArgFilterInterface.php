@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Interfaces;
+namespace App\Routes\Filters;
 
 use Psr\Http\Message\ServerRequestInterface;
 
