@@ -16,6 +16,8 @@ use Slim\Exception\HttpMethodNotAllowedException;
 
 abstract class AbstractController
 {
+    use InvokeMethodTrait;
+
     /**
      * @var ServerRequestInterface
      */
@@ -75,28 +77,6 @@ abstract class AbstractController
     protected function determineMethod(): string
     {
         return $this->request->getParsedBody()['_method'] ?? $this->request->getMethod();
-    }
-
-    /**
-     * @param string $method
-     * @param array $inputs
-     * @return ResponseInterface
-     * @throws ReflectionException
-     */
-    protected function _invokeMethod(string $method, array $inputs): ResponseInterface
-    {
-        $method = new ReflectionMethod($this, $method);
-        $parameters = $method->getParameters();
-        $arguments = [];
-        foreach ($parameters as $arg) {
-            $position = $arg->getPosition();
-            $varName = $arg->getName();
-            $optionValue = $arg->isOptional() ? $arg->getDefaultValue() : null;
-            $value = $inputs[$varName] ?? $optionValue;
-            $arguments[$position] = $value;
-        }
-        $method->setAccessible(true);
-        return $method->invokeArgs($this, $arguments);
     }
 
     protected function filterArgs(array $args): array
