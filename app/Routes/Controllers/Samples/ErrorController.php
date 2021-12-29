@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Routes\Controllers\Samples;
 
-use App\Routes\AbstractController;
+use App\Routes\Utils\AbstractController;
 
 class ErrorController extends AbstractController
 {

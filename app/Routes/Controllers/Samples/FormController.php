@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Routes\Controllers\Samples;
 
 
-use App\Routes\AbstractController;
 use App\Routes\Filters\PostArray;
+use App\Routes\Utils\AbstractController;
 use Psr\Http\Message\ResponseInterface;
 
 class FormController extends AbstractController

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Routes\Controllers\Samples;
 
 
-use App\Routes\AbstractController;
+use App\Routes\Utils\AbstractController;
 use Psr\Http\Message\ResponseInterface;
 
 class CsRfController extends AbstractController
