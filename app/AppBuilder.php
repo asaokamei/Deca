@@ -19,12 +19,12 @@ class AppBuilder
     /**
      * @var string
      */
-    private $root;
+    private $rootDir;
 
     /**
      * @var string
      */
-    private $cache;
+    private $cacheDir;
 
     /**
      * @var Setting
@@ -36,10 +36,10 @@ class AppBuilder
      */
     private $containerBuilder;
 
-    public function __construct(string $root, string $cache)
+    public function __construct(string $rootDir, string $cacheDir)
     {
-        $this->root = $root;
-        $this->cache = $cache;
+        $this->rootDir = $rootDir;
+        $this->cacheDir = $cacheDir;
     }
 
     public static function forge(string $root, string $cache = null): self
@@ -82,12 +82,12 @@ class AppBuilder
     public function loadSettings(?string $iniPath = null): AppBuilder
     {
         if ($iniPath === null) {
-            $iniPath = $this->root . '/settings.ini';
+            $iniPath = $this->rootDir . '/settings.ini';
         }
         $this->setting = Setting::forge($iniPath, $_ENV);
         $this->setting->addSettings([
-            'projectRoot' => $this->root,
-            'cacheDirectory' => $this->cache,
+            'projectRoot' => $this->rootDir,
+            'cacheDirectory' => $this->cacheDir,
         ]);
 
         return $this;
@@ -122,8 +122,8 @@ class AppBuilder
         if ($this->containerBuilder) return;
 
         $this->containerBuilder = new Builder();
-        if ($useCache && $this->cache) { // compilation not working, yet
-            $this->containerBuilder->enableCompilation($this->cache);
+        if ($useCache && $this->cacheDir) { // compilation not working, yet
+            $this->containerBuilder->enableCompilation($this->cacheDir);
         }
         $this->containerBuilder->addDefinitions([
             Setting::class => $this->setting,
