@@ -12,7 +12,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 use Slim\App;
 use Slim\Factory\AppFactory;
-use Slim\Interfaces\RouteCollectorInterface;
 use Throwable;
 
 class AppBuilder
@@ -58,9 +57,9 @@ class AppBuilder
     {
         $app = $this->makeApp();
         $files = [
+            __DIR__ . '/Application/setup.php',
             __DIR__ . '/Application/middleware.php',
             __DIR__ . '/Routes/routes.php',
-            __DIR__ . '/Application/setup.php',
         ];
         $files += $extraFiles;
         foreach ($files as $file) {
@@ -143,9 +142,15 @@ class AppBuilder
         AppFactory::setResponseFactory($container->get(ResponseFactoryInterface::class));
 
         $app = AppFactory::create();
-        $this->containerBuilder->set(App::class, $app); // register $app self.
-        $this->containerBuilder->set(RouteCollectorInterface::class, $app->getRouteCollector()); // register $app self.
 
         return $app;
+    }
+
+    /**
+     * @return Builder
+     */
+    public function getContainerBuilder(): Builder
+    {
+        return $this->containerBuilder;
     }
 }
