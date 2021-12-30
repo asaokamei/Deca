@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Filters;
+namespace App\Routes\Utils;
 
 use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;

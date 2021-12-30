@@ -1,23 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controllers;
+namespace App\Routes\Utils;
 
-use App\Application\Interfaces\ControllerArgFilterInterface;
 use App\Application\Interfaces\MessageInterface;
+use App\Application\Interfaces\RoutingInterface;
 use App\Application\Interfaces\SessionInterface;
-use App\Controllers\Filters\Redirect;
-use App\Controllers\Filters\Respond;
+use App\Routes\Filters\ControllerArgFilterInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionException;
 use ReflectionMethod;
 use Slim\Exception\HttpMethodNotAllowedException;
-use Slim\Interfaces\RouteParserInterface;
 
 abstract class AbstractController
 {
+    use InvokeMethodTrait;
+
     /**
      * @var ServerRequestInterface
      */
@@ -79,28 +79,6 @@ abstract class AbstractController
         return $this->request->getParsedBody()['_method'] ?? $this->request->getMethod();
     }
 
-    /**
-     * @param string $method
-     * @param array $inputs
-     * @return ResponseInterface
-     * @throws ReflectionException
-     */
-    protected function _invokeMethod(string $method, array $inputs): ResponseInterface
-    {
-        $method = new ReflectionMethod($this, $method);
-        $parameters = $method->getParameters();
-        $arguments = [];
-        foreach ($parameters as $arg) {
-            $position = $arg->getPosition();
-            $varName = $arg->getName();
-            $optionValue = $arg->isOptional() ? $arg->getDefaultValue() : null;
-            $value = $inputs[$varName] ?? $optionValue;
-            $arguments[$position] = $value;
-        }
-        $method->setAccessible(true);
-        return $method->invokeArgs($this, $arguments);
-    }
-
     protected function filterArgs(array $args): array
     {
         $request = $this->getRequest();
@@ -143,7 +121,7 @@ abstract class AbstractController
 
     protected function redirect(): Redirect
     {
-        return new Redirect($this->request->getAttribute(RouteParserInterface::class), $this->response);
+        return new Redirect($this->container->get(RoutingInterface::class), $this->response);
     }
 
     protected function respond(): Respond

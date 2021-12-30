@@ -8,9 +8,11 @@ use App\Application\Handlers\ErrorTwigRenderer;
 use App\Application\Handlers\ErrorWhoopsRenderer;
 use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\ProviderInterface;
+use App\Application\Interfaces\RoutingInterface;
 use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
 use App\Application\Services\Messages;
+use App\Application\Services\Routing;
 use App\Application\Services\SessionAura;
 use App\Application\Services\ViewTwig;
 use Aura\Session\SessionFactory;
@@ -34,9 +36,8 @@ class Provider implements ProviderInterface
             // define real objects
             Psr17Factory::class => DI\create(Psr17Factory::class),
             Logger::class => DI\factory([self::class, 'getMonolog']),
-            ViewTwig::class => DI\factory([self::class, 'getView']),
+            ViewTwig::class => DI\factory([self::class, 'getViewTwig']),
             SessionAura::class => DI\factory([self::class, 'getSessionAura']),
-            Messages::class => DI\factory([self::class, 'getMessageAura']),
             ErrorHandler::class => DI\factory([self::class, 'getErrorHandler']),
 
             // define interfaces
@@ -45,6 +46,7 @@ class Provider implements ProviderInterface
             ViewInterface::class => DI\get(ViewTwig::class),
             SessionInterface::class => DI\get(SessionAura::class),
             MessageInterface::class => DI\get(Messages::class),
+            RoutingInterface::class => DI\get(Routing::class),
 
             // define shortcut entries
             'view' => DI\get(ViewInterface::class),
@@ -101,7 +103,7 @@ class Provider implements ProviderInterface
         return $logger;
     }
 
-    public static function getView(ContainerInterface $c): ViewTwig
+    public static function getViewTwig(ContainerInterface $c): ViewTwig
     {
         /** @var Setting $settings */
         $settings = $c->get(Setting::class);
@@ -126,10 +128,5 @@ class Provider implements ProviderInterface
         $session = new SessionAura($c->get(SessionFactory::class));
         $session->setCsrfTokenName('_csrf_token');
         return $session;
-    }
-
-    public static function getMessageAura(ContainerInterface $c): Messages
-    {
-        return new Messages($c->get(SessionInterface::class));
     }
 }

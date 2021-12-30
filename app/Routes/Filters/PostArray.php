@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controllers\Filters;
+namespace App\Routes\Filters;
 
-use App\Application\Interfaces\ControllerArgFilterInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class PostArray implements ControllerArgFilterInterface

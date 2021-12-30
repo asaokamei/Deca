@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controllers\Filters;
+namespace App\Routes\Utils;
 
+use App\Application\Interfaces\RoutingInterface;
 use Psr\Http\Message\ResponseInterface;
-use Slim\Interfaces\RouteParserInterface;
 
 class Redirect
 {
@@ -12,11 +12,11 @@ class Redirect
      */
     private $response;
     /**
-     * @var RouteParserInterface
+     * @var RoutingInterface
      */
     private $routeParser;
 
-    public function __construct(RouteParserInterface $routeParser, ResponseInterface $response)
+    public function __construct(RoutingInterface $routeParser, ResponseInterface $response)
     {
         $this->response = $response;
         $this->routeParser = $routeParser;
@@ -25,6 +25,11 @@ class Redirect
     public function getUrlFor(string $string, $options = [], $query = []): string
     {
         return $this->routeParser->urlFor($string, $options, $query);
+    }
+
+    public function getRelativeUrlFor(string $string, $options = [], $query = []): string
+    {
+        return $this->routeParser->relativeUrlFor($string, $options, $query);
     }
 
     public function toUrl(string $url, array $query = []): ResponseInterface

@@ -7,8 +7,12 @@ use App\Application\Interfaces\ViewInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Handlers\ErrorHandler;
+use Slim\Interfaces\RouteCollectorInterface;
 
-if (!isset($app) || !isset($request)) {
+if (!isset($this) || !isset($app) || !isset($request)) {
+    return;
+}
+if (!$this instanceof \App\AppBuilder){
     return;
 }
 if (!$app instanceof App){
@@ -20,6 +24,9 @@ if (!$request instanceof ServerRequestInterface){
 
 /** @var Setting $setting */
 $container = $app->getContainer();
+
+$this->getContainerBuilder()->set(App::class, $app); // register $app self.
+$this->getContainerBuilder()->set(RouteCollectorInterface::class, $app->getRouteCollector()); // register $app self.
 
 /**
  * Add Routing Middleware

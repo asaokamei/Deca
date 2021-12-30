@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Controllers\Samples;
+namespace App\Routes\Controllers\Samples;
 
-use App\Controllers\AbstractController;
+use App\Routes\Utils\AbstractController;
 
 class ErrorController extends AbstractController
 {

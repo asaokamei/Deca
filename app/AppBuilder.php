@@ -3,27 +3,28 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Application\Container\Builder;
 use App\Application\Container\Provider;
 use App\Application\Container\Setting;
 use App\Application\Interfaces\ProviderInterface;
-use DI\ContainerBuilder;
-use PHPUnit\Framework\MockObject\RuntimeException;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use RuntimeException;
 use Slim\App;
 use Slim\Factory\AppFactory;
+use Throwable;
 
 class AppBuilder
 {
     /**
      * @var string
      */
-    private $root;
+    private $rootDir;
 
     /**
      * @var string
      */
-    private $cache;
+    private $cacheDir;
 
     /**
      * @var Setting
@@ -31,14 +32,14 @@ class AppBuilder
     private $setting;
 
     /**
-     * @var ContainerBuilder
+     * @var Builder
      */
     private $containerBuilder;
 
-    public function __construct(string $root, string $cache)
+    public function __construct(string $rootDir, string $cacheDir)
     {
-        $this->root = $root;
-        $this->cache = $cache;
+        $this->rootDir = $rootDir;
+        $this->cacheDir = $cacheDir;
     }
 
     public static function forge(string $root, string $cache = null): self
@@ -56,9 +57,9 @@ class AppBuilder
     {
         $app = $this->makeApp();
         $files = [
-            __DIR__ . '/middleware.php',
-            __DIR__ . '/routes.php',
-            __DIR__ . '/setup.php',
+            __DIR__ . '/Application/setup.php',
+            __DIR__ . '/Application/middleware.php',
+            __DIR__ . '/Routes/routes.php',
         ];
         $files += $extraFiles;
         foreach ($files as $file) {
@@ -73,7 +74,7 @@ class AppBuilder
     {
         try {
             require $file;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new RuntimeException('failed to load a file: ' . $file, $e->getCode(), $e);
         }
     }
@@ -81,12 +82,12 @@ class AppBuilder
     public function loadSettings(?string $iniPath = null): AppBuilder
     {
         if ($iniPath === null) {
-            $iniPath = $this->root . '/settings.ini';
+            $iniPath = $this->rootDir . '/settings.ini';
         }
         $this->setting = Setting::forge($iniPath, $_ENV);
         $this->setting->addSettings([
-            'projectRoot' => $this->root,
-            'cacheDirectory' => $this->cache,
+            'projectRoot' => $this->rootDir,
+            'cacheDirectory' => $this->cacheDir,
         ]);
 
         return $this;
@@ -101,7 +102,7 @@ class AppBuilder
     public function loadContainer(bool $useCache = false): AppBuilder
     {
         $this->prepareContainer($useCache);
-        $this->containerBuilder->addDefinitions(Provider::getDefinitions());
+        $this->loadProvider(Provider::class);
 
         return $this;
     }
@@ -120,9 +121,9 @@ class AppBuilder
     {
         if ($this->containerBuilder) return;
 
-        $this->containerBuilder = new ContainerBuilder();
-        if ($useCache && $this->cache) { // compilation not working, yet
-            $this->containerBuilder->enableCompilation($this->cache);
+        $this->containerBuilder = new Builder();
+        if ($useCache && $this->cacheDir) { // compilation not working, yet
+            $this->containerBuilder->enableCompilation($this->cacheDir);
         }
         $this->containerBuilder->addDefinitions([
             Setting::class => $this->setting,
@@ -141,8 +142,15 @@ class AppBuilder
         AppFactory::setResponseFactory($container->get(ResponseFactoryInterface::class));
 
         $app = AppFactory::create();
-        $container->set(App::class, $app); // register $app self.
 
         return $app;
+    }
+
+    /**
+     * @return Builder
+     */
+    public function getContainerBuilder(): Builder
+    {
+        return $this->containerBuilder;
     }
 }

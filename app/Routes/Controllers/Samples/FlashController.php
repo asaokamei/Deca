@@ -2,10 +2,10 @@
 declare(strict_types=1);
 
 
-namespace App\Controllers\Samples;
+namespace App\Routes\Controllers\Samples;
 
 
-use App\Controllers\AbstractController;
+use App\Routes\Utils\AbstractController;
 use Psr\Http\Message\ResponseInterface;
 
 class FlashController extends AbstractController
