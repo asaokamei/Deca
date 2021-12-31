@@ -6,10 +6,12 @@ namespace App\Routes\Utils;
 use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\RoutingInterface;
 use App\Application\Interfaces\SessionInterface;
+use App\Routes\Filters\ArgumentFilters;
 use App\Routes\Filters\ControllerArgFilterInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use ReflectionAttribute;
 use ReflectionException;
 use ReflectionMethod;
 use Slim\Exception\HttpMethodNotAllowedException;
@@ -56,7 +58,6 @@ abstract class AbstractController
         $this->request = $request;
         $this->response = $response;
         $this->container = $request->getAttribute(ContainerInterface::class);
-        $this->args = $this->filterArgs($args);
 
         if (method_exists($this, 'action')) {
             return $this->_invokeMethod('action', $this->args);
@@ -77,16 +78,6 @@ abstract class AbstractController
     protected function determineMethod(): string
     {
         return $this->request->getParsedBody()['_method'] ?? $this->request->getMethod();
-    }
-
-    protected function filterArgs(array $args): array
-    {
-        $request = $this->getRequest();
-        foreach ($this->argFilters as $filter) {
-            $args = $filter($request, $args);
-        }
-
-        return $args;
     }
 
     protected function addArgFilter(ControllerArgFilterInterface $filter)

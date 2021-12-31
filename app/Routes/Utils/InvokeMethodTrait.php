@@ -2,13 +2,18 @@
 
 namespace App\Routes\Utils;
 
+use App\Routes\Filters\ControllerArgFilterInterface;
 use \InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
+use ReflectionAttribute;
+use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 
 trait InvokeMethodTrait
 {
+    abstract protected function addArgFilter(ControllerArgFilterInterface $filter);
+
     /**
      * @param string $method
      * @param array $inputs
@@ -20,8 +25,10 @@ trait InvokeMethodTrait
         if (!method_exists($this, $method)) {
             throw new \BadMethodCallException("method not found: $method");
         }
-        $method = new ReflectionMethod($this, $method);
-        $parameters = $method->getParameters();
+        $inputs = $this->filterArgs($method, $inputs);
+
+        $refMethod = new ReflectionMethod($this, $method);
+        $parameters = $refMethod->getParameters();
         $arguments = [];
         foreach ($parameters as $arg) {
             $position = $arg->getPosition();
@@ -34,10 +41,45 @@ trait InvokeMethodTrait
                 $arguments[$position] = $arg->getDefaultValue();
                 continue;
             }
-            throw new InvalidArgumentException("argument not found for: $varName");
+            throw new InvalidArgumentException("Argument not found, '$varName', in " . __CLASS__ . '::'.$method);
         }
-        $method->setAccessible(true);
-        return $method->invokeArgs($this, $arguments);
+        $refMethod->setAccessible(true);
+        return $refMethod->invokeArgs($this, $arguments);
+    }
+
+    /**
+     * @param string $method
+     * @param array $args
+     * @return array
+     * @throws ReflectionException
+     */
+    protected function filterArgs(string $method, array $args): array
+    {
+        $refThis = new ReflectionClass($this);
+        $this->setFilters($refThis->getAttributes());
+        $refMethod = new ReflectionMethod($this, $method);
+        $this->setFilters($refMethod->getAttributes());
+
+        $request = $this->getRequest();
+        foreach ($this->argFilters as $filter) {
+            $args = $filter($request, $args);
+        }
+
+        return $args;
+    }
+
+    /**
+     * @param ReflectionAttribute[] $filters
+     */
+    protected function setFilters(array $filters): void
+    {
+        foreach ($filters as $filter) {
+            if (is_subclass_of($filter->getName(), ControllerArgFilterInterface::class)) {
+                /** @var ControllerArgFilterInterface $object */
+                $object = $filter->newInstance();
+                $this->addArgFilter($object);
+            }
+        }
     }
 
 }
