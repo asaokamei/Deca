@@ -40,8 +40,6 @@ abstract class AbstractController
      * @return ResponseInterface
      * @throws HttpMethodNotAllowedException
      * @throws ReflectionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
@@ -54,7 +52,7 @@ abstract class AbstractController
         }
         $method = 'on' . $this->determineMethod();
         if (method_exists($this, $method)) {
-            return $this->_invokeMethod($method, $this->args);
+            return $this->_invokeMethod($method, $args);
         }
         throw new HttpMethodNotAllowedException($request);
     }

@@ -9,21 +9,15 @@ use App\Routes\Filters\PostAsArgs;
 use App\Routes\Utils\AbstractController;
 use Psr\Http\Message\ResponseInterface;
 
+#[PostAsArgs]
 #[PostArray(name: 'posted')]
 class FormController extends AbstractController
 {
-    public function __construct(PostArray $postArray)
-    {
-        $this->addArgFilter($postArray);
-    }
-
     public function onGet(): ResponseInterface
     {
-        return $this->view('samples/form.twig', [
-        ]);
+        return $this->view('samples/form.twig');
     }
 
-    #[PostAsArgs]
     public function onPost($posted, $name): ResponseInterface
     {
         return $this->view('samples/form.twig', [

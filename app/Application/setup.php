@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 
 use App\Application\Container\Setting;
+use App\Application\Handlers\RouteInvocation;
 use App\Application\Interfaces\ViewInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
@@ -32,6 +33,7 @@ $this->getContainerBuilder()->set(RouteCollectorInterface::class, $app->getRoute
  * Add Routing Middleware
  */
 $app->addRoutingMiddleware();
+$app->getRouteCollector()->setDefaultInvocationStrategy($container->get(RouteInvocation::class));
 
 /**
  * Add Error Middleware

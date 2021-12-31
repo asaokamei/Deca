@@ -11,6 +11,6 @@ class PostAsArgs implements ControllerArgFilterInterface
 {
     public function __invoke(ServerRequestInterface $request, array $args): array
     {
-        return array_merge($args, $request->getParsedBody());
+        return array_merge($args, $request->getParsedBody() ?? []);
     }
 }
