@@ -2,20 +2,14 @@
 
 namespace App\Routes\Utils;
 
-use App\Routes\Filters\ControllerArgFilterInterface;
 use BadMethodCallException;
 use InvalidArgumentException;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionException;
 use ReflectionMethod;
 
 trait InvokeMethodTrait
 {
-    abstract protected function addArgFilter(ControllerArgFilterInterface $filter);
-
-    abstract protected function getContainer(): ContainerInterface;
-
     /**
      * @param string $method
      * @param array $inputs

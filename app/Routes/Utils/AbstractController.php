@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Routes\Utils;
 
+use App\Application\Interfaces\ControllerArgFilterInterface;
 use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\RoutingInterface;
 use App\Application\Interfaces\SessionInterface;
-use App\Routes\Filters\ControllerArgFilterInterface;
 use JetBrains\PhpStorm\Pure;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -46,6 +46,7 @@ abstract class AbstractController
         $this->request = $request;
         $this->response = $response;
         $this->container = $request->getAttribute(ContainerInterface::class);
+        $this->args = $args;
 
         if (method_exists($this, 'action')) {
             return $this->_invokeMethod('action', $this->args);

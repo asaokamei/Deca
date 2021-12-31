@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Routes\Filters;
 
+use App\Application\Interfaces\ControllerArgFilterInterface;
 use Attribute;
 use Psr\Http\Message\ServerRequestInterface;
 

@@ -2,7 +2,7 @@
 
 namespace App\Application\Handlers;
 
-use App\Routes\Filters\ControllerArgFilterInterface;
+use App\Application\Interfaces\ControllerArgFilterInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
