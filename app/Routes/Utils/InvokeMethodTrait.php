@@ -2,7 +2,6 @@
 
 namespace App\Routes\Utils;
 
-use App\Routes\Filters\ArgumentFilters;
 use App\Routes\Filters\ControllerArgFilterInterface;
 use BadMethodCallException;
 use InvalidArgumentException;
