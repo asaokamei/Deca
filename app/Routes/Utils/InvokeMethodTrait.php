@@ -2,8 +2,13 @@
 
 namespace App\Routes\Utils;
 
+use App\Routes\Filters\ArgumentFilters;
 use App\Routes\Filters\ControllerArgFilterInterface;
-use \InvalidArgumentException;
+use BadMethodCallException;
+use InvalidArgumentException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionAttribute;
 use ReflectionClass;
@@ -14,16 +19,20 @@ trait InvokeMethodTrait
 {
     abstract protected function addArgFilter(ControllerArgFilterInterface $filter);
 
+    abstract protected function getContainer(): ContainerInterface;
+
     /**
      * @param string $method
      * @param array $inputs
      * @return ResponseInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      */
     protected function _invokeMethod(string $method, array $inputs): ResponseInterface
     {
         if (!method_exists($this, $method)) {
-            throw new \BadMethodCallException("method not found: $method");
+            throw new BadMethodCallException("method not found: $method");
         }
         $inputs = $this->filterArgs($method, $inputs);
 
@@ -51,6 +60,8 @@ trait InvokeMethodTrait
      * @param string $method
      * @param array $args
      * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      */
     protected function filterArgs(string $method, array $args): array
@@ -70,13 +81,17 @@ trait InvokeMethodTrait
 
     /**
      * @param ReflectionAttribute[] $filters
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function setFilters(array $filters): void
     {
         foreach ($filters as $filter) {
             if (is_subclass_of($filter->getName(), ControllerArgFilterInterface::class)) {
                 /** @var ControllerArgFilterInterface $object */
-                $object = $filter->newInstance();
+                $object = empty($filter->getArguments())
+                    ? $this->getContainer()->get($filter->getName())
+                    : $filter->newInstance();
                 $this->addArgFilter($object);
             }
         }

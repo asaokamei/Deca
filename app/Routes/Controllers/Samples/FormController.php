@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Routes\Controllers\Samples;
 
 
-use App\Routes\Filters\ArgumentFilters;
 use App\Routes\Filters\PostArray;
 use App\Routes\Filters\PostAsArgs;
 use App\Routes\Utils\AbstractController;
