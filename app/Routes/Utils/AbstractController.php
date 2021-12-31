@@ -6,44 +6,32 @@ namespace App\Routes\Utils;
 use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\RoutingInterface;
 use App\Application\Interfaces\SessionInterface;
-use App\Routes\Filters\ArgumentFilters;
 use App\Routes\Filters\ControllerArgFilterInterface;
+use JetBrains\PhpStorm\Pure;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use ReflectionAttribute;
 use ReflectionException;
-use ReflectionMethod;
 use Slim\Exception\HttpMethodNotAllowedException;
 
 abstract class AbstractController
 {
     use InvokeMethodTrait;
 
-    /**
-     * @var ServerRequestInterface
-     */
-    private $request;
+    private ServerRequestInterface $request;
 
-    /**
-     * @var ResponseInterface
-     */
-    private $response;
+    private ResponseInterface $response;
 
-    /**
-     * @var array
-     */
-    private $args = [];
+    private array $args = [];
 
     /**
      * @var ControllerArgFilterInterface[]
      */
-    private $argFilters = [];
+    private array $argFilters = [];
 
-    /**
-     * @var ContainerInterface|null
-     */
-    private $container;
+    private ?ContainerInterface $container;
 
     /**
      * @param ServerRequestInterface $request
@@ -52,6 +40,8 @@ abstract class AbstractController
      * @return ResponseInterface
      * @throws HttpMethodNotAllowedException
      * @throws ReflectionException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
@@ -95,6 +85,10 @@ abstract class AbstractController
         return $this->request;
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function getSession(): SessionInterface
     {
         return $this->getContainer()->get(SessionInterface::class);
@@ -105,16 +99,25 @@ abstract class AbstractController
         return $this->container;
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function getMessages(): MessageInterface
     {
         return $this->getContainer()->get(MessageInterface::class);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function redirect(): Redirect
     {
         return new Redirect($this->container->get(RoutingInterface::class), $this->response);
     }
 
+    #[Pure]
     protected function respond(): Respond
     {
         return new Respond($this->container, $this->response);
@@ -125,6 +128,10 @@ abstract class AbstractController
         return $this->respond()->view($template, $data);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function regenerateCsRfToken()
     {
         $this->getSession()->regenerateCsRfToken();
