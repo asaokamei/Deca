@@ -1,11 +1,11 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types=1);
 
 namespace App\Application\Container;
 
 
 use App\Application\Handlers\ErrorTwigRenderer;
-use App\Application\Handlers\ErrorWhoopsRenderer;
 use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\ProviderInterface;
 use App\Application\Interfaces\RoutingInterface;
@@ -58,18 +58,13 @@ class Provider implements ProviderInterface
     public static function getErrorHandler(ContainerInterface $c): ErrorHandler
     {
         $app = $c->get(App::class);
-        $setting = $c->get(Setting::class);
 
         $responseFactory = $app->getResponseFactory();
         $callableResolver = $app->getCallableResolver();
         $errorHandler = new ErrorHandler($callableResolver, $responseFactory, $c->get(LoggerInterface::class));
-        if ($setting->isDebug()) {
-            $errorHandler->registerErrorRenderer('text/html', $c->get(ErrorWhoopsRenderer::class));
-            $errorHandler->setDefaultErrorRenderer('text/html', $c->get(ErrorWhoopsRenderer::class));
-        } else {
-            $errorHandler->registerErrorRenderer('text/html', $c->get(ErrorTwigRenderer::class));
-            $errorHandler->setDefaultErrorRenderer('text/html', $c->get(ErrorTwigRenderer::class));
-        }
+        $errorHandler->registerErrorRenderer('text/html', $c->get(ErrorTwigRenderer::class));
+        $errorHandler->setDefaultErrorRenderer('text/html', $c->get(ErrorTwigRenderer::class));
+
         return $errorHandler;
     }
 
@@ -77,7 +72,6 @@ class Provider implements ProviderInterface
     {
         /** @var Setting $settings */
         $settings = $c->get(Setting::class);
-        $isProduction = $settings->isProduction();
 
         $logger = new Logger($settings['app_name']??'decaApp');
 
@@ -86,18 +80,14 @@ class Provider implements ProviderInterface
 
         $path = $settings->projectRoot . '/var/app.log';
 
-        if ($isProduction) {
-            $handler = new FingersCrossedHandler(
-                new StreamHandler($path, Logger::DEBUG),
-                Logger::ERROR,
-                0,
-                true,
-                true,
-                Logger::NOTICE
-            );
-        } else {
-            $handler = new StreamHandler($path, Logger::DEBUG);
-        }
+        $handler = new FingersCrossedHandler(
+            new StreamHandler($path, Logger::DEBUG),
+            Logger::ERROR,
+            0,
+            true,
+            true,
+            Logger::NOTICE
+        );
         $logger->pushHandler($handler);
 
         return $logger;

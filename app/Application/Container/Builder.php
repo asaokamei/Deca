@@ -4,7 +4,6 @@ namespace App\Application\Container;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use Exception;
 use Psr\Container\ContainerInterface;
 
 class Builder

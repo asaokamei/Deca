@@ -5,8 +5,10 @@ namespace App;
 
 use App\Application\Container\Builder;
 use App\Application\Container\Provider;
+use App\Application\Container\ProviderForDebug;
 use App\Application\Container\Setting;
 use App\Application\Interfaces\ProviderInterface;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
@@ -16,30 +18,19 @@ use Throwable;
 
 class AppBuilder
 {
-    /**
-     * @var string
-     */
-    private $rootDir;
+    private string $rootDir;
 
-    /**
-     * @var string
-     */
-    private $cacheDir;
+    private string $cacheDir;
 
-    /**
-     * @var Setting
-     */
-    private $setting;
+    private Setting $setting;
 
-    /**
-     * @var Builder
-     */
-    private $containerBuilder;
+    private Builder $containerBuilder;
 
     public function __construct(string $rootDir, string $cacheDir)
     {
         $this->rootDir = $rootDir;
         $this->cacheDir = $cacheDir;
+        $this->containerBuilder = new Builder();
     }
 
     public static function forge(string $root, string $cache = null): self
@@ -93,34 +84,40 @@ class AppBuilder
         return $this;
     }
 
-    /**
-     * @param bool $useCache
-     * @return $this
-     * @noinspection PhpUnhandledExceptionInspection
-     * @noinspection PhpDocMissingThrowsInspection
-     */
     public function loadContainer(bool $useCache = false): AppBuilder
     {
         $this->prepareContainer($useCache);
         $this->loadProvider(Provider::class);
 
+        if ($this->setting->isDebug()) {
+            $this->loadProvider(ProviderForDebug::class);
+        }
+        if ($this->setting->isProduction()) {
+            return $this;
+        }
+
+        // load environment specific definitions.
+        $env = $this->setting->getEnv();
+        $envProvider = dirname(Provider::class) . '\Provider' . ucwords($env);
+        if (class_exists($envProvider)) {
+            $this->loadProvider($envProvider);
+        }
+
         return $this;
     }
 
-    /**
-     * @param string|ProviderInterface $provider
-     * @return $this
-     */
     public function loadProvider(string $provider): AppBuilder
     {
+        if (!in_array(ProviderInterface::class, class_implements($provider))) {
+            throw new InvalidArgumentException("provider class must implement " . ProviderInterface::class);
+        }
+        /** @var ProviderInterface $provider */
         $this->containerBuilder->addDefinitions($provider::getDefinitions());
         return $this;
     }
 
     private function prepareContainer(bool $useCache)
     {
-        if ($this->containerBuilder) return;
-
         $this->containerBuilder = new Builder();
         if ($useCache && $this->cacheDir) { // compilation not working, yet
             $this->containerBuilder->enableCompilation($this->cacheDir);
@@ -141,9 +138,7 @@ class AppBuilder
         AppFactory::setContainer($container);
         AppFactory::setResponseFactory($container->get(ResponseFactoryInterface::class));
 
-        $app = AppFactory::create();
-
-        return $app;
+        return AppFactory::create();
     }
 
     /**
