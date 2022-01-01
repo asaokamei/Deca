@@ -9,14 +9,11 @@ use Psr\Container\ContainerInterface;
 
 class Builder
 {
-    /**
-     * @var ContainerBuilder
-     */
-    private $containerBuilder;
-    /**
-     * @var Container|ContainerInterface
-     */
-    private $container;
+    private ContainerBuilder $containerBuilder;
+
+    private Container|ContainerInterface $container;
+
+    private array $definitions = [];
 
     public function __construct()
     {
@@ -30,15 +27,13 @@ class Builder
 
     public function addDefinitions(array $definitions)
     {
-        $this->containerBuilder->addDefinitions($definitions);
+        $this->definitions = array_merge($this->definitions, $definitions);
     }
 
-    /**
-     * @return ContainerInterface
-     * @throws Exception
-     */
     public function build(): ContainerInterface
     {
+        $this->containerBuilder->addDefinitions($this->definitions);
+        /** @noinspection PhpUnhandledExceptionInspection */
         $this->container = $this->containerBuilder->build();
         return $this->container;
     }
