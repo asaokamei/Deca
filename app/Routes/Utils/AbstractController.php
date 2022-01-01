@@ -7,13 +7,9 @@ use App\Application\Interfaces\ControllerArgFilterInterface;
 use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\RoutingInterface;
 use App\Application\Interfaces\SessionInterface;
-use JetBrains\PhpStorm\Pure;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use ReflectionException;
 use Slim\Exception\HttpMethodNotAllowedException;
 
 abstract class AbstractController
@@ -33,14 +29,6 @@ abstract class AbstractController
 
     private ContainerInterface $container;
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param array $args
-     * @return ResponseInterface
-     * @throws HttpMethodNotAllowedException
-     * @throws ReflectionException
-     */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $this->request = $request;
@@ -55,6 +43,7 @@ abstract class AbstractController
         if (method_exists($this, $method)) {
             return $this->_invokeMethod($method, $args);
         }
+        /** @noinspection PhpUnhandledExceptionInspection */
         throw new HttpMethodNotAllowedException($request);
     }
 
@@ -79,12 +68,9 @@ abstract class AbstractController
         return $this->request;
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     protected function getSession(): SessionInterface
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         return $this->getContainer()->get(SessionInterface::class);
     }
 
@@ -93,25 +79,18 @@ abstract class AbstractController
         return $this->container;
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     protected function getMessages(): MessageInterface
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         return $this->getContainer()->get(MessageInterface::class);
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     protected function redirect(): Redirect
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         return new Redirect($this->container->get(RoutingInterface::class), $this->response);
     }
 
-    #[Pure]
     protected function respond(): Respond
     {
         return new Respond($this->container, $this->response);
