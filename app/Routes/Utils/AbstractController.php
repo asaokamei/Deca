@@ -31,7 +31,7 @@ abstract class AbstractController
      */
     private array $argFilters = [];
 
-    private ?ContainerInterface $container;
+    private ContainerInterface $container;
 
     /**
      * @param ServerRequestInterface $request
@@ -67,11 +67,6 @@ abstract class AbstractController
     protected function determineMethod(): string
     {
         return $this->request->getParsedBody()['_method'] ?? $this->request->getMethod();
-    }
-
-    protected function addArgFilter(ControllerArgFilterInterface $filter)
-    {
-        $this->argFilters[] = $filter;
     }
 
     protected function getArgs(): array
@@ -125,14 +120,5 @@ abstract class AbstractController
     protected function view(string $template, array $data = []): ResponseInterface
     {
         return $this->respond()->view($template, $data);
-    }
-
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    protected function regenerateCsRfToken()
-    {
-        $this->getSession()->regenerateCsRfToken();
     }
 }

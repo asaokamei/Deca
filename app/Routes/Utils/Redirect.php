@@ -7,14 +7,9 @@ use Psr\Http\Message\ResponseInterface;
 
 class Redirect
 {
-    /**
-     * @var ResponseInterface
-     */
-    private $response;
-    /**
-     * @var RoutingInterface
-     */
-    private $routeParser;
+    private ResponseInterface $response;
+
+    private RoutingInterface $routeParser;
 
     public function __construct(RoutingInterface $routeParser, ResponseInterface $response)
     {

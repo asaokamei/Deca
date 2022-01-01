@@ -19,7 +19,7 @@ trait InvokeMethodTrait
     protected function _invokeMethod(string $method, array $inputs): ResponseInterface
     {
         if (!method_exists($this, $method)) {
-            throw new BadMethodCallException("method not found: $method");
+            throw new BadMethodCallException("method, '$method', not found in " . __CLASS__);
         }
 
         $refMethod = new ReflectionMethod($this, $method);
@@ -36,7 +36,7 @@ trait InvokeMethodTrait
                 $arguments[$position] = $arg->getDefaultValue();
                 continue;
             }
-            throw new InvalidArgumentException("Argument not found, '$varName', in " . __CLASS__ . '::'.$method);
+            throw new InvalidArgumentException("Argument, '$varName', not found in " . __CLASS__ . '::'.$method);
         }
         $refMethod->setAccessible(true);
         return $refMethod->invokeArgs($this, $arguments);
