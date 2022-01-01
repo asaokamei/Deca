@@ -2,7 +2,8 @@
 
 namespace App\Routes\Utils;
 
-use \InvalidArgumentException;
+use BadMethodCallException;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionException;
 use ReflectionMethod;
@@ -18,10 +19,11 @@ trait InvokeMethodTrait
     protected function _invokeMethod(string $method, array $inputs): ResponseInterface
     {
         if (!method_exists($this, $method)) {
-            throw new \BadMethodCallException("method not found: $method");
+            throw new BadMethodCallException("method, '$method', not found in " . __CLASS__);
         }
-        $method = new ReflectionMethod($this, $method);
-        $parameters = $method->getParameters();
+
+        $refMethod = new ReflectionMethod($this, $method);
+        $parameters = $refMethod->getParameters();
         $arguments = [];
         foreach ($parameters as $arg) {
             $position = $arg->getPosition();
@@ -34,10 +36,9 @@ trait InvokeMethodTrait
                 $arguments[$position] = $arg->getDefaultValue();
                 continue;
             }
-            throw new InvalidArgumentException("argument not found for: $varName");
+            throw new InvalidArgumentException("Argument, '$varName', not found in " . __CLASS__ . '::'.$method);
         }
-        $method->setAccessible(true);
-        return $method->invokeArgs($this, $arguments);
+        $refMethod->setAccessible(true);
+        return $refMethod->invokeArgs($this, $arguments);
     }
-
 }

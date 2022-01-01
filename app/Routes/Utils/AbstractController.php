@@ -3,45 +3,35 @@ declare(strict_types=1);
 
 namespace App\Routes\Utils;
 
+use App\Application\Interfaces\ControllerArgFilterInterface;
 use App\Application\Interfaces\MessageInterface;
 use App\Application\Interfaces\RoutingInterface;
 use App\Application\Interfaces\SessionInterface;
-use App\Routes\Filters\ControllerArgFilterInterface;
+use JetBrains\PhpStorm\Pure;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionException;
-use ReflectionMethod;
 use Slim\Exception\HttpMethodNotAllowedException;
 
 abstract class AbstractController
 {
     use InvokeMethodTrait;
 
-    /**
-     * @var ServerRequestInterface
-     */
-    private $request;
+    private ServerRequestInterface $request;
 
-    /**
-     * @var ResponseInterface
-     */
-    private $response;
+    private ResponseInterface $response;
 
-    /**
-     * @var array
-     */
-    private $args = [];
+    private array $args = [];
 
     /**
      * @var ControllerArgFilterInterface[]
      */
-    private $argFilters = [];
+    private array $argFilters = [];
 
-    /**
-     * @var ContainerInterface|null
-     */
-    private $container;
+    private ContainerInterface $container;
 
     /**
      * @param ServerRequestInterface $request
@@ -56,14 +46,14 @@ abstract class AbstractController
         $this->request = $request;
         $this->response = $response;
         $this->container = $request->getAttribute(ContainerInterface::class);
-        $this->args = $this->filterArgs($args);
+        $this->args = $args;
 
         if (method_exists($this, 'action')) {
             return $this->_invokeMethod('action', $this->args);
         }
         $method = 'on' . $this->determineMethod();
         if (method_exists($this, $method)) {
-            return $this->_invokeMethod($method, $this->args);
+            return $this->_invokeMethod($method, $args);
         }
         throw new HttpMethodNotAllowedException($request);
     }
@@ -79,21 +69,6 @@ abstract class AbstractController
         return $this->request->getParsedBody()['_method'] ?? $this->request->getMethod();
     }
 
-    protected function filterArgs(array $args): array
-    {
-        $request = $this->getRequest();
-        foreach ($this->argFilters as $filter) {
-            $args = $filter($request, $args);
-        }
-
-        return $args;
-    }
-
-    protected function addArgFilter(ControllerArgFilterInterface $filter)
-    {
-        $this->argFilters[] = $filter;
-    }
-
     protected function getArgs(): array
     {
         return $this->args;
@@ -104,6 +79,10 @@ abstract class AbstractController
         return $this->request;
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function getSession(): SessionInterface
     {
         return $this->getContainer()->get(SessionInterface::class);
@@ -114,16 +93,25 @@ abstract class AbstractController
         return $this->container;
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function getMessages(): MessageInterface
     {
         return $this->getContainer()->get(MessageInterface::class);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function redirect(): Redirect
     {
         return new Redirect($this->container->get(RoutingInterface::class), $this->response);
     }
 
+    #[Pure]
     protected function respond(): Respond
     {
         return new Respond($this->container, $this->response);
@@ -132,10 +120,5 @@ abstract class AbstractController
     protected function view(string $template, array $data = []): ResponseInterface
     {
         return $this->respond()->view($template, $data);
-    }
-
-    protected function regenerateCsRfToken()
-    {
-        $this->getSession()->regenerateCsRfToken();
     }
 }

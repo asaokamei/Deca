@@ -6,13 +6,9 @@ use App\Routes\Filters\PostArray;
 use App\Routes\Utils\AbstractController;
 use Psr\Http\Message\ResponseInterface;
 
+#[PostArray]
 class ResourceController extends AbstractController
 {
-    public function __construct(PostArray $postArray)
-    {
-        $this->addArgFilter($postArray);
-    }
-
     protected function determineMethod(): string
     {
         $method = $this->getRequest()->getParsedBody()['_method'] ?? $this->getRequest()->getMethod();

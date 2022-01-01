@@ -11,14 +11,9 @@ class Respond
 {
     const OK = 200;
 
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-    /**
-     * @var ResponseInterface
-     */
-    private $response;
+    private ContainerInterface $container;
+
+    private ResponseInterface $response;
 
     public function __construct(ContainerInterface $container, ResponseInterface $response)
     {
@@ -39,7 +34,9 @@ class Respond
 
     public function view(string $template, array $data = []): ResponseInterface
     {
+        /** @noinspection PhpUnhandledExceptionInspection*/
         $this->container->get(SessionInterface::class)->clearFlash(); // rendering a view means ...
+        /** @noinspection PhpUnhandledExceptionInspection*/
         $view = $this->container->get(ViewInterface::class);
         return $view->render($this->response, $template, $data);
     }

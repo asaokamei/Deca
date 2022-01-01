@@ -12,6 +12,10 @@
         <input type="submit" value="Post It">
     </form>
 
+    {% if name is defined %}
+        <h2>name is defined: {{ name }}</h2>
+    {% endif %}
+
 {% if posts is defined %}
     <h2>form submitted...</h2>
     {% for key, val in posts %}
