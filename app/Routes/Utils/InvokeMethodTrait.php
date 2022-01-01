@@ -5,17 +5,10 @@ namespace App\Routes\Utils;
 use BadMethodCallException;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
-use ReflectionException;
 use ReflectionMethod;
 
 trait InvokeMethodTrait
 {
-    /**
-     * @param string $method
-     * @param array $inputs
-     * @return ResponseInterface
-     * @throws ReflectionException
-     */
     protected function _invokeMethod(string $method, array $inputs): ResponseInterface
     {
         if (!method_exists($this, $method)) {
@@ -33,12 +26,14 @@ trait InvokeMethodTrait
                 continue;
             }
             if ($arg->isOptional()) {
+                /** @noinspection PhpUnhandledExceptionInspection */
                 $arguments[$position] = $arg->getDefaultValue();
                 continue;
             }
             throw new InvalidArgumentException("Argument, '$varName', not found in " . __CLASS__ . '::'.$method);
         }
         $refMethod->setAccessible(true);
+        /** @noinspection PhpUnhandledExceptionInspection */
         return $refMethod->invokeArgs($this, $arguments);
     }
 }

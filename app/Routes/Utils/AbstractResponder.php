@@ -20,10 +20,6 @@ abstract class AbstractResponder implements ControllerResponderInterface
 
     private ContainerInterface $container;
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     */
     public function set(ServerRequestInterface $request, ResponseInterface $response)
     {
         $this->request = $request;

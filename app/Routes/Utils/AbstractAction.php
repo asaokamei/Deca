@@ -7,7 +7,6 @@ use App\Application\Interfaces\SessionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use ReflectionException;
 
 abstract class AbstractAction
 {
@@ -21,15 +20,11 @@ abstract class AbstractAction
 
     private ContainerInterface $container;
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param array $args
-     * @return ResponseInterface
-     * @throws ReflectionException
-     */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
-    {
+    public function __invoke(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         $this->request = $request;
         $this->response = $response;
         $this->container = $request->getAttribute(ContainerInterface::class);
