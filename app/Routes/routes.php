@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Application\Interfaces\ViewInterface;
+use App\Routes\Actions\WelcomeSample\WelcomeAction;
 use App\Routes\Controllers\Samples\CsRfController;
 use App\Routes\Controllers\Samples\ErrorController;
 use App\Routes\Controllers\Samples\FlashController;
@@ -38,7 +39,7 @@ $app->get('/info', function (Request $request, Response $response) {
  */
 $app->group('/samples', function (Group $group) {
     $group->any('/form', FormController::class)->setName('form');
-    $group->any('/welcome/{name:.*}', WelcomeController::class)->setName('welcome');
+    $group->any('/welcome/{name:.*}', WelcomeAction::class)->setName('welcome');
     $group->any('/flashes/[{method}]', FlashController::class)->setName('flashes');
     $group->any('/resource/[{action}[/{id}]]', ResourceController::class)->setName('resource');
 });
