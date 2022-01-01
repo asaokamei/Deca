@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Routes\Utils;
 
-use App\Routes\Filters\ControllerArgFilterInterface;
+use App\Application\Interfaces\SessionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,30 +13,13 @@ abstract class AbstractAction
 {
     use InvokeMethodTrait;
 
-    /**
-     * @var ServerRequestInterface
-     */
-    private $request;
+    private ServerRequestInterface $request;
 
-    /**
-     * @var ResponseInterface
-     */
-    private $response;
+    private ResponseInterface $response;
 
-    /**
-     * @var array
-     */
-    private $args = [];
+    private array $args = [];
 
-    /**
-     * @var ControllerArgFilterInterface[]
-     */
-    private $argFilters = [];
-
-    /**
-     * @var ContainerInterface|null
-     */
-    private $container;
+    private ContainerInterface $container;
 
     /**
      * @param ServerRequestInterface $request
@@ -50,24 +33,9 @@ abstract class AbstractAction
         $this->request = $request;
         $this->response = $response;
         $this->container = $request->getAttribute(ContainerInterface::class);
-        $this->args = $this->filterArgs($args);
+        $this->args = $args;
 
         return $this->_invokeMethod('action', $this->args);
-    }
-
-    protected function filterArgs(array $args): array
-    {
-        $request = $this->getRequest();
-        foreach ($this->argFilters as $filter) {
-            $args = $filter($request, $args);
-        }
-
-        return $args;
-    }
-
-    protected function addArgFilter(ControllerArgFilterInterface $filter)
-    {
-        $this->argFilters[] = $filter;
     }
 
     protected function getArgs(): array
@@ -88,5 +56,11 @@ abstract class AbstractAction
     protected function getContainer(): ContainerInterface
     {
         return $this->container;
+    }
+
+    protected function getSession(): SessionInterface
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return $this->getContainer()->get(SessionInterface::class);
     }
 }

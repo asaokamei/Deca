@@ -9,10 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class WelcomeAction extends AbstractAction
 {
-    /**
-     * @var WelcomeResponder
-     */
-    private $responder;
+    private WelcomeResponder $responder;
 
     public function __construct(WelcomeResponder $responder)
     {
@@ -25,8 +22,6 @@ class WelcomeAction extends AbstractAction
      */
     public function action(string $name): ResponseInterface
     {
-        return $this->responder
-            ->set($this->getRequest(), $this->getResponse())
-            ->view($name);
+        return $this->responder->view($name);
     }
 }
