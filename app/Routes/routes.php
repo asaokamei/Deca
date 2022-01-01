@@ -2,11 +2,11 @@
 declare(strict_types=1);
 
 use App\Application\Interfaces\ViewInterface;
+use App\Routes\Actions\FormSample\FormController;
 use App\Routes\Actions\WelcomeSample\WelcomeAction;
 use App\Routes\Controllers\Samples\CsRfController;
 use App\Routes\Controllers\Samples\ErrorController;
 use App\Routes\Controllers\Samples\FlashController;
-use App\Routes\Controllers\Samples\FormController;
 use App\Routes\Controllers\Samples\ResourceController;
 use App\Routes\Controllers\Samples\WelcomeController;
 use Psr\Http\Message\ResponseInterface as Response;
