@@ -12,18 +12,12 @@ use Psr\Http\Server\MiddlewareInterface as Middleware;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Psr\Log\LoggerInterface;
 use Slim\App;
-use Slim\Interfaces\RouteParserInterface;
 
 class AppMiddleware implements Middleware
 {
-    /**
-     * @var App
-     */
-    private $app;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private App $app;
+
+    private LoggerInterface $logger;
 
     public function __construct(App $app, LoggerInterface $logger)
     {
@@ -46,8 +40,7 @@ class AppMiddleware implements Middleware
         }
 
         $request = $request
-            ->withAttribute(ContainerInterface::class, $this->app->getContainer())
-            ->withAttribute(RouteParserInterface::class, $this->app->getRouteCollector()->getRouteParser());
+            ->withAttribute(ContainerInterface::class, $this->app->getContainer());
 
         return $handler->handle($request);
     }

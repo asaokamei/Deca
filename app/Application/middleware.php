@@ -14,10 +14,6 @@ if (!$app instanceof App){
     return;
 }
 
-$app->add(TwigMiddleware::createFromContainer($app));
-
-$app->add(SessionMiddleware::class);
-
 $app->add(CsRfGuard::class);
 
 $app->add(AppMiddleware::class);
