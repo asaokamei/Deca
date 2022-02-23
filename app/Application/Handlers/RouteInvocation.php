@@ -47,8 +47,7 @@ class RouteInvocation implements InvocationStrategyInterface
         $refObject = new ReflectionClass($object);
         foreach ($refObject->getProperties() as $property) {
             $item = $property->getValue($object);
-            if (class_implements($item, ControllerResponderInterface::class)) {
-                /** @var ControllerResponderInterface $item */
+            if ($item instanceof ControllerResponderInterface) {
                 $item->set($request, $response);
             }
         }
