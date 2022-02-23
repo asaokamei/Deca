@@ -1,0 +1,50 @@
+{% extends('layouts/layout.html.twig') %}
+
+{% block style %}
+    <style>
+        div.mailBody {
+            margin: 1em;
+            padding: 1em;
+            border: 1px solid #cccccc;
+            border-radius: .5em;
+            background-color: #f0f0f0;
+        }
+    </style>
+{% endblock %}
+
+{% block contents %}
+
+    <h1>Mail Samples</h1>
+
+    <dl>
+        <dt>Subject</dt>
+        <dd>{{ mailer.subject }}</dd>
+
+        <dt>mailTo</dt>
+        <dd>{{ mailer.mailTo|mailAddress }}</dd>
+
+        <dt>from</dt>
+        <dd>{{ mailer.from|mailAddress }}</dd>
+
+        <dt>cc</dt>
+        <dd>{% for email, name in mailer.cc %}
+                {{ {(email): name}|mailAddress }}<br>
+            {% endfor %}</dd>
+
+        <dt>bcc</dt>
+        <dd>{% for email, name in mailer.bcc %}
+                {{ {(email): name}|mailAddress }}<br>
+            {% endfor %}</dd>
+
+        <dt>HTML</dt>
+        <dd><div class="mailBody">
+                {{ mailer.render|raw }}
+            </div>
+        </dd>
+    </dl>
+
+    <form action="" method="post">
+        {{ hidden_csrf_token()|raw }}
+        <input type="submit" value="Send Mail">
+    </form>
+{% endblock %}

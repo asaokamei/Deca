@@ -7,6 +7,7 @@ use App\Routes\Actions\WelcomeSample\WelcomeAction;
 use App\Routes\Controllers\Samples\CsRfController;
 use App\Routes\Controllers\Samples\ErrorController;
 use App\Routes\Controllers\Samples\FlashController;
+use App\Routes\Controllers\Samples\MailController;
 use App\Routes\Controllers\Samples\ResourceController;
 use App\Routes\Controllers\Samples\WelcomeController;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -42,6 +43,7 @@ $app->group('/samples', function (Group $group) {
     $group->any('/welcome/{name:.*}', WelcomeAction::class)->setName('welcome');
     $group->any('/flashes/[{method}]', FlashController::class)->setName('flashes');
     $group->any('/resource/[{action}[/{id}]]', ResourceController::class)->setName('resource');
+    $group->any('/mail', MailController::class)->setName('mail');
 });
 
 $app->group('/errors', function(Group $group) {
