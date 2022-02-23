@@ -27,6 +27,10 @@ use Psr\Log\LoggerInterface;
 use Slim\App;
 use DI;
 use Slim\Handlers\ErrorHandler;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Transport\SendmailTransport;
 
 class Provider implements ProviderInterface
 {
@@ -39,6 +43,7 @@ class Provider implements ProviderInterface
             ViewTwig::class => DI\factory([self::class, 'getViewTwig']),
             SessionAura::class => DI\factory([self::class, 'getSessionAura']),
             ErrorHandler::class => DI\factory([self::class, 'getErrorHandler']),
+            Mailer::class => DI\factory([self::class, 'getMailer']),
 
             // define interfaces
             ResponseFactoryInterface::class => DI\get(Psr17Factory::class),
@@ -47,6 +52,7 @@ class Provider implements ProviderInterface
             SessionInterface::class => DI\get(SessionAura::class),
             MessageInterface::class => DI\get(Messages::class),
             RoutingInterface::class => DI\get(Routing::class),
+            MailerInterface::class => DI\get(Mailer::class),
 
             // define shortcut entries
             'view' => DI\get(ViewInterface::class),
@@ -118,5 +124,16 @@ class Provider implements ProviderInterface
         $session = new SessionAura($c->get(SessionFactory::class));
         $session->setCsrfTokenName('_csrf_token');
         return $session;
+    }
+
+    public static function getMailer(ContainerInterface $c): MailerInterface
+    {
+        $settings = $c->get(Setting::class);
+        $dsn = $settings->get('MAILER_DSN');
+        $transport = $dsn
+            ? Transport::fromDsn($dsn)
+            : new SendmailTransport();
+
+        return new Mailer($transport);
     }
 }

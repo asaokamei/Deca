@@ -53,7 +53,8 @@ class TwigExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('arrayToString', [TwigFilters::class, 'filterArrayToString'])
+            new TwigFilter('arrayToString', [TwigFilters::class, 'filterArrayToString']),
+            new TwigFilter('mailAddress', [TwigFilters::class, 'filterMailAddressArray']),
         ];
     }
 }
