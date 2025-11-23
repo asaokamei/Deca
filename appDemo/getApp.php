@@ -1,9 +1,9 @@
 <?php
 
-use App\Application\Middleware\AppMiddleware;
 use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Factory\AppFactory;
+use WScore\Deca\Middleware\AppMiddleware;
 use WScore\Deca\Middleware\CsRfGuard;
 use WScore\Deca\Services\Setting;
 

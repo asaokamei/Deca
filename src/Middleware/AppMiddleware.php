@@ -17,12 +17,14 @@ class AppMiddleware implements Middleware
 {
     private App $app;
 
-    private LoggerInterface $logger;
+    private ?LoggerInterface $logger;
 
-    public function __construct(App $app, LoggerInterface $logger)
+    public function __construct(ContainerInterface $container)
     {
-        $this->app = $app;
-        $this->logger = $logger;
+        $this->app = $container->get(App::class);
+        $this->logger = $container->has(LoggerInterface::class)
+            ? $container->get(LoggerInterface::class)
+            : null;
     }
 
     /**

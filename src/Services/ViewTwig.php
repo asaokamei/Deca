@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace WScore\Deca\Services;
 
-use WsCore\Deca\Interfaces\SessionInterface;
-use WsCore\Deca\Interfaces\ViewInterface;
+use WScore\Deca\Interfaces\SessionInterface;
+use WScore\Deca\Interfaces\ViewInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
@@ -14,31 +14,22 @@ use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
-use App\Application\Services\Twig\TwigExtension;
-use App\Application\Services\Twig\TwigRuntimeLoader;
 
 class ViewTwig implements ViewInterface
 {
-    /**
-     * @var Environment
-     */
-    private $environment;
-
-    /**
-     * @var LoaderInterface
-     */
-    private $loader;
+    private Environment $environment;
+    private LoaderInterface $loader;
 
     /**
      * Default view variables
      *
      * @var array<string, mixed>
      */
-    protected $defaultVariables = [];
+    protected array $defaultVariables = [];
     /**
      * @var array
      */
-    private $info;
+    private array $info;
 
     /**
      * @param string $tempDir
@@ -69,7 +60,7 @@ class ViewTwig implements ViewInterface
      */
     public function render(ResponseInterface $response, string $template, array $data = []): ResponseInterface
     {
-        $response->getBody()->write($this->fetch($template, $data));
+        $response->getBody()->write($this->drawTemplate($template, $data));
 
         return $response;
     }
@@ -99,10 +90,5 @@ class ViewTwig implements ViewInterface
 
     public function setRequest(ServerRequestInterface $request): void
     {
-        $runtimeLoader = new TwigRuntimeLoader($this->info[App::class], $request, $this->info[SessionInterface::class]);
-        $this->environment->addRuntimeLoader($runtimeLoader);
-
-        $extension = new TwigExtension();
-        $this->environment->addExtension($extension);
     }
 }
