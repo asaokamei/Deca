@@ -18,10 +18,7 @@ use Slim\Exception\HttpForbiddenException;
 
 class CsRfGuard implements MiddlewareInterface
 {
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private SessionInterface $session;
 
     /**
      * @var callable

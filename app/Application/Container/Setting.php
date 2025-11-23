@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace App\Application\Container;
 
 use ArrayAccess;
+use ArrayIterator;
 use IteratorAggregate;
 use RuntimeException;
+use Traversable;
 
 /**
  *
@@ -16,18 +18,13 @@ class Setting implements ArrayAccess, IteratorAggregate
 {
     private const APP_ENV = 'APP_ENV';
     private const APP_DEBUG = 'APP_DEBUG';
-
     private const PRODUCTION = 'production';
 
-    /**
-     * @var array|false
-     */
-    private $settings;
+    private array $prodStrings = [self::PRODUCTION, 'prod'];
 
-    /**
-     * @var array
-     */
-    private $env;
+    private array $settings;
+
+    private array $env;
 
     public function __construct(array $settings, array $env = [])
     {
@@ -35,10 +32,13 @@ class Setting implements ArrayAccess, IteratorAggregate
         $this->env = $env;
     }
 
-    public static function forge(string $settingFile, array $env): Setting
+    public static function forge(string $settingFile, array $env = null): Setting
     {
         if (!file_exists($settingFile)) {
-            return new self([], $env);
+            throw new RuntimeException('Cannot find a setting file: ' . $settingFile);
+        }
+        if ($env === null) {
+            $env = $_ENV;
         }
         $settings = parse_ini_file($settingFile);
         if (is_array($settings)) {
@@ -63,15 +63,15 @@ class Setting implements ArrayAccess, IteratorAggregate
 
     /**
      * @param string $key
-     * @return string[]|string|null
+     * @return mixed
      */
-    public function get(string $key)
+    public function get(string $key): mixed
     {
+        if (array_key_exists($key, $this->env)) {
+            return $this->env[$key];
+        }
         if (array_key_exists($key, $this->settings)) {
             return $this->settings[$key];
-        }
-        if (isset($this->env[$key])) {
-            return $this->env[$key];
         }
         return null;
     }
@@ -79,18 +79,6 @@ class Setting implements ArrayAccess, IteratorAggregate
     public function has(string $key): bool
     {
         return array_key_exists($key, $this->settings);
-    }
-
-    public function getSettings(string $key): Setting
-    {
-        $setting = $this->get($key);
-        if (is_array($setting)) {
-            return new self($setting);
-        }
-        if ($setting === null) {
-            return new self([]);
-        }
-        return new self([$setting]);
     }
 
     public function getEnv(): string
@@ -107,7 +95,7 @@ class Setting implements ArrayAccess, IteratorAggregate
 
     public function isProduction(): bool
     {
-        return $this->getEnv() === self::PRODUCTION;
+        return in_array($this->getEnv(), $this->prodStrings);
     }
 
     public function isDebug(): bool
@@ -135,8 +123,8 @@ class Setting implements ArrayAccess, IteratorAggregate
         throw new RuntimeException('Cannot unset an offset!');
     }
 
-    public function getIterator(): \Traversable
+    public function getIterator(): Traversable
     {
-        return new \ArrayIterator($this->settings);
+        return new ArrayIterator($this->settings);
     }
 }
