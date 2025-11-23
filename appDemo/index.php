@@ -12,9 +12,9 @@ SERVER:
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-require __DIR__ . '/../appDemo/getContainer.php';
-require __DIR__ . '/../appDemo/getApp.php';
-require __DIR__ . '/../appDemo/routes.php';
+require __DIR__ . '/getContainer.php';
+require __DIR__ . '/getApp.php';
+require __DIR__ . '/routes.php';
 
 /** @var \Slim\App $app */
 $app->run();
