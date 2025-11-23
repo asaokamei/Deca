@@ -2,7 +2,7 @@
 
 namespace WScore\Deca;
 
-use App\Application\Middleware\AppMiddleware;
+use WScore\Deca\Middleware\AppMiddleware;
 use Aura\Session\SessionFactory;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PDO;
@@ -27,6 +27,8 @@ use WScore\Deca\Services\ViewTwig;
 
 class Definitions
 {
+    const APP_DIR = 'app-Dir';
+
     /**
      * @var callable[]
      */
@@ -44,7 +46,12 @@ class Definitions
         return $this->definitions;
     }
 
-    public function set(string $name, callable $func): self
+    /**
+     * @param string $name
+     * @param mixed|callable|int|string $func
+     * @return $this
+     */
+    public function set(string $name, mixed $func): self
     {
         $this->definitions[$name] = $func;
         return $this;
@@ -61,12 +68,12 @@ class Definitions
             ResponseFactoryInterface::class => function () {
                 return new Psr17Factory();
             },
-            Setting::class => function() {
-                return Setting::forge(__DIR__ . '/../settings.ini', $_ENV);
+            Setting::class => function(ContainerInterface $container) {
+                return Setting::forge($container->get(self::APP_DIR) . '/../settings.ini', $_ENV);
             },
-            ViewInterface::class => function() {
-                return new ViewTwig(__DIR__ . '/../templates', [
-                    'cache' => __DIR__ . '/../var/cache/twig',
+            ViewInterface::class => function(ContainerInterface $container) {
+                return new ViewTwig($container->get(self::APP_DIR) . '/templates', [
+                    'cache' => $container->get(self::APP_DIR) . '/../var/cache/twig',
                 ]);
             },
             SessionInterface::class => function(ContainerInterface $container) {
@@ -110,11 +117,8 @@ class Definitions
                 $displayErrorDetails = (bool) ($settings['display_errors'] ?? false);
                 $app->addErrorMiddleware($displayErrorDetails, true, true);
 
+                $container->set(RouteCollectorInterface::class, $app->getRouteCollector());
                 return $app;
-            },
-            RouteCollectorInterface::class => function(ContainerInterface $container) {
-                $app = $container->get(App::class);
-                return $app->getRouteCollector();
             },
 
         ];
