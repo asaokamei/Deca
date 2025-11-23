@@ -21,3 +21,8 @@ $app->get('/', function (Request $request, Response $response) {
         'app_name' => $_ENV['APP_NAME'] ?? 'no-app-name-is-set!',
     ]);
 })->setName('hello');
+
+$app->get('/info', function () {
+    phpinfo();
+    exit;
+});

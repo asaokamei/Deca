@@ -3,26 +3,7 @@
 {% block contents %}
 <h1>Deca Demo</h1>
 
-    <p>This is Deca PHP; see <a href="https://github.com/asaokamei/Deca">github</a> to see some details...</p>
+    <p>This is Deca-Initial3 version; see <a href="https://github.com/asaokamei/Deca">github</a> to see some details...</p>
 
-    <h2>Samples...</h2>
-    <ul>
-        <li><a href="{{ path('form') }}">form samples</a></li>
-        <li><a href="{{ path('welcome', {name:"YourName"}) }}">welcome (change your_name)</a></li>
-        <li><a href="{{ path('flashes') }}">flash samples.</a></li>
-        <li><a href="{{ path('phpinfo') }}">php info</a></li>
-        <li><a href="{{ path('resource') }}">resource controller</a></li>
-        <li><a href="{{ path('mail') }}">mail samples</a></li>
-    </ul>
-
-    <h2>Errors Samples</h2>
-    <ul>
-        <li><a href="/bad">not found error</a></li>
-        <li><a href="{{ path('nonExists') }}">calling a controller which does not exist</a></li>
-        <li><a href="{{ path('div0') }}">Divided by zero error</a></li>
-        <li><a href="{{ path('csrf') }}">CSRF Token Validation</a></li>
-    </ul>
-    <h2>settings</h2>
-    {{ settings|arrayToString }}
 
 {% endblock %}

@@ -57,12 +57,12 @@
 </header>
 
 <div class="contents">
-    {% for msg in flashNotices() %}
+    { % for msg in flashNotices() %}
         <div class="alert alert-notice"><p class="alert-title">notice:</p>{{ msg|raw }}</div>
-    {% endfor %}
-    {% for msg in flashMessages() %}
+    { % endfor %}
+    { % for msg in flashMessages() %}
         <div class="alert alert-message">{{ msg|raw }}</div>
-    {% endfor %}
+    { % endfor %}
 
     {% block contents %}
     {% endblock %}
@@ -75,11 +75,11 @@
     <h2>twig functions</h2>
     <dl>
         <dt>current_url()/path()</dt>
-        <dd>{{ current_url() }}</dd>
+        <dd>{ { current_url() }}</dd>
         <dt>csrf_token()</dt>
-        <dd>{{ csrf_token() }}</dd>
+        <dd>{ { csrf_token() }}</dd>
         <dt>base_path()</dt>
-        <dd>{{ base_path() }}</dd>
+        <dd>{ { base_path() }}</dd>
     </dl>
 
 </footer>
