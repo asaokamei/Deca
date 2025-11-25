@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace WScore\Deca\Mailer;
 
-use WsCore\Deca\Interfaces\MailInterface;
-use WsCore\Deca\Interfaces\ViewInterface;
+use WScore\Deca\Interfaces\MailInterface;
+use WScore\Deca\Interfaces\ViewInterface;
 use RuntimeException;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;

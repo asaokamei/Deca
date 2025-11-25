@@ -3,10 +3,6 @@ declare(strict_types=1);
 
 namespace WScore\Deca\Controllers;
 
-use App\Application\Interfaces\ControllerArgFilterInterface;
-use WsCore\Deca\Interfaces\MessageInterface;
-use WsCore\Deca\Interfaces\RoutingInterface;
-use App\AppWsCore\Decalication\Interfaces\SessionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -30,13 +26,12 @@ abstract class AbstractControllerInvoker extends AbstractController
         if (method_exists($this, $method)) {
             return $this->_invokeMethod($method, $args);
         }
-        /** @noinspection PhpUnhandledExceptionInspection */
         throw new HttpMethodNotAllowedException($request);
     }
 
     /**
      * Override this method to change which method to invoke.
-     * Default is to use $_POST['_method'], or http method.
+     * The default behavior is to use $_POST['_method'], or http method.
      *
      * @return string
      */

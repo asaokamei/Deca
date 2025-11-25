@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace WScore\Deca\Controllers;
 
-use App\Application\Interfaces\ControllerArgFilterInterface;
-use WsCore\Deca\Interfaces\MessageInterface;
-use WsCore\Deca\Interfaces\RoutingInterface;
-use App\AppWsCore\Decalication\Interfaces\SessionInterface;
+use WScore\Deca\Interfaces\MessageInterface;
+use WScore\Deca\Interfaces\RoutingInterface;
+use WScore\Deca\Interfaces\SessionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

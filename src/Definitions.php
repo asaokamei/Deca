@@ -16,7 +16,8 @@ use WScore\Deca\Controllers\Messages;
 use WScore\Deca\Interfaces\SessionInterface;
 use WScore\Deca\Services\SessionAura;
 use WScore\Deca\Services\Setting;
-use WScore\Deca\Services\ViewTwig;
+use WScore\Deca\Views\Twig\TwigLoader;
+use WScore\Deca\Views\Twig\ViewTwig;
 
 class Definitions
 {
@@ -84,9 +85,10 @@ class Definitions
                 return Setting::forge($container->get(self::APP_DIR) . '/../settings.ini', $_ENV);
             },
             ViewTwig::class => function(ContainerInterface $container) {
-                return new ViewTwig($container->get(self::APP_DIR) . '/templates', [
-                    'cache' => $container->get(self::APP_DIR) . '/../var/cache/twig',
-                ]);
+                $environment = $container->get(Environment::class);
+                $loader = $container->get(TwigLoader::class);
+                $loader->load($environment);
+                return new ViewTwig($environment);
             },
             SessionAura::class => function(ContainerInterface $container) {
                 return new SessionAura($container->get(SessionFactory::class));
@@ -94,10 +96,11 @@ class Definitions
             Messages::class => function(ContainerInterface $container) {
                 return new Messages($container->get(SessionInterface::class));
             },
-            Environment::class => function() {
-                $loader = new FilesystemLoader(__DIR__ . '/templates/');
+            Environment::class => function(ContainerInterface $container) {
+                $appDir = $container->get(self::APP_DIR);
+                $loader = new FilesystemLoader($appDir . '/templates/');
                 return new Environment($loader, [
-                    'cache' => __DIR__ . '/../var/cache',
+                    'cache' => $appDir . '/../var/cache',
                     'auto_reload' => true,
                 ]);
             },

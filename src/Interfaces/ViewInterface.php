@@ -24,7 +24,6 @@ interface ViewInterface
      */
     public function render(ResponseInterface $response, string $template, array $data = []): ResponseInterface;
 
-
     /**
      * Fetch rendered template
      *

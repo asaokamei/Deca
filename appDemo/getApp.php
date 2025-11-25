@@ -3,6 +3,7 @@
 use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Factory\AppFactory;
+use Slim\Interfaces\RouteCollectorInterface;
 use WScore\Deca\Middleware\AppMiddleware;
 use WScore\Deca\Middleware\CsRfGuard;
 use WScore\Deca\Services\Setting;
@@ -14,7 +15,6 @@ if (!isset($container)) {
 if (!$container instanceof ContainerInterface) {
     return null;
 }
-$settings = $container->get(Setting::class);
 $app = AppFactory::createFromContainer($container);
 
 // set up middlewares
@@ -22,9 +22,12 @@ $app->addRoutingMiddleware();
 $app->add(CsRfGuard::class);
 $app->add(AppMiddleware::class);
 
+$settings = $container->get(Setting::class);
 $displayErrorDetails = (bool) ($settings['display_errors'] ?? false);
 $app->addErrorMiddleware($displayErrorDetails, true, true);
 
+// register $app self and routeCollector.
 $container->set(App::class, $app);
+$container->set(RouteCollectorInterface::class, $app->getRouteCollector());
 
 return $app;
