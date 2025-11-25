@@ -2,32 +2,25 @@
 
 namespace WScore\Deca;
 
-use WScore\Deca\Middleware\AppMiddleware;
 use Aura\Session\SessionFactory;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PDO;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
-use Slim\App;
-use Slim\Factory\AppFactory;
-use Slim\Interfaces\RouteCollectorInterface;
 use Symfony\Component\Mailer\Mailer;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Transport\SendmailTransport;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use WScore\Deca\Controllers\Messages;
-use WScore\Deca\Interfaces\MessageInterface;
 use WScore\Deca\Interfaces\SessionInterface;
-use WScore\Deca\Interfaces\ViewInterface;
 use WScore\Deca\Services\SessionAura;
 use WScore\Deca\Services\Setting;
 use WScore\Deca\Services\ViewTwig;
 
 class Definitions
 {
-    const APP_DIR = 'app-Dir';
+    public const APP_DIR = 'app-Dir';
 
     /**
      * @var callable[]
@@ -35,7 +28,7 @@ class Definitions
     private array $definitions = [];
 
     public function __construct() {
-        $this->setupDefinitions();
+        $this->load($this->getDefaults());
     }
 
     /**
@@ -47,13 +40,32 @@ class Definitions
     }
 
     /**
-     * @param string $name
-     * @param mixed|callable|int|string $func
-     * @return $this
+     * @param callable[] $definitions
+     * @return void
      */
-    public function set(string $name, mixed $func): self
+    public function load(array $definitions): void
     {
-        $this->definitions[$name] = $func;
+        $this->definitions = array_merge($this->definitions, $definitions);
+    }
+
+    /**
+     * set a value to the container.
+     */
+    public function setValue(string $name, mixed $value): static
+    {
+        $this->definitions[$name] = function() use ($value) { return $value;};
+        return $this;
+    }
+
+    /**
+     * set an alias to the container; alias can be a class name or a service name.
+     */
+    public function setAlias(string $name, string $alias): static
+    {
+        $this->definitions[$name] =
+            function(ContainerInterface $container) use ($alias) {
+            return $container->get($alias);
+        };
         return $this;
     }
 
@@ -62,24 +74,24 @@ class Definitions
         return $this->definitions[$name] ?? null;
     }
 
-    private function setupDefinitions(): void
+    private function getDefaults(): array
     {
-        $this->definitions = [
+        return [
             ResponseFactoryInterface::class => function () {
                 return new Psr17Factory();
             },
             Setting::class => function(ContainerInterface $container) {
                 return Setting::forge($container->get(self::APP_DIR) . '/../settings.ini', $_ENV);
             },
-            ViewInterface::class => function(ContainerInterface $container) {
+            ViewTwig::class => function(ContainerInterface $container) {
                 return new ViewTwig($container->get(self::APP_DIR) . '/templates', [
                     'cache' => $container->get(self::APP_DIR) . '/../var/cache/twig',
                 ]);
             },
-            SessionInterface::class => function(ContainerInterface $container) {
+            SessionAura::class => function(ContainerInterface $container) {
                 return new SessionAura($container->get(SessionFactory::class));
             },
-            MessageInterface::class => function(ContainerInterface $container) {
+            Messages::class => function(ContainerInterface $container) {
                 return new Messages($container->get(SessionInterface::class));
             },
             Environment::class => function() {
@@ -100,7 +112,7 @@ class Definitions
                     ]
                 );
             },
-            MailerInterface::class => function (ContainerInterface $c) {
+            Mailer::class => function (ContainerInterface $c) {
                 $settings = $c->get(Setting::class);
                 $dsn = $settings->get('MAILER_DSN');
                 $transport = $dsn
@@ -109,18 +121,6 @@ class Definitions
 
                 return new Mailer($transport);
             },
-            App::class => function(ContainerInterface $container) {
-                $settings = $container->get(Setting::class);
-                $app = AppFactory::createFromContainer($container);
-                $app->addRoutingMiddleware();
-                $app->add(AppMiddleware::class);
-                $displayErrorDetails = (bool) ($settings['display_errors'] ?? false);
-                $app->addErrorMiddleware($displayErrorDetails, true, true);
-
-                $container->set(RouteCollectorInterface::class, $app->getRouteCollector());
-                return $app;
-            },
-
         ];
     }
 }

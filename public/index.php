@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+use Slim\App;
+use WScore\Deca\Services\Setting;
+
 if (php_sapi_name() == 'cli-server') {
     /* 静的コンテンツのルーティングをして false を返します */
     $path = $_SERVER["REQUEST_URI"];
@@ -12,9 +15,10 @@ SERVER:
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
+$setting = Setting::forge(__DIR__ . '/../settings.ini', $_ENV);
 require __DIR__ . '/../appDemo/getContainer.php';
 require __DIR__ . '/../appDemo/getApp.php';
 require __DIR__ . '/../appDemo/routes.php';
 
-/** @var \Slim\App $app */
+/** @var App $app */
 $app->run();
