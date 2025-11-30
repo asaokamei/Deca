@@ -86,9 +86,10 @@ class Definitions
             },
             ViewTwig::class => function(ContainerInterface $container) {
                 $environment = $container->get(Environment::class);
+                $view = new ViewTwig($environment);
                 $loader = $container->get(TwigLoader::class);
-                $loader->load($environment);
-                return new ViewTwig($environment);
+                $view->setRuntimeLoader($loader);
+                return $view;
             },
             SessionAura::class => function(ContainerInterface $container) {
                 return new SessionAura($container->get(SessionFactory::class));

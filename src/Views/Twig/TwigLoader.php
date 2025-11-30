@@ -15,6 +15,8 @@ use WScore\Deca\Services\Setting;
 
 class TwigLoader implements TwigLoaderInterface
 {
+    private RequestInterface $request;
+
     public function __construct(private ContainerInterface $container)
     {
     }
@@ -24,11 +26,16 @@ class TwigLoader implements TwigLoaderInterface
         $environment->addGlobal('_app', $this->container->get(App::class));
         $environment->addGlobal('_setting', $this->container->get(Setting::class));
         $environment->addGlobal('_routes', $this->container->get(RoutingInterface::class));
+        if (isset($this->request)) {
+            $environment->addGlobal('_request', $this->request);
+        }
 
         $environment->addFunction(new TwigFunction('csrfTokenName', [$this, 'getCsrfTokenName']));
         $environment->addFunction(new TwigFunction('csrfTokenValue', [$this, 'getCsrfTokenValue']));
         $environment->addFunction(new TwigFunction('flashMessages', [$this, 'getFlashMessages']));
         $environment->addFunction(new TwigFunction('flashNotices', [$this, 'getFlashNotices']));
+        $environment->addFunction(new TwigFunction('basePath', [$this, 'getBasePath']));
+        $environment->addFunction(new TwigFunction('currentUrl', [$this, 'getCurrentUrl']));
 
         $environment->addFilter(new TwigFilter('arrayToString', [$this, 'filterArrayToString'], ['is_safe' => ['html']]));
         $environment->addFilter(new TwigFilter('mailAddress', [$this, 'filterMailAddressArray'], ['is_safe' => ['html']]));
@@ -87,6 +94,21 @@ class TwigLoader implements TwigLoaderInterface
 
     public function setRequest(RequestInterface $request)
     {
-        // TODO: Implement setRequest() method.
+        $this->request = $request;
+    }
+
+    public function getBasePath(): string
+    {
+        /** @var App $app */
+        $app = $this->container->get(App::class);
+        return $app->getBasePath();
+    }
+
+    public function getCurrentUrl(): string
+    {
+        if (!isset($this->request)) {
+            return 'no request! no current url!';
+        }
+        return $this->request->getUri()->getPath();
     }
 }

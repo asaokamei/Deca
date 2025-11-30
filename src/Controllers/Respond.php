@@ -6,6 +6,7 @@ use App\Application\Interfaces\SessionInterface;
 use App\Application\Interfaces\ViewInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Respond
 {
@@ -15,10 +16,17 @@ class Respond
 
     private ResponseInterface $response;
 
+    private ServerRequestInterface $request;
+
     public function __construct(ContainerInterface $container, ResponseInterface $response)
     {
         $this->container = $container;
         $this->response = $response;
+    }
+
+    public function setRequest(ServerRequestInterface $request): void
+    {
+        $this->request = $request;
     }
 
     public function response(string $input, int $status, array $header = []): ResponseInterface
@@ -32,13 +40,24 @@ class Respond
         return $response;
     }
 
+    private function getView(): ViewInterface
+    {
+        $this->container->get(SessionInterface::class)->clearFlash(); // rendering a view means ...
+        $view = $this->container->get(ViewInterface::class);
+        $view->setRequest($this->request);
+        return $view;
+    }
+
     public function view(string $template, array $data = []): ResponseInterface
     {
-        /** @noinspection PhpUnhandledExceptionInspection*/
-        $this->container->get(SessionInterface::class)->clearFlash(); // rendering a view means ...
-        /** @noinspection PhpUnhandledExceptionInspection*/
-        $view = $this->container->get(ViewInterface::class);
+        $view = $this->getView();
         return $view->render($this->response, $template, $data);
+    }
+
+    public function drawTemplate(string $template, array $data = []): string
+    {
+        $view = $this->getView();
+        return $view->fetch($template, $data);
     }
 
     public function json(array $json): ResponseInterface

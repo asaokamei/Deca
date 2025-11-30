@@ -56,7 +56,7 @@ abstract class AbstractController
     protected function session(): SessionInterface
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        return $this->getContainer()->get(SessionInterface::class);
+        return $this->container->get(SessionInterface::class);
     }
 
     protected function container(): ContainerInterface
@@ -67,7 +67,7 @@ abstract class AbstractController
     protected function messages(): MessageInterface
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        return $this->getContainer()->get(MessageInterface::class);
+        return $this->container->get(MessageInterface::class);
     }
 
     protected function redirect(): Redirect
@@ -78,12 +78,17 @@ abstract class AbstractController
 
     protected function respond(): Respond
     {
-        return new Respond($this->container, $this->response);
+        $respond = new Respond($this->container, $this->response);
+        $respond->setRequest($this->request);
+        return $respond;
     }
 
+    /**
+     * a quick way to render a view (skip getting the respond object)
+     */
     protected function view(string $template, array $data = []): ResponseInterface
     {
-        $view = $this->container->get(ViewInterface::class);
-        return $view->drawTemplate($template, $data);
+        $respond = $this->respond();
+        return $respond->view($template, $data);
     }
 }

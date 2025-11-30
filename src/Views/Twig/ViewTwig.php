@@ -9,7 +9,15 @@ use WScore\Deca\Interfaces\ViewInterface;
 
 class ViewTwig implements ViewInterface
 {
-    private TwigLoaderInterface $loader;
+    /**
+     * list of loaders
+     * @var TwigLoaderInterface[]
+     */
+    private array $loaders = [];
+
+    private bool $isLoaded = false;
+
+    private ServerRequestInterface $request;
 
     public function __construct(
         private Environment $environment,
@@ -25,6 +33,7 @@ class ViewTwig implements ViewInterface
 
     public function drawTemplate(string $template, array $data = []): string
     {
+        $this->load();
         $data = array_merge($this->defaultVariables, $data);
         return $this->environment->render($template, $data);
     }
@@ -36,12 +45,25 @@ class ViewTwig implements ViewInterface
 
     public function setRequest(ServerRequestInterface $request): void
     {
-        $this->loader->setRequest($request);
-        $this->loader->load($this->environment);
+        $this->request = $request;
+    }
+
+    private function load(): void
+    {
+        if ($this->isLoaded) {
+            return;
+        }
+        foreach ($this->loaders as $loader) {
+            if (isset($this->request)) {
+                $loader->setRequest($this->request);
+            }
+            $loader->load($this->environment);
+        }
+        $this->isLoaded = true;
     }
 
     public function setRuntimeLoader(TwigLoaderInterface $loader): void
     {
-        $this->loader = $loader;
+        $this->loaders[] = $loader;
     }
 }

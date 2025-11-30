@@ -17,8 +17,10 @@ if (!$app instanceof App){
  * set up main routes
  */
 $app->get('/', function (Request $request, Response $response) {
-    return $this->get(ViewInterface::class)->render($response, 'hello.twig', [
-        'app_name' => $_ENV['APP_NAME'] ?? 'no-app-name-is-set!',
+    $view = $this->get(ViewInterface::class);
+    $view->setRequest($request);
+    return $view->render($response, 'hello.twig', [
+        'app_name' => $_ENV['APP_NAME'] ?? 'APP_NAME is blank!',
     ]);
 })->setName('hello');
 
