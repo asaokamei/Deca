@@ -2,13 +2,13 @@
 
 namespace WScore\Deca\Views\Twig;
 
-use App\Application\Interfaces\MessageInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
 use Slim\App;
 use Twig\Environment;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use WScore\Deca\Interfaces\MessageInterface;
 use WScore\Deca\Interfaces\RoutingInterface;
 use WScore\Deca\Interfaces\SessionInterface;
 use WScore\Deca\Services\Setting;
@@ -36,6 +36,8 @@ class TwigLoader implements TwigLoaderInterface
         $environment->addFunction(new TwigFunction('flashNotices', [$this, 'getFlashNotices']));
         $environment->addFunction(new TwigFunction('basePath', [$this, 'getBasePath']));
         $environment->addFunction(new TwigFunction('currentUrl', [$this, 'getCurrentUrl']));
+        $environment->addFunction(new TwigFunction('url_for', [$this, 'getUrlFor']));
+        $environment->addFunction(new TwigFunction('urlFor', [$this, 'getUrlFor']));
 
         $environment->addFilter(new TwigFilter('arrayToString', [$this, 'filterArrayToString'], ['is_safe' => ['html']]));
         $environment->addFilter(new TwigFilter('mailAddress', [$this, 'filterMailAddressArray'], ['is_safe' => ['html']]));
@@ -110,5 +112,13 @@ class TwigLoader implements TwigLoaderInterface
             return 'no request! no current url!';
         }
         return $this->request->getUri()->getPath();
+    }
+
+    public function getUrlFor(string $routeName, array $data = [], array $queryParams = []): string
+    {
+        /** @var App $app */
+        $app = $this->container->get(App::class);
+        $routeParser = $app->getRouteCollector()->getRouteParser();
+        return $routeParser->urlFor($routeName, $data, $queryParams);
     }
 }

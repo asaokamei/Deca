@@ -1,0 +1,15 @@
+{% extends('layouts/layout.html.twig') %}
+
+{% block contents %}
+    <h1><a href="{{ url_for('samples-flash') }}">Flash Samples</a></h1>
+    {% if method is defined %}
+        <h2>Method: {{ method }}</h2>
+    {% endif %}
+
+    <p>you will see another message. </p>
+    <ul>
+        <li><a href="{{ url_for('samples-flash', {method: 'page'}) }}">another page</a></li>
+        <li><a href="{{ url_for('samples-flash', {method: 'back'}) }}">redirects back</a></li>
+    </ul>
+
+{% endblock %}

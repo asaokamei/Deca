@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
+use AppDemo\Application\Controller\FlashController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
+use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 use WScore\Deca\Interfaces\ViewInterface;
 
 if (!isset($app)) {
@@ -27,4 +29,12 @@ $app->get('/', function (Request $request, Response $response) {
 $app->get('/info', function () {
     phpinfo();
     exit;
+});
+
+
+/**
+ * sample groups. 
+ */
+$app->group('/samples', function (Group $group) {
+    $group->any('/flashes/[{method}]', FlashController::class)->setName('samples-flash');
 });

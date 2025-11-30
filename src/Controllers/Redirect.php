@@ -2,14 +2,14 @@
 
 namespace WScore\Deca\Controllers;
 
-use Slim\Interfaces\RouteCollectorInterface;
 use Psr\Http\Message\ResponseInterface;
+use WScore\Deca\Interfaces\RoutingInterface;
 
 class Redirect
 {
     private ResponseInterface $response;
 
-    private RouteCollectorInterface $routeParser;
+    private RoutingInterface $routeParser;
 
     public function __construct(RoutingInterface $routeParser, ResponseInterface $response)
     {
@@ -40,7 +40,7 @@ class Redirect
 
     public function toRoute(string $string, $options = [], $query = []): ResponseInterface
     {
-        $url = $this->getUrlFor($string, $options, $query);
+        $url = $this->urlFor($string, $options, $query);
 
         return $this->toUrl($url);
     }

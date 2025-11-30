@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace WScore\Deca\Controllers;
 
-use App\Application\Interfaces\MessageInterface;
-use App\Application\Interfaces\SessionInterface;
+use WScore\Deca\Interfaces\MessageInterface;
+use WScore\Deca\Interfaces\SessionInterface;
 
 class Messages implements MessageInterface
 {

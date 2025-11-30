@@ -2,8 +2,8 @@
 
 namespace WScore\Deca\Controllers;
 
-use App\Application\Interfaces\SessionInterface;
-use App\Application\Interfaces\ViewInterface;
+use WScore\Deca\Interfaces\SessionInterface;
+use WScore\Deca\Interfaces\ViewInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
