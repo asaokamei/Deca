@@ -25,6 +25,15 @@ trait InvokeMethodTrait
                 $arguments[$position] = $inputs[$varName];
                 continue;
             }
+            /* TODO: test this code.
+            $class = $arg->getType()->getName();
+            foreach ($inputs as $value) {
+                if ($value instanceof $class) {
+                    $arguments[$position] = $value;
+                    break;
+                }
+            }
+            */
             if ($arg->isOptional()) {
                 /** @noinspection PhpUnhandledExceptionInspection */
                 $arguments[$position] = $arg->getDefaultValue();
