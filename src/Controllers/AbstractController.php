@@ -33,9 +33,7 @@ abstract class AbstractController
         if (method_exists($this, 'action')) {
             return $this->_invokeMethod('action', $this->args);
         }
-        $method = 'on' . 
-            $this->request->getParsedBody()['_method'] 
-            ?? $this->request->getMethod();
+        $method = 'on' . $this->determineMethod();
         if (method_exists($this, $method)) {
             return $this->$method($this->request, $this->args);
         }
@@ -90,5 +88,16 @@ abstract class AbstractController
     {
         $respond = $this->respond();
         return $respond->view($template, $data);
+    }
+
+    /**
+     * Override this method to change which method to invoke.
+     * The default behavior is to use $_POST['_method'], or http method.
+     *
+     * @return string
+     */
+    protected function determineMethod(): string
+    {
+        return $this->request->getParsedBody()['_method'] ?? $this->request->getMethod();
     }
 }

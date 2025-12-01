@@ -28,15 +28,4 @@ abstract class AbstractControllerInvoker extends AbstractController
         }
         throw new HttpMethodNotAllowedException($request);
     }
-
-    /**
-     * Override this method to change which method to invoke.
-     * The default behavior is to use $_POST['_method'], or http method.
-     *
-     * @return string
-     */
-    protected function determineMethod(): string
-    {
-        return $this->request->getParsedBody()['_method'] ?? $this->request->getMethod();
-    }
 }
