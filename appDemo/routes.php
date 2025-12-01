@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use AppDemo\Application\Controller\CsRfController;
 use AppDemo\Application\Controller\FlashController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -37,4 +38,5 @@ $app->get('/info', function () {
  */
 $app->group('/samples', function (Group $group) {
     $group->any('/flashes/[{method}]', FlashController::class)->setName('samples-flash');
+    $group->any('/csrf', CsRfController::class)->setName('samples-csrf');
 });

@@ -1,0 +1,19 @@
+{% extends('layouts/layout.html.twig') %}
+
+{% block contents %}
+<h1><a href="{{ url_for('samples-csrf') }}">CSRF Token Validation</a></h1>
+
+    <h2>Form with CSRF Token</h2>
+    <form action="" method="post">
+        <input type="hidden" name="{{ csrfTokenName() }}" value="{{ csrfTokenValue() }}">
+        <pre>{{ csrfTokenValue() }}</pre>
+        <input type="submit" value="POST">
+    </form>
+
+    <h2>Form with CSRF Token</h2>
+    <form action="" method="post">
+        <pre>not token in this form...</pre>
+        <input type="submit" value="POST">
+    </form>
+
+{% endblock %}
