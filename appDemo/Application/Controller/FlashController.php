@@ -20,8 +20,6 @@ class FlashController extends AbstractControllerInvoker
 
     public function onGet(): ResponseInterface
     {
-        $this->messages()->addError('This notice is set in onGet method.');
-        $this->messages()->addSuccess('This message is set in onGet method.');
         return $this->view('samples/flash.twig', []);
     }
 
