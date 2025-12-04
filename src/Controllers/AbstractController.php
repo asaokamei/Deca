@@ -13,8 +13,6 @@ use Slim\Exception\HttpMethodNotAllowedException;
 
 abstract class AbstractController
 {
-    use InvokeMethodTrait;
-
     protected ServerRequestInterface $request;
 
     protected ResponseInterface $response;
@@ -31,11 +29,11 @@ abstract class AbstractController
         $this->args = $args;
 
         if (method_exists($this, 'action')) {
-            return $this->_invokeMethod('action', $this->args);
+            return $this->action($this->args);
         }
         $method = 'on' . $this->determineMethod();
         if (method_exists($this, $method)) {
-            return $this->$method($this->request, $this->args);
+            return $this->$method($this->args);
         }
         /** @noinspection PhpUnhandledExceptionInspection */
         throw new HttpMethodNotAllowedException($request);
