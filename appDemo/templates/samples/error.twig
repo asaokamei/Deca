@@ -1,0 +1,15 @@
+{% extends('layouts/layout.html.twig') %}
+
+{% block contents %}
+    <h1><a href="{{ url_for('samples-error') }}">Error Samples</a></h1>
+    {% if method is defined %}
+        <h2>Method: {{ method }}</h2>
+    {% endif %}
+
+    <p>test errors. </p>
+    <ul>
+        <li><a href="{{ url_for('samples-error', {method: 'exception'}) }}">throw exception</a></li>
+        <li><a href="{{ url_for('samples-error', {method: 'error'}) }}">divide by 0 error</a></li>
+    </ul>
+
+{% endblock %}
