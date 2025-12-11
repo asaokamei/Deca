@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use AppDemo\Application\Action\InfoAction;
 use AppDemo\Application\Controller\CsRfController;
 use AppDemo\Application\Controller\ErrorController;
 use AppDemo\Application\Controller\FlashController;
@@ -28,10 +29,7 @@ $app->get('/', function (Request $request, Response $response) {
     ]);
 })->setName('hello');
 
-$app->get('/info', function () {
-    phpinfo();
-    exit;
-});
+$app->get('/info', InfoAction::class)->setName('phpinfo');
 
 
 /**
