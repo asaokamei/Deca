@@ -57,7 +57,7 @@ class Respond
     public function drawTemplate(string $template, array $data = []): string
     {
         $view = $this->getView();
-        return $view->fetch($template, $data);
+        return $view->drawTemplate($template, $data);
     }
 
     public function json(array $json): ResponseInterface
