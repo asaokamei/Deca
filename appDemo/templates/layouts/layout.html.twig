@@ -1,9 +1,9 @@
 <!Document html>
 <html lang="en">
 <head>
-    <title>Deca PHP</title>
+    <title>Deca for PHP</title>
     <meta charset="utf-8">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="/images/deca-logo.png">
     <link
             rel="stylesheet"
@@ -16,11 +16,12 @@
 <header>
     <nav>
         <ul>
-            <li><strong style="font-size: 1.5em;"><img src="/images/deca-logo.png" alt="deca logo" style="height: 2em;">
-                <a class="header-title" href="/">Deca Framework</a></strong></li>
+            <li><strong style="font-size: 1.5em;">
+                    <img src="/images/deca-logo.png" alt="deca logo" style="height: 1.4em;">
+                <a class="header-title" href="/">Deca <span style="font-size: smaller; font-weight: normal;">for PHP</span></a></strong></li>
         </ul>
         <ul>
-            <li><a href="{{ url_for('samples-flash')}}">flash</a></li>
+            <li><a href="{{ url_for('samples-flash')}}">Flash</a></li>
             <li><a href="{{ url_for('samples-csrf') }}">CSRF</a></li>
             <li><a href="{{ url_for('samples-error') }}">Error</a></li>
         </ul>
@@ -62,8 +63,6 @@
     <dl>
         <dt>current_url()/path()</dt>
         <dd>{{ currentUrl() }}</dd>
-        <dt>csrf_token()</dt>
-        <dd>{{ csrfTokenName() }}: {{ csrfTokenValue() }}</dd>
         <dt>base_path()</dt>
         <dd>{{ basePath() }}</dd>
     </dl>

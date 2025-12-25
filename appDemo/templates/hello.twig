@@ -1,14 +1,18 @@
 {% extends('layouts/layout.html.twig') %}
 
 {% block contents %}
-<h1>Deca Demo</h1>
+<h1><img src="/images/deca-logo.png" alt="deca logo" style="height: 1.2em;">
+    Deca Framework</h1>
 
-    <p>This is Deca-Initial3 version; see <a href="https://github.com/asaokamei/Deca">github</a> to see some details...</p>
+    <p>Deca is a simple PHP framework which I can (hopefuly) use for decades.
+        Please see <a href="https://github.com/asaokamei/Deca">github</a> for more details...</p>
+    <p>Based on: Slim 4, php-di, twig, aura/session.
+        More packages maybe added, such as PhpMailer, Monolog, whoops, etc. </p>
 
-<h3>Samples</h3>
+<h3>Sample Codes</h3>
 
 <ul>
-    <li><a href="{{ url_for('samples-flash')}}">flash sample</a></li>
+    <li><a href="{{ url_for('samples-flash')}}">Flash sample</a></li>
     <li><a href="{{ url_for('samples-csrf') }}">CSRF token validation</a></li>
     <li><a href="{{ url_for('samples-error') }}">Error sample</a></li>
 </ul>
