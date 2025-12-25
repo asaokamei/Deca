@@ -100,8 +100,12 @@ class Definitions
             Environment::class => function(ContainerInterface $container) {
                 $appDir = $container->get(self::APP_DIR);
                 $loader = new FilesystemLoader($appDir . '/templates/');
+                $settings = $container->get(Setting::class);
+                $cache =  $settings->isProduction()
+                    ? $appDir . '/../var/cache'
+                    : false;
                 return new Environment($loader, [
-                    'cache' => $appDir . '/../var/cache',
+                    'cache' => $cache,
                     'auto_reload' => true,
                 ]);
             },
