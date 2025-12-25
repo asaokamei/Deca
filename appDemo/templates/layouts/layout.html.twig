@@ -3,29 +3,59 @@
 <head>
     <title>Deca PHP</title>
     <meta charset="utf-8">
+
+    <link rel="icon" type="image/png" href="/images/deca-logo.png">
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.cyan.min.css"
+    >
     <link rel="stylesheet" href="/demo.css">
     {% block style %}{% endblock %}
 </head>
 <body>
 <header>
-    <a class="header-title" href="/">Deca PHP</a>
+    <nav>
+        <ul>
+            <li><strong><a class="header-title" href="/">Deca Framework</a></strong></li>
+        </ul>
+        <ul>
+            <li><a href="{{ url_for('samples-flash')}}">flash</a></li>
+            <li><a href="{{ url_for('samples-csrf') }}">CSRF</a></li>
+            <li><a href="{{ url_for('samples-error') }}">Error</a></li>
+        </ul>
+    </nav>
 </header>
 
-<div class="contents">
+<main class="container">
     {% for msg in flashNotices() %}
-        <div class="alert alert-notice"><p class="alert-title">notice:</p>{{ msg|raw }}</div>
+        <dialog open id="alert-dialog">
+            <article class="alert-error">
+                <header>
+                    <button onclick="document.getElementById('alert-dialog').style.display='none'" aria-label="Close" rel="prev"></button>
+                    <strong>Error！</strong>
+                </header>
+                {{ msg|raw }}
+            </article>
+        </dialog>
     {% endfor %}
     {% for msg in flashMessages() %}
-        <div class="alert alert-message">{{ msg|raw }}</div>
+        <dialog open id="success-dialog">
+            <article class="alert-success">
+                <header>
+                    <button onclick="document.getElementById('success-dialog').style.display='none'" aria-label="Close" rel="prev"></button>
+                    <strong>Message:</strong>
+                </header>
+                {{ msg|raw }}
+            </article>
+        </dialog>
     {% endfor %}
 
     {% block contents %}
     {% endblock %}
-</div>
+</main>
 
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<hr>
 <footer>
     <h2>twig functions</h2>
     <dl>

@@ -1,18 +1,20 @@
 {% extends('layouts/layout.html.twig') %}
 
 {% block contents %}
-<h1><a href="{{ url_for('samples-csrf') }}">CSRF Token Validation</a></h1>
+<h1>CSRF Token Validation</h1>
 
-    <h2>Form with CSRF Token</h2>
+    <h3>Form with CSRF Token</h3>
     <form action="" method="post">
-        <input type="hidden" name="{{ csrfTokenName() }}" value="{{ csrfTokenValue() }}">
-        <pre>{{ csrfTokenValue() }}</pre>
+        <label for="token">CSRF Token:</label>
+        <input type="text" id="token" name="{{ csrfTokenName() }}" value="{{ csrfTokenValue() }}">
+        <p>With CSRF Token, post methold should pass. </p>
         <input type="submit" value="POST">
     </form>
 
-    <h2>Form with CSRF Token</h2>
+    <h3>Form with CSRF Token</h3>
     <form action="" method="post">
-        <pre>not token in this form...</pre>
+        <p>no token in this form.</p>
+        <p>This should cause Forbidden Error</p>
         <input type="submit" value="POST">
     </form>
 

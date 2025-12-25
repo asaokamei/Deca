@@ -7,9 +7,9 @@ use WScore\Deca\Services\Setting;
 if (php_sapi_name() == 'cli-server') {
     /* 静的コンテンツのルーティングをして false を返します */
     $path = $_SERVER["REQUEST_URI"];
-    if (is_dir($path)) goto SERVER;
-    if (file_exists($path)) return false;
-    if ($path === '/worker.js') return false;
+    if (preg_match('/\.(?:png|jpg|jpeg|gif|css|js)$/', $path)) {
+        return false;    // リクエストされたリソースをそのままの形式で扱います。
+    }
 }
 SERVER:
 

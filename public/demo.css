@@ -1,66 +1,30 @@
-body {
-    font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
-    font-size: 16px;
-    margin: 0;
-    line-height: 1.5em;
-}
 header {
-    margin: 0;
-    padding: 1.5rem 1rem;
     border-bottom: 1px solid #cccccc;
-    background-color: #e3e6f8;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-a.header-title {
-    font-size: 2rem;
-    text-decoration: none;
-    letter-spacing: 0.05em;
-    color: #333;
-    transition: color 0.3s ease;
+
+footer {
+    border-top: 1px solid #cccccc;
 }
-div.contents {
-    margin: 1rem;
+
+.alert-success {
+    color: #006400; /* 例: 緑系の文字色 */
+    border-left: 5px solid var(--pico-primary); /* 例: 左側にボーダーを追加 */
+    justify-content: space-between;
+    align-items: center;
 }
-/*
- * for headings
- */
-h1 {
-    font-size: 2em;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e3e6f8;
-    color: #333333;
-}
-h2 {
-    font-size: 1.5em;
-}
-h3 {
-    font-size: 1.2em;
-}
-/*
- * for flash messages
- */
-div.alert {
-    border: 1px solid gray;
-    padding: 1em;
-    border-radius: .5em;
-    margin: 1em;
-}
-div.alert p.alert-title {
-    margin: 0;
-    padding: 0;
+.alert-success header {
+    background-color: #b0de96; /* 例: 緑系の背景色 */
     font-weight: bold;
-    font-size: 1.2em;
-    color: #666666;
 }
-div.alert-notice {
-    background-color: #f0cfcf;
+
+.alert-error {
+    color: #ff0000; /* 例: 赤系の文字色 */
+    border-left: 5px solid #ff0000; /* 例: 左側にボーダーを追加 */
+    justify-content: space-between;
+    align-items: center;
 }
-div.alert-message {
-    background-color: #dff0df;
-}
-dl dt {
-    margin-top: .5em;
+
+.alert-error header {
+    background-color: #ffcccc; /* 例: 赤系の背景色 */
     font-weight: bold;
 }
