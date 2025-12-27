@@ -76,4 +76,9 @@ class ViewTwig implements ViewInterface
     {
         $this->loaders[] = $loader;
     }
+
+    public function setInputs(array $inputs, array $errors = []): void
+    {
+        $this->valueLoader->setValues($inputs, $errors);
+    }
 }

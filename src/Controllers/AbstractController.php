@@ -44,6 +44,11 @@ abstract class AbstractController
         return $this->args;
     }
 
+    protected function getInputs(): array
+    {
+        return $this->request()->getparsedBody();
+    }
+
     protected function request(): ServerRequestInterface
     {
         return $this->request;

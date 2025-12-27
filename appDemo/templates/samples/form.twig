@@ -15,10 +15,7 @@
             <div>
                 <fieldset>
                     <legend>Say Yeah!</legend>
-                    <label>
-                        {{ f.checkbox('say', 'yeah') }}
-                        Yeah!!
-                    </label>
+                    {{ f.checkbox('say', 'yeah', 'Yeah!!') }}
                 </fieldset>
             </div>
             <div>
@@ -60,7 +57,14 @@
         </fieldset>
 
         <input type="hidden" id="token" name="{{ csrfTokenName() }}" value="{{ csrfTokenValue() }}">
-        <input type="submit" value="POST">
+        <div class="grid">
+            <div>
+                <input type="submit" value="POST">
+            </div>
+            <div>
+                <input type="submit" value="With Error" name="with_error" class="secondary">
+            </div>
+        </div>
     </form>
 
 {% endblock %}

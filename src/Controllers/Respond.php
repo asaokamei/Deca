@@ -17,6 +17,7 @@ class Respond
     private ResponseInterface $response;
 
     private ServerRequestInterface $request;
+    private ViewInterface $view;
 
     public function __construct(ContainerInterface $container, ResponseInterface $response)
     {
@@ -42,10 +43,12 @@ class Respond
 
     private function getView(): ViewInterface
     {
-        $this->container->get(SessionInterface::class)->clearFlash(); // rendering a view means ...
-        $view = $this->container->get(ViewInterface::class);
-        $view->setRequest($this->request);
-        return $view;
+        if (!isset($this->view)) {
+            $this->view = $this->container->get(ViewInterface::class);
+            $this->view->setRequest($this->request);
+            $this->container->get(SessionInterface::class)->clearFlash();
+        }
+        return $this->view;
     }
 
     public function view(string $template, array $data = []): ResponseInterface
@@ -78,5 +81,11 @@ class Respond
             'Content-Length'      => (string)strlen($content),
             'Content-Type'        => $mime,
         ]);
+    }
+
+    public function withInputs(array $inputs, array $errors = []): static
+    {
+        $this->getView()->setInputs($inputs, $errors);
+        return $this;
     }
 }

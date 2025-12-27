@@ -48,4 +48,6 @@ interface ViewInterface
     public function add(string $key, $value): void;
 
     public function setRequest(ServerRequestInterface $request): void;
+
+    public function setInputs(array $inputs, array $errors = []): void;
 }

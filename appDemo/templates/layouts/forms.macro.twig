@@ -8,6 +8,10 @@
            value="{{ getValue(name) }}"
            {{ attribute(attributes) }}
            {% if not attributes.id is defined %}id="{{ name }}"{% endif %}/>
+    {% set error = getError(name) %}
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
 {% endmacro %}
 
 {% macro text(name, attributes) %}
@@ -96,6 +100,10 @@
             {{ attribute(attributes) }}
             {% if not attributes.id is defined %} id="{{ getValue(name) }}"{% endif %}
     >{{ getValue(name)|e }}</textarea>
+    {% set error = getError(name) %}
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
 {% endmacro %}
 
 {% macro label(id, content, attributes) %}
@@ -103,21 +111,40 @@
     <label for="{{ id }}"{{ attribute(attributes) }}>{{ content|e }}</label>
 {% endmacro %}
 
-{% macro checkbox(name, key, attributes) %}
+{% macro checkbox(name, key, label, attributes, hideError) %}
     {% from _self import attribute %}
     {% from _self import idName %}
-    <input type="checkbox" name="{{ name }}"
-           {% if checkIf(name, key) %} checked="checked"{% endif %}
-           {% if not attributes.id is defined %} id="{{ idName(name, key) }}"{% endif %}
-           value="{{ key }}"{{ attribute(attributes) }} />
+    <label>
+        <input type="checkbox" name="{{ name }}"
+                {% if checkIf(name, key) %} checked="checked"{% endif %}
+                {% if not attributes.id is defined %} id="{{ idName(name, key) }}"{% endif %}
+               value="{{ key }}"
+                {{ attribute(attributes) }} /> {{ label }}
+    </label>
+
+    {% if hideError is not defined %}
+        {% set showError = true %}
+    {% else %}
+        {% set showError = not hideError %}
+    {% endif %}
+    {% if showError %}
+        {% set error = getError(name) %}
+        {% if error and showError %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+    {% endif %}
 {% endmacro %}
 
 {% macro checkList(name, values, value, attributes) %}
     {% from _self import checkbox %}
     {% from _self import idName %}
     {% for key, label in values %}
-        <label>{{ checkbox(name, key) }}{{ label }}</label>
+        {{ checkbox(name, key, label, attributes, true) }}
     {% endfor %}
+    {% set error = getError(name) %}
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
 {% endmacro %}
 
 {% macro select(name, values, attributes) %}
@@ -130,6 +157,10 @@
         >{{ label }}</option>
     {% endfor %}
     </select>
+    {% set error = getError(name) %}
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
 {% endmacro %}
 
 {% macro radio(name, values, attributes) %}
@@ -144,6 +175,10 @@
                     {% if not attributes.id is defined %} id="{{ idName(name, key) }}"{% endif %}
             > {{ label }}</label>
     {% endfor %}
+    {% set error = getError(name) %}
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
 {% endmacro %}
 
 {% macro idName(name, value) %}
