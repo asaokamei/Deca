@@ -2,7 +2,6 @@
 
 namespace Tests\End2End;
 
-use App\AppBuilder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
@@ -24,10 +23,11 @@ class TopPageTest extends TestCase
 
     private function createApp(ServerRequestInterface $request): App
     {
-        return AppBuilder::forge(dirname(__DIR__, 2))
-            ->loadSettings(__DIR__.'/settings.test.ini')
-            ->loadContainer(false)
-            ->build($request);
+        require __DIR__ . '/../../appDemo/getContainer.php';
+        require __DIR__ . '/../../appDemo/getApp.php';
+        require __DIR__ . '/../../appDemo/routes.php';
+        /** @var App $app */
+        return $app;
     }
 
     private function getResponse(string $path = '/'): ResponseInterface
@@ -48,8 +48,8 @@ class TopPageTest extends TestCase
     {
         $html = $this->getHtml('/');
 
-        $this->assertStringContainsString('<h1>Deca Demo</h1>', $html);
-        $this->assertStringContainsString('This is Deca PHP;', $html);
+        $this->assertStringContainsString('<title>Deca for PHP</title>', $html);
+        $this->assertStringContainsString('Deca Framework</h1>', $html);
     }
 
     public function test404NotFound()
@@ -60,11 +60,11 @@ class TopPageTest extends TestCase
 
     public function testDividedByZeroReturns500()
     {
-        $response = $this->getResponse('/errors/div0');
+        $response = $this->getResponse('/samples/errors/error');
         $this->assertEquals(500, $response->getStatusCode());
 
         $response->getBody()->rewind();
         $html = $response->getBody()->getContents();
-        $this->assertStringContainsString('<h1>Sorry!</h1>', $html);
+        $this->assertStringContainsString('Slim Application Error', $html);
     }
 }

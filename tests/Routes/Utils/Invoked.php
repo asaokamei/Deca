@@ -2,8 +2,8 @@
 
 namespace Tests\Routes\Utils;
 
-use App\Routes\Utils\InvokeMethodTrait;
 use Psr\Http\Message\ResponseInterface;
+use WScore\Deca\Controllers\InvokeMethodTrait;
 
 class Invoked
 {

@@ -2,7 +2,6 @@
 
 namespace Tests\Routes\Utils;
 
-use App\Routes\Utils\InvokeMethodTrait;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;

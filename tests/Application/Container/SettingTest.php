@@ -2,8 +2,8 @@
 
 namespace Tests\Application\Container;
 
-use App\Application\Container\Setting;
 use PHPUnit\Framework\TestCase;
+use WScore\Deca\Services\Setting;
 
 class SettingTest extends TestCase
 {
