@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace WScore\Deca\Mailer;
+namespace WScore\Deca\Services;
 
 use WScore\Deca\Interfaces\MailInterface;
 use WScore\Deca\Interfaces\ViewInterface;
