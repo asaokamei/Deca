@@ -2,6 +2,7 @@
 
 namespace AppDemo\Application\Controller;
 
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use WScore\Deca\Controllers\AbstractController;
 
@@ -17,16 +18,17 @@ class ErrorController extends AbstractController
 
     public function onGet(): ResponseInterface
     {
-        return $this->view('samples/error.twig', []);
+        return $this->view('samples/error.twig');
     }
 
     public function onException()
     {
-        throw new \Exception('This is a test exception.');
+        throw new Exception('This is a test exception.');
     }
 
-    public function onError()
+    public function onError(): float|int
     {
-        return 0/5;
+        /** @noinspection PhpDivisionByZeroInspection */
+        return 5/0;
     }
 }

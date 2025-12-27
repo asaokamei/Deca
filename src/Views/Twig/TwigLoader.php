@@ -109,7 +109,7 @@ class TwigLoader implements TwigLoaderInterface
     public function getCurrentUrl(): string
     {
         if (!isset($this->request)) {
-            return 'no request! no current url!';
+            return '';
         }
         return $this->request->getUri()->getPath();
     }

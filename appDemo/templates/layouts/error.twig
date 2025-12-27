@@ -4,10 +4,18 @@
 
 <h1>Sorry!</h1>
 
-<p>We have encountered errors...</p>
-
 {% if title %}
-    <p style="font-weight: bold;">{{ title|raw }}</p>
+    <h3>{{ title|raw }}</h3>
 {% endif %}
+
+    <p>We have encountered errors...</p>
+
+    {% if displayErrorDetails is true %}
+        <h2>Error Details</h2>
+        <p>{{ exception.message }}</p>
+        <p>File: {{ exception.file }}</p>
+        <p>Line# {{ exception.line }}</p>
+        <pre>{{ exception.traceAsString }}</pre>
+    {% endif %}
 
 {% endblock %}

@@ -4,6 +4,7 @@ use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Interfaces\RouteCollectorInterface;
+use WScore\Deca\Handlers\SimpleErrorHandler;
 use WScore\Deca\Middleware\AppMiddleware;
 use WScore\Deca\Middleware\CsRfGuard;
 use WScore\Deca\Services\Setting;
@@ -24,7 +25,9 @@ $app->add(AppMiddleware::class);
 
 $settings = $container->get(Setting::class);
 $displayErrorDetails = (bool) ($settings['display_errors'] ?? false);
-$app->addErrorMiddleware($displayErrorDetails, true, true);
+$errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, true, true);
+$errorHandler = $errorMiddleware->getDefaultErrorHandler();
+$errorHandler->registerErrorRenderer('text/html', SimpleErrorHandler::class);
 
 // register $app self and routeCollector.
 $container->set(App::class, $app);
