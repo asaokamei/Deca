@@ -19,10 +19,20 @@ class ViewTwig implements ViewInterface
 
     private ServerRequestInterface $request;
 
+    private TwigValueLoader $valueLoader;
+
     public function __construct(
         private Environment $environment,
         private array $defaultVariables = []
     ) {
+        $this->valueLoader = new TwigValueLoader();
+        $this->loaders[] = $this->valueLoader;
+    }
+
+    public function setValueLoader(array $values, array $errors = []): static
+    {
+        $this->valueLoader->setValues($values, $errors);
+        return $this;
     }
 
     public function render(ResponseInterface $response, string $template, array $data = []): ResponseInterface
