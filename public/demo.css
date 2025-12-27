@@ -1,11 +1,15 @@
+body {
+}
 header {
     border-bottom: 1px solid #cccccc;
-    padding: 10px;
+    padding: 0 10px;
+    background-color: #fffdf8;
 }
 
 footer {
     border-top: 1px solid #cccccc;
     padding: 10px;
+    background-color: #f0f0f0;
 }
 
 .alert-success {

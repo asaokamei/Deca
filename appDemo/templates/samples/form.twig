@@ -1,0 +1,66 @@
+{% extends('layouts/layout.html.twig') %}
+
+{% block contents %}
+<h1>Form Building</h1>
+
+    <h3>Sample Form</h3>
+    {% import "layouts/forms.macro.twig" as f %}
+    <form action="" method="post">
+        <label>
+            Name:
+            {{ f.text('name') }}
+        </label>
+
+        <div class="grid">
+            <div>
+                <fieldset>
+                    <legend>Say Yeah!</legend>
+                    <label>
+                        {{ f.checkbox('say', 'yeah') }}
+                        Yeah!!
+                    </label>
+                </fieldset>
+            </div>
+            <div>
+                <fieldset>
+                    <legend>Language:</legend>
+                    {{ f.select('language', {ENG: 'English', JPN: '日本語'}) }}
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div>
+                <fieldset>
+                    <legend>Favorite Framework:</legend>
+                    {{ f.radio('framework', {LARAVEL: 'Laravel', SYMFONY: 'Symfony', SLIM: 'Slim'}) }}
+                </fieldset>
+            </div>
+            <div>
+                <fieldset>
+                    <legend>AI Assets:</legend>
+                    {{ f.checkList('ai[]', {CHATGPT: 'ChatGPT', GEMINI: 'Gemini', CLAUDE: 'Claude'}) }}
+                </fieldset>
+            </div>
+        </div>
+
+        <fieldset>
+            <legend>Your Email:</legend>
+            {{ f.email('email') }}
+        </fieldset>
+
+        <fieldset>
+            <legend>Birthday:</legend>
+            {{ f.date('birthday') }}
+        </fieldset>
+
+        <fieldset>
+            <legend>Your Note:</legend>
+            {{ f.textarea('note') }}
+        </fieldset>
+
+        <input type="hidden" id="token" name="{{ csrfTokenName() }}" value="{{ csrfTokenValue() }}">
+        <input type="submit" value="POST">
+    </form>
+
+{% endblock %}

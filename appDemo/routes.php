@@ -39,4 +39,5 @@ $app->group('/samples', function (Group $group) {
     $group->any('/errors/[{method}]', ErrorController::class)->setName('samples-error');
     $group->any('/flashes/[{method}]', FlashController::class)->setName('samples-flash');
     $group->any('/csrf', CsRfController::class)->setName('samples-csrf');
+    $group->any('/form', \AppDemo\Application\Controller\FormController::class)->setName('samples-form');
 });
