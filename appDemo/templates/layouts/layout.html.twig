@@ -21,9 +21,15 @@
                 <a class="header-title" href="/">Deca <span style="font-size: smaller; font-weight: normal;">for PHP</span></a></strong></li>
         </ul>
         <ul>
-            <li><a href="{{ url_for('samples-flash')}}">Flash</a></li>
-            <li><a href="{{ url_for('samples-csrf') }}">CSRF</a></li>
-            <li><a href="{{ url_for('samples-error') }}">Error</a></li>
+            <details class="dropdown">
+                <summary>Samples...</summary>
+                <ul dir="rtl">
+                    <li><a href="{{ url_for('samples-flash')}}">Flash Messages</a></li>
+                    <li><a href="{{ url_for('samples-csrf') }}">CSRF Tokens</a></li>
+                    <li><a href="{{ url_for('samples-error') }}">Error Handling</a></li>
+                    <li><a href="{{ url_for('samples-form') }}">Form Building</a></li>
+                </ul>
+            </details>
         </ul>
     </nav>
 </header>
