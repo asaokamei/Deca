@@ -16,10 +16,32 @@ class SampleFormValidator implements ValidatorInterface
 
     public function __construct()
     {
-        $this->filter = (new FilterFactory())->newSubjectFilter();
+        $factory = new FilterFactory(
+            $this->makeValidators()
+        );
+        $this->filter = $factory->newSubjectFilter();
         $this->buildRules();
     }
 
+    private function makeValidators(): array
+    {
+        return [
+            'arrayValues' => function() {
+                return function($subject, $field, $list) {
+                    $value = $subject->$field;
+                    if (!is_array($value)) {
+                        return false;
+                    }
+                    foreach ($value as $item) {
+                        if (!in_array($item, $list)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+            }
+        ];
+    }
     private function field(string $key, $createSpec = true): ?ValidateSpec
     {
         if (str_contains($key, '.')) {
@@ -56,11 +78,9 @@ class SampleFormValidator implements ValidatorInterface
             ->is('inValues', ['LARAVEL', 'SYMFONY', 'SLIM'])
             ->setMessage('フレームワークを選択してください');
 
-        $this->field('ai.*')
-            ->isBlankOr('inValues', ['CHATGPT', 'GEMINI', 'CLAUDE'])
-            ->setMessage('選択肢からAIを選んでください');
         $this->field('ai')
             ->isNotBlank()
+            ->is('arrayValues', ['CHATGPT', 'GEMINI', 'CLAUDE'])
             ->setMessage('AIを選択してください');
 
         $this->field('email')
