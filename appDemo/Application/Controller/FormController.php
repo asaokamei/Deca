@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace AppDemo\Application\Controller;
 
 
+use AppDemo\Application\Forms\SampleFormValidator;
 use Psr\Http\Message\ResponseInterface;
 use WScore\Deca\Controllers\AbstractController;
 
 class FormController extends AbstractController
 {
+    public function __construct(private SampleFormValidator $validator)
+    {
+    }
+
     public function onGet(): ResponseInterface
     {
         return $this->view('samples/form.twig');
@@ -18,7 +23,6 @@ class FormController extends AbstractController
     public function onPost(): ResponseInterface
     {
         $inputs = $this->getInputs();
-        $inputs['email'] = strtoupper($inputs['email']);
 
         if (isset($inputs['with_error']) && $inputs['with_error']) {
             $this->messages()->addError('Post with Error!<br>Showing inputs and errors...');
@@ -33,8 +37,13 @@ class FormController extends AbstractController
                 'birthday' => 'This is an error message for birthday.',
             ];
         } else {
-            $this->messages()->addSuccess('Post accepted!<br>Input validated...');
-            $errors = [];
+            if ($this->validator->validate($inputs)) {
+                $this->messages()->addSuccess('Post accepted!<br>Input validated...');
+                $errors = [];
+            } else {
+                $this->messages()->addError('Post rejected!<br>Input not validated...');
+                $errors = $this->validator->getErrors();
+            }
         }
 
         return $this->respond()
