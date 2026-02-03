@@ -41,7 +41,9 @@ trait InvokeMethodTrait
             }
             throw new InvalidArgumentException("Argument, '$varName', not found in " . __CLASS__ . '::'.$method);
         }
-        $refMethod->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $refMethod->setAccessible(true);
+        }
         /** @noinspection PhpUnhandledExceptionInspection */
         return $refMethod->invokeArgs($this, $arguments);
     }
