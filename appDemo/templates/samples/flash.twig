@@ -3,13 +3,17 @@
 {% block contents %}
     <h1>Flash Samples</h1>
     {% if method is defined %}
-        <h2>Method: {{ method }}</h2>
+        <h2>This is another page! (method: {{ method }})</h2>
     {% endif %}
 
     <p>you will see another message. </p>
     <ul>
-        <li><a href="{{ url_for('samples-flash', {method: 'page'}) }}">another page</a></li>
-        <li><a href="{{ url_for('samples-flash', {method: 'back'}) }}">redirects back</a></li>
+        {% if method is defined %}
+            <li><a href="{{ url_for('samples-flash') }}">return to Flash samples</a></li>
+        {% else %}
+            <li><a href="{{ url_for('samples-flash', {method: 'page'}) }}">Another page</a></li>
+        {% endif %}
+        <li><a href="{{ url_for('samples-flash', {method: 'back'}) }}">Redirects back</a></li>
     </ul>
 
 {% endblock %}
