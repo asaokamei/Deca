@@ -7,6 +7,7 @@ use Aura\Filter\Spec\ValidateSpec;
 use Aura\Filter\SubjectFilter;
 use RuntimeException;
 use WScore\Deca\Interfaces\ValidatorInterface;
+use WScore\Deca\Interfaces\ValidatorResultInterface;
 use WScore\Deca\Validation\Rules\ArrayCallable;
 use WScore\Deca\Validation\Rules\ArrayValues;
 
@@ -59,13 +60,13 @@ class AbstractAuraValidator implements ValidatorInterface
         throw new RuntimeException('buildRules() must be implemented.');
     }
 
-    public function validate(array $data): bool
+    public function validate(array $data): ValidatorResultInterface
     {
         $this->buildRules($data);
         $this->success = $this->filter->apply($data);
         $this->validatedData = $data;
 
-        return $this->success;
+        return $this->createResult();
     }
 
     public function failed(): bool
@@ -91,5 +92,13 @@ class AbstractAuraValidator implements ValidatorInterface
             $valid[$field] = $this->validatedData[$field] ?? null;
         }
         return $valid;
+    }
+
+    protected function createResult(): ValidatorResultInterface
+    {
+        if ($this->success) {
+            return new ValidatorSuccess($this->getValidData());
+        }
+        return new ValidatorFailed($this->getErrors());
     }
 }

@@ -26,7 +26,8 @@ class SampleFormValidator extends AbstractAuraValidator
             ->setMessage('Say Yeah! if you like');
 
         $this->field('language')
-            ->isBlankOr('inValues', ['en', 'ja'])
+            ->isNotBlank()
+            ->is('inValues', ['en', 'ja'])
             ->setMessage('Select language');
 
         $this->field('framework')

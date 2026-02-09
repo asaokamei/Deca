@@ -36,14 +36,12 @@ class FormController extends AbstractController
                 'framework' => 'This is an error message for framework.',
                 'birthday' => 'This is an error message for birthday.',
             ];
+        } elseif ($this->validator->validate($inputs)->success()) {
+            $this->messages()->addSuccess('Post accepted!<br>Input validated...');
+            $errors = [];
         } else {
-            if ($this->validator->validate($inputs)) {
-                $this->messages()->addSuccess('Post accepted!<br>Input validated...');
-                $errors = [];
-            } else {
-                $this->messages()->addError('Post rejected!<br>Input not validated...');
-                $errors = $this->validator->getErrors();
-            }
+            $this->messages()->addError('Post rejected!<br>Input not validated...');
+            $errors = $this->validator->getErrors();
         }
 
         return $this->respond()
