@@ -27,7 +27,7 @@ class Setting implements ArrayAccess, IteratorAggregate
         $this->settings = $settings;
     }
 
-    public static function forge(string $settingFile, array $env = null): Setting
+    public static function forge(string $settingFile, ?array $env = null): Setting
     {
         if (!file_exists($settingFile)) {
             throw new RuntimeException('Cannot find a setting file: ' . $settingFile);
