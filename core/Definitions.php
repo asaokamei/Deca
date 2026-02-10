@@ -3,11 +3,16 @@
 namespace WScore\Deca;
 
 use Aura\Session\SessionFactory;
+use Monolog\Handler\FingersCrossedHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Monolog\Processor\UidProcessor;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PDO;
 use PHPMailer\PHPMailer\PHPMailer;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Transport\SendmailTransport;
@@ -141,6 +146,33 @@ class Definitions
                 $mailer->SMTPSecure = 'tls';
                 $mailer->Port = 587;
                 return $mailer;
+            },
+            LoggerInterface::class => function(ContainerInterface $container) {
+                $settings = $container->get(Setting::class);
+
+                $logger = new Logger($settings['app_name']??'decaApp');
+
+                $processor = new UidProcessor();
+                $logger->pushProcessor($processor);
+
+                $path = $settings->projectRoot . '/var/app.log';
+
+                if ($settings->isProduction()) {
+                    $handler = new FingersCrossedHandler(
+                        new StreamHandler($path, Logger::DEBUG),
+                        Logger::ERROR,
+                        0,
+                        true,
+                        true,
+                        Logger::NOTICE
+                    );
+                } else {
+                    $handler = new StreamHandler($path, Logger::DEBUG);
+                }
+                $logger->pushHandler($handler);
+
+                return $logger;
+
             }
         ];
     }

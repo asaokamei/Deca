@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 
 use DI\ContainerBuilder;
+use Psr\Container\ContainerInterface;
 use WScore\Deca\Controllers\Messages;
 use WScore\Deca\Definitions;
 use WScore\Deca\Interfaces\MailerInterface;
@@ -18,19 +19,22 @@ use WScore\Deca\Views\Twig\ViewTwig;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-$definitions = new Definitions();
-if (isset($setting) && $setting instanceof Setting) {
-    $definitions->setValue(Setting::class, $setting);
+function getContainer(?Setting $setting = null): ContainerInterface
+{
+    $definitions = new Definitions();
+    if (isset($setting)) {
+        $definitions->setValue(Setting::class, $setting);
+    }
+    $definitions->setValue(Definitions::APP_DIR, __DIR__);
+    $definitions->setAlias(RoutingInterface::class, Routing::class);
+    $definitions->setAlias(SessionInterface::class, SessionAura::class);
+    $definitions->setAlias(MessageInterface::class, Messages::class);
+    $definitions->setAlias(ViewInterface::class, ViewTwig::class);
+    $definitions->setAlias(MailerInterface::class, PhpMailer::class);
+
+    $containerBuilder = new ContainerBuilder();
+    $containerBuilder->addDefinitions($definitions->getDefinitions());
+    $container = $containerBuilder->build();
+
+    return $container;
 }
-$definitions->setValue(Definitions::APP_DIR, __DIR__);
-$definitions->setAlias(RoutingInterface::class, Routing::class);
-$definitions->setAlias(SessionInterface::class, SessionAura::class);
-$definitions->setAlias(MessageInterface::class, Messages::class);
-$definitions->setAlias(ViewInterface::class, ViewTwig::class);
-$definitions->setAlias(MailerInterface::class, PhpMailer::class);
-
-$containerBuilder = new ContainerBuilder();
-$containerBuilder->addDefinitions($definitions->getDefinitions());
-$container = $containerBuilder->build();
-
-return $container;

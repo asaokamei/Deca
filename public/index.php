@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use Slim\App;
 use WScore\Deca\Services\Setting;
 
 if (php_sapi_name() == 'cli-server') {
@@ -15,10 +14,12 @@ SERVER:
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-$setting = Setting::forge(__DIR__ . '/../settings.ini', $_ENV);
-require __DIR__ . '/../appDemo/getContainer.php';
-require __DIR__ . '/../appDemo/getApp.php';
-require __DIR__ . '/../appDemo/routes.php';
+require __DIR__ . '/../appDemo/boot.php';
 
-/** @var App $app */
+$setting = Setting::forge(__DIR__ . '/../settings.ini', $_ENV);
+$container = getContainer($setting);
+$app = getApp($container);
+setRoutes($app);
+
+// All OK!
 $app->run();

@@ -8,8 +8,9 @@
 
     <p>test errors. </p>
     <ul>
-        <li><a href="{{ url_for('samples-error', {method: 'exception'}) }}">throw exception</a></li>
-        <li><a href="{{ url_for('samples-error', {method: 'error'}) }}">divide by 0 error</a></li>
+        <li><a href="./bad-url">URL Not Found error</a></li>
+        <li><a href="{{ url_for('samples-error', {method: 'exception'}) }}">Throw exception</a></li>
+        <li><a href="{{ url_for('samples-error', {method: 'error'}) }}">Divide by 0 error</a></li>
     </ul>
 
 {% endblock %}
