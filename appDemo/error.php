@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-use App\Application\Handlers\ShutdownHandler;
+use WScore\Deca\Handlers\ShutdownHandler;
 
 ini_set("display_errors", '0');
 ini_set("display_startup_errors", '0');
-error_reporting(E_ALL);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 
 /**
  * error handling for warnings, etc.

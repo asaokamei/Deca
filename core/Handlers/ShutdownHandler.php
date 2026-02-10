@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Application\Handlers;
+namespace WScore\Deca\Handlers;
 
 use Throwable;
 use Whoops\Handler\PrettyPageHandler;
