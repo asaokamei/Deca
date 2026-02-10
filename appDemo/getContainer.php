@@ -16,7 +16,7 @@ use WScore\Deca\Services\SessionAura;
 use WScore\Deca\Services\Setting;
 use WScore\Deca\Views\Twig\ViewTwig;
 
-require __DIR__ . '/../vendor/autoload.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 $definitions = new Definitions();
 if (isset($setting) && $setting instanceof Setting) {
