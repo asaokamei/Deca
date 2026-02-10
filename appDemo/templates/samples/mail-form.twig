@@ -9,6 +9,20 @@
             border-radius: .5em;
             background-color: #f0f0f0;
         }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 1em;
+        }
+        th, td {
+            border: 1px solid #cccccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            width: 150px;
+        }
     </style>
 {% endblock %}
 
@@ -16,32 +30,36 @@
 
     <h1>Mail Samples</h1>
 
-    <dl>
-        <dt>Subject</dt>
-        <dd>{{ mailer.subject }}</dd>
-
-        <dt>mailTo</dt>
-        <dd>{{ mailer.mailTo|mailAddress }}</dd>
-
-        <dt>from</dt>
-        <dd>{{ mailer.from|mailAddress }}</dd>
-
-        <dt>cc</dt>
-        <dd>{% for email, name in mailer.cc %}
-                {{ {(email): name}|mailAddress }}<br>
-            {% endfor %}</dd>
-
-        <dt>bcc</dt>
-        <dd>{% for email, name in mailer.bcc %}
-                {{ {(email): name}|mailAddress }}<br>
-            {% endfor %}</dd>
-
-        <dt>HTML</dt>
-        <dd><div class="mailBody">
-                {{ mailer.render|raw }}
-            </div>
-        </dd>
-    </dl>
+    <table>
+        <tr>
+            <th>Subject</th>
+            <td>{{ mailer.subject }}</td>
+        </tr>
+        <tr>
+            <th>mailTo</th>
+            <td>{{ mailer.mailTo|mailAddress|e }}</td>
+        </tr>
+        <tr>
+            <th>from</th>
+            <td>{{ mailer.from|mailAddress|e }}</td>
+        </tr>
+        <tr>
+            <th>cc</th>
+            <td>{{ mailer.cc|mailAddress|e }}</td>
+        </tr>
+        <tr>
+            <th>bcc</th>
+            <td>{{ mailer.bcc|mailAddress|e }}</td>
+        </tr>
+        <tr>
+            <th>HTML</th>
+            <td>
+                <div class="mailBody">
+                    {{ mailer.render|raw }}
+                </div>
+            </td>
+        </tr>
+    </table>
 
     <form action="" method="post">
         <input type="hidden" id="token" name="{{ csrfTokenName() }}" value="{{ csrfTokenValue() }}">

@@ -54,16 +54,25 @@ class TwigLoader implements TwigLoaderInterface
             return $this->formMailAddress($address, $name);
         }
         if (is_iterable($address)) {
-            $mail = array_key_first($address);
-            $name = $address[$mail];
-            return $this->formMailAddress($mail, $name);
+            $formatted = [];
+            foreach ($address as $mail => $name) {
+                if (is_numeric($mail)) {
+                    $mail = $name;
+                    $name = null;
+                }
+                $formatted[] = $this->formMailAddress($mail, $name);
+            }
+            return implode(', ', $formatted);
         }
-        return $this->formMailAddress($address, $name);
+        return (string) $address;
     }
 
     private function formMailAddress(string $address, mixed $name): string
     {
-        return "{$address} <{$name}>";
+        if (empty($name)) {
+            return $address;
+        }
+        return "{$name} <{$address}>";
     }
 
     public function getCsrfTokenName(): string
