@@ -5,7 +5,6 @@ namespace WScore\Deca\Services;
 
 use WScore\Deca\Interfaces\MailInterface;
 use WScore\Deca\Interfaces\ViewInterface;
-use RuntimeException;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
@@ -13,7 +12,7 @@ use Symfony\Component\Mime\Email;
 /**
  * an Abstract class for Symfony's Mailer
  */
-abstract class AbstractHtmlMail implements MailInterface
+abstract class AbstractSymfonyMailer implements MailInterface
 {
     public function __construct(
         protected ViewInterface $view,
@@ -22,12 +21,7 @@ abstract class AbstractHtmlMail implements MailInterface
     }
 
     /** @Override */
-    /** @noinspection PhpUnhandledExceptionInspection */
-    public function render(): string
-    {
-        // return $this->view->fetch('dummy.twig', []);
-        throw new RuntimeException('AbstractHtmlMail::render method not implemented. ');
-    }
+    abstract public function render(): string;
 
     protected function toAddress(array $address): ?Address
     {
@@ -86,7 +80,6 @@ abstract class AbstractHtmlMail implements MailInterface
         return $email;
     }
 
-    /** @noinspection PhpUnhandledExceptionInspection */
     public function send()
     {
         $mail = $this->buildMail();
