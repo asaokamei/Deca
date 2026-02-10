@@ -5,9 +5,9 @@ namespace WScore\Deca\Services;
 
 use PHPMailer\PHPMailer\PHPMailer as PHPMailerEngine;
 use PHPMailer\PHPMailer\Exception;
-use WScore\Deca\Interfaces\MailableInterface;
-use WScore\Deca\Interfaces\MailerInterface;
-use WScore\Deca\Interfaces\ViewInterface;
+use WScore\Deca\Contracts\MailableInterface;
+use WScore\Deca\Contracts\MailerInterface;
+use WScore\Deca\Contracts\ViewInterface;
 use RuntimeException;
 
 /**

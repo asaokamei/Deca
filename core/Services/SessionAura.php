@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace WScore\Deca\Services;
 
 
-use WScore\Deca\Interfaces\SessionInterface;
+use WScore\Deca\Contracts\SessionInterface;
 use Aura\Session\Segment;
 use Aura\Session\Session;
 use Aura\Session\SessionFactory;

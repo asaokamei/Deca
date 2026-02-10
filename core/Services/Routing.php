@@ -2,7 +2,7 @@
 
 namespace WScore\Deca\Services;
 
-use WScore\Deca\Interfaces\RoutingInterface;
+use WScore\Deca\Contracts\RoutingInterface;
 use Psr\Http\Message\UriInterface;
 use Slim\Interfaces\RouteCollectorInterface;
 use Slim\Interfaces\RouteParserInterface;

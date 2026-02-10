@@ -11,7 +11,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
-use WScore\Deca\Interfaces\ViewInterface;
+use WScore\Deca\Contracts\ViewInterface;
 
 function setRoutes(App $app): void
 {

@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace WScore\Deca\Middleware;
 
-use WScore\Deca\Interfaces\SessionInterface;
+use WScore\Deca\Contracts\SessionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

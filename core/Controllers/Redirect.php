@@ -3,7 +3,7 @@
 namespace WScore\Deca\Controllers;
 
 use Psr\Http\Message\ResponseInterface;
-use WScore\Deca\Interfaces\RoutingInterface;
+use WScore\Deca\Contracts\RoutingInterface;
 
 class Redirect
 {

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace WScore\Deca\Services;
 
-use WScore\Deca\Interfaces\MailableInterface;
+use WScore\Deca\Contracts\MailableInterface;
 
 abstract class AbstractMailable implements MailableInterface
 {

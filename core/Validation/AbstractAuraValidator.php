@@ -6,8 +6,8 @@ use Aura\Filter\FilterFactory;
 use Aura\Filter\Spec\ValidateSpec;
 use Aura\Filter\SubjectFilter;
 use RuntimeException;
-use WScore\Deca\Interfaces\ValidatorInterface;
-use WScore\Deca\Interfaces\ValidatorResultInterface;
+use WScore\Deca\Contracts\ValidatorInterface;
+use WScore\Deca\Contracts\ValidatorResultInterface;
 use WScore\Deca\Validation\Rules\ArrayCallable;
 use WScore\Deca\Validation\Rules\ArrayValues;
 

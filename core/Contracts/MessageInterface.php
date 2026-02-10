@@ -1,6 +1,6 @@
 <?php
 
-namespace WScore\Deca\Interfaces;
+namespace WScore\Deca\Contracts;
 
 interface MessageInterface
 {

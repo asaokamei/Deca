@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace WScore\Deca\Services;
 
 use Symfony\Component\Mailer\Mailer;
-use WScore\Deca\Interfaces\MailableInterface;
-use WScore\Deca\Interfaces\MailerInterface;
-use WScore\Deca\Interfaces\ViewInterface;
+use WScore\Deca\Contracts\MailableInterface;
+use WScore\Deca\Contracts\MailerInterface;
+use WScore\Deca\Contracts\ViewInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 

@@ -5,7 +5,7 @@ namespace WScore\Deca\Views\Twig;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Twig\Environment;
-use WScore\Deca\Interfaces\ViewInterface;
+use WScore\Deca\Contracts\ViewInterface;
 
 class ViewTwig implements ViewInterface
 {

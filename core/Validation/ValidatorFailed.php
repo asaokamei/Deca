@@ -2,7 +2,7 @@
 
 namespace WScore\Deca\Validation;
 
-use WScore\Deca\Interfaces\ValidatorResultInterface;
+use WScore\Deca\Contracts\ValidatorResultInterface;
 
 class ValidatorFailed implements ValidatorResultInterface
 {

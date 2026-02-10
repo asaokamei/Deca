@@ -8,7 +8,7 @@ use Slim\Exception\HttpMethodNotAllowedException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Interfaces\ErrorRendererInterface;
 use Throwable;
-use WScore\Deca\Interfaces\ViewInterface;
+use WScore\Deca\Contracts\ViewInterface;
 
 class SimpleErrorHandler implements ErrorRendererInterface
 {

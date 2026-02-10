@@ -5,7 +5,7 @@ namespace AppDemo\Application\Controller;
 use AppDemo\Application\Emails\SampleMail;
 use Psr\Http\Message\ResponseInterface;
 use WScore\Deca\Controllers\AbstractController;
-use WScore\Deca\Interfaces\MailerInterface;
+use WScore\Deca\Contracts\MailerInterface;
 
 class MailController extends AbstractController
 {

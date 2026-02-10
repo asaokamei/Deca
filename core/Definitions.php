@@ -19,7 +19,7 @@ use Symfony\Component\Mailer\Transport\SendmailTransport;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use WScore\Deca\Controllers\Messages;
-use WScore\Deca\Interfaces\SessionInterface;
+use WScore\Deca\Contracts\SessionInterface;
 use WScore\Deca\Services\SessionAura;
 use WScore\Deca\Services\Setting;
 use WScore\Deca\Views\Twig\TwigLoader;

@@ -8,9 +8,9 @@ use Slim\App;
 use Twig\Environment;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use WScore\Deca\Interfaces\MessageInterface;
-use WScore\Deca\Interfaces\RoutingInterface;
-use WScore\Deca\Interfaces\SessionInterface;
+use WScore\Deca\Contracts\MessageInterface;
+use WScore\Deca\Contracts\RoutingInterface;
+use WScore\Deca\Contracts\SessionInterface;
 use WScore\Deca\Services\Setting;
 
 class TwigLoader implements TwigLoaderInterface

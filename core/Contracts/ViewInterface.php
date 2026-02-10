@@ -1,6 +1,6 @@
 <?php
 
-namespace WScore\Deca\Interfaces;
+namespace WScore\Deca\Contracts;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
