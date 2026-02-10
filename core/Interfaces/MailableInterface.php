@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace WScore\Deca\Interfaces;
 
-interface MailInterface
+interface MailableInterface
 {
     public function subject(): string;
 
@@ -56,17 +56,23 @@ interface MailInterface
     public function bcc(): array;
 
     /**
+     * returns template name.
+     *
+     * @return string
+     */
+    public function template(): string;
+
+    /**
+     * returns data for rendering template.
+     *
+     * @return array
+     */
+    public function data(): array;
+
+    /**
      * returns rendered html string.
      *
-     * @override
      * @return string
      */
     public function render(): string;
-
-    /**
-     * sends this mail.
-     *
-     * @return mixed
-     */
-    public function send();
 }

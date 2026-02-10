@@ -30,7 +30,8 @@
     },
     "autoload": {
         "psr-4": {
-            "WScore\\Deca\\": "core/"
+            "WScore\\Deca\\": "core/",
+            "App\\": "app/"
         }
     },
     "autoload-dev": {

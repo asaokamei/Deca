@@ -5,6 +5,8 @@ use AppDemo\Application\Action\InfoAction;
 use AppDemo\Application\Controller\CsRfController;
 use AppDemo\Application\Controller\ErrorController;
 use AppDemo\Application\Controller\FlashController;
+use AppDemo\Application\Controller\FormController;
+use AppDemo\Application\Controller\MailController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -39,5 +41,6 @@ $app->group('/samples', function (Group $group) {
     $group->any('/errors/[{method}]', ErrorController::class)->setName('samples-error');
     $group->any('/flashes/[{method}]', FlashController::class)->setName('samples-flash');
     $group->any('/csrf', CsRfController::class)->setName('samples-csrf');
-    $group->any('/form', \AppDemo\Application\Controller\FormController::class)->setName('samples-form');
+    $group->any('/form', FormController::class)->setName('samples-form');
+    $group->any('/mail', MailController::class)->setName('samples-mail');
 });

@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Routes\Mails;
+namespace AppDemo\Application\Emails;
 
 use WScore\Deca\Services\AbstractMailable;
 
-class SampleMailer extends AbstractMailable
+class SampleMail extends AbstractMailable
 {
     public function subject(): string
     {

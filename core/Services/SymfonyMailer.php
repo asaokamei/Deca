@@ -3,25 +3,35 @@ declare(strict_types=1);
 
 namespace WScore\Deca\Services;
 
-use WScore\Deca\Interfaces\MailInterface;
+use Symfony\Component\Mailer\Mailer;
+use WScore\Deca\Interfaces\MailableInterface;
+use WScore\Deca\Interfaces\MailerInterface;
 use WScore\Deca\Interfaces\ViewInterface;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
 /**
- * an Abstract class for Symfony's Mailer
+ * a Mailer implementation using Symfony's Mailer
  */
-abstract class AbstractSymfonyMailer implements MailInterface
+class SymfonyMailer implements MailerInterface
 {
     public function __construct(
-        protected ViewInterface $view,
-        protected MailerInterface $mailer
+        protected Mailer $mailer,
+        protected ?ViewInterface $view = null
     ) {
     }
 
-    /** @Override */
-    abstract public function render(): string;
+    protected function render(MailableInterface $mailable): string
+    {
+        $html = $mailable->render();
+        if ($html) {
+            return $html;
+        }
+        if ($this->view && $template = $mailable->template()) {
+            return $this->view->drawTemplate($template, $mailable->data());
+        }
+        return '';
+    }
 
     protected function toAddress(array $address): ?Address
     {
@@ -56,33 +66,33 @@ abstract class AbstractSymfonyMailer implements MailInterface
         return $addresses;
     }
 
-    protected function buildMail(): Email
+    protected function buildMail(MailableInterface $mailable): Email
     {
         $email = (new Email())
-            ->subject($this->subject())
-            ->html($this->render());
+            ->subject($mailable->subject())
+            ->html($this->render($mailable));
 
-        if ($addresses = $this->listAddress($this->mailTo())) {
+        if ($addresses = $this->listAddress($mailable->mailTo())) {
             $email->to(...$addresses);
         }
-        if ($address = $this->toAddress($this->from())) {
+        if ($address = $this->toAddress($mailable->from())) {
             $email->from($address);
         }
-        if ($address = $this->toAddress($this->replyTo())) {
+        if ($address = $this->toAddress($mailable->replyTo())) {
             $email->replyTo($address);
         }
-        if ($addresses = $this->listAddress($this->cc())) {
+        if ($addresses = $this->listAddress($mailable->cc())) {
             $email->cc(...$addresses);
         }
-        if ($addresses = $this->listAddress($this->bcc())) {
+        if ($addresses = $this->listAddress($mailable->bcc())) {
             $email->bcc(...$addresses);
         }
         return $email;
     }
 
-    public function send()
+    public function send(MailableInterface $mailable): void
     {
-        $mail = $this->buildMail();
+        $mail = $this->buildMail($mailable);
         $this->mailer->send($mail);
     }
 }

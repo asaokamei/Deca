@@ -5,6 +5,7 @@ namespace WScore\Deca;
 use Aura\Session\SessionFactory;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PDO;
+use PHPMailer\PHPMailer\PHPMailer;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Symfony\Component\Mailer\Mailer;
@@ -129,6 +130,18 @@ class Definitions
 
                 return new Mailer($transport);
             },
+            PHPMailer::class => function (ContainerInterface $c) {
+                $settings = $c->get(Setting::class);
+                $mailer = new PHPMailer();
+                $mailer->isSMTP();
+                $mailer->Host = $settings->get('MAILER_HOST');
+                $mailer->SMTPAuth = true;
+                $mailer->Username = $settings->get('MAILER_USER');
+                $mailer->Password = $settings->get('MAILER_PASS');
+                $mailer->SMTPSecure = 'tls';
+                $mailer->Port = 587;
+                return $mailer;
+            }
         ];
     }
 }
