@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace AppDemo\Application\Controller;
 
 
-use AppDemo\Application\Forms\SampleFormValidator;
+use AppDemo\Application\Forms\SampleLeanValidator;
 use Psr\Http\Message\ResponseInterface;
 use WScore\Deca\Controllers\AbstractController;
 
 class FormController extends AbstractController
 {
-    public function __construct(private SampleFormValidator $validator)
+    public function __construct(private SampleLeanValidator $validator)
     {
     }
 
