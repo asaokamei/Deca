@@ -155,8 +155,7 @@ class Definitions
                 $processor = new UidProcessor();
                 $logger->pushProcessor($processor);
 
-                $projectRoot = $container->get(self::APP_DIR);
-                $path = $projectRoot . '/var/app.log';
+                $path = $container->get(self::APP_DIR) . '/../var/app.log';
 
                 if ($settings->isProduction()) {
                     $handler = new FingersCrossedHandler(
