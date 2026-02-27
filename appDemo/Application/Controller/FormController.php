@@ -30,11 +30,12 @@ class FormController extends AbstractController
                 'name' => 'This is an error message for name.',
                 'note' => 'This is an error message for note.',
                 'language' => 'This is an error message for language.',
-                'email' => 'This is an error message for email.',
-                'ai' => 'This is an error message for AI.',
+                // use dot-notation keys to match form names and FormDotted
+                'profile.email' => 'This is an error message for email.',
+                'dev.ai' => 'This is an error message for AI.',
                 'say' => 'This is an error message for YEAH!',
-                'framework' => 'This is an error message for framework.',
-                'birthday' => 'This is an error message for birthday.',
+                'dev.framework' => 'This is an error message for framework.',
+                'profile.birthday' => 'This is an error message for birthday.',
             ];
         } elseif ($this->validator->validate($inputs)->success()) {
             $this->messages()->addSuccess('Post accepted!<br>Input validated...');

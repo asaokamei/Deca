@@ -7,11 +7,12 @@ use Psr\Http\Message\RequestInterface;
 use Twig\Environment;
 use Twig\TwigFunction;
 use WScore\Deca\Views\FormData;
+use WScore\Deca\Views\FormDotted;
 
 class TwigValueLoader implements TwigLoaderInterface
 {
     private FormData $values;
-    private FormData $errors;
+    private ?FormDotted $errors = null;
     private RequestInterface $request;
 
     public function load(Environment $environment): void
@@ -65,6 +66,6 @@ class TwigValueLoader implements TwigLoaderInterface
     public function setValues(array $values, array $errors): void
     {
         $this->values = new FormData($values);
-        $this->errors = new FormData($errors);
+        $this->errors = new FormDotted($errors);
     }
 }

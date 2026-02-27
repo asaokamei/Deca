@@ -51,14 +51,11 @@ class AbstractLeanValidator implements ValidatorInterface
     protected function buildResult(Validator $validatorData): ValidatorResultInterface
     {
         if ($validatorData->isValid()) {
-            return new ValidatorSuccess($validatorData->getValidatedData());
+            $this->lastResult = new ValidatorSuccess($validatorData->getValidatedData());
+            return $this->lastResult;
         }
-        return new ValidatorFailed($validatorData->getErrorsFlat());
-    }
-
-    protected function setLastResult(ValidatorResultInterface $result): void
-    {
-        $this->lastResult = $result;
+        $this->lastResult = new ValidatorFailed($validatorData->getErrorsFlat());
+        return $this->lastResult;
     }
 
     public function getErrors(): array

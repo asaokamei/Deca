@@ -26,31 +26,34 @@
             </div>
         </div>
 
+        <h3>Favorite Development Tools:</h3>
         <div class="grid">
             <div>
                 <fieldset>
                     <legend>Favorite Framework:</legend>
-                    {{ f.radio('framework', {LARAVEL: 'Laravel', SYMFONY: 'Symfony', SLIM: 'Slim'}) }}
+                    {{ f.radio('dev[framework]', {LARAVEL: 'Laravel', SYMFONY: 'Symfony', SLIM: 'Slim'}) }}
                 </fieldset>
             </div>
             <div>
                 <fieldset>
                     <legend>AI Assets:</legend>
-                    {{ f.checkList('ai[]', {CHATGPT: 'ChatGPT', GEMINI: 'Gemini', CLAUDE: 'Claude'}) }}
+                    {{ f.checkList('dev[ai][]', {CHATGPT: 'ChatGPT', GEMINI: 'Gemini', CLAUDE: 'Claude'}) }}
                 </fieldset>
             </div>
         </div>
 
+        <h3>Profile:</h3>
         <fieldset>
             <legend>Your Email:</legend>
-            {{ f.email('email') }}
+            {{ f.email('profile[email]') }}
         </fieldset>
 
         <fieldset>
             <legend>Birthday:</legend>
-            {{ f.date('birthday') }}
+            {{ f.date('profile[birthday]') }}
         </fieldset>
 
+        <h3>Note:</h3>
         <fieldset>
             <legend>Your Note:</legend>
             {{ f.textarea('note') }}
