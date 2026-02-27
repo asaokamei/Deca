@@ -25,7 +25,7 @@ class CsRfGuard implements MiddlewareInterface
      */
     private $errorHandler;
 
-    public function __construct(SessionInterface $session, callable $errorHandler = null)
+    public function __construct(SessionInterface $session, ?callable $errorHandler = null)
     {
         $this->session = $session;
         $this->errorHandler = $errorHandler;
