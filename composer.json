@@ -22,7 +22,7 @@
         "twig/twig": "^3.0",
         "ext-json": "*",
         "aura/filter": "^2.3",
-        "wscore/leanvalidator": "^0.1.2"
+        "wscore/leanvalidator": "^0.2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",

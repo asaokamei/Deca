@@ -7,6 +7,10 @@ use WScore\Deca\Contracts\ValidatorResultInterface;
 use Wscore\LeanValidator\Sanitizer;
 use Wscore\LeanValidator\Validator;
 
+/**
+ * AbstractLeanValidator is the base class for LeanValidator.
+ * Please refer to the documentation of LeanValidator at vendor/wscore/leanvalidator.
+ */
 class AbstractLeanValidator implements ValidatorInterface
 {
     protected Sanitizer $sanitizer;
