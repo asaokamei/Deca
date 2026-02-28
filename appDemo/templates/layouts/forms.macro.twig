@@ -117,7 +117,7 @@
     <label>
         <input type="checkbox" name="{{ name }}"
                 {% if checkIf(name, key) %} checked="checked"{% endif %}
-                {% if not attributes.id is defined %} id="{{ idName(name, key) }}"{% endif %}
+                {% if not attributes.id is defined %}{{ idName(name) }}{% endif %}
                value="{{ key }}"
                 {{ attribute(attributes) }} /> {{ label }}
     </label>
@@ -137,9 +137,14 @@
 
 {% macro checkList(name, values, value, attributes) %}
     {% from _self import checkbox %}
-    {% from _self import idName %}
+    {% if name ends with '[]' %}
+        {% set name = name|slice(0, -2) %}
+    {% endif %}
+    {% set idx = 0 %}
     {% for key, label in values %}
-        {{ checkbox(name, key, label, attributes, true) }}
+        {% set name_tag = name ~ '[' ~ idx ~ ']' %}
+        {{ checkbox(name_tag, key, label, attributes, false) }}
+        {% set idx = idx + 1 %}
     {% endfor %}
     {% set error = getError(name) %}
     {% if error %}
@@ -172,7 +177,7 @@
                     value="{{ key }}"
                     {% if checkIf(name, key) %} checked="checked"{% endif %}
                     {{ attribute(attributes) }}
-                    {% if not attributes.id is defined %} id="{{ idName(name, key) }}"{% endif %}
+                    {% if not attributes.id is defined %}{{ idName(name, key) }}{% endif %}
             > {{ label }}</label>
     {% endfor %}
     {% set error = getError(name) %}
@@ -182,10 +187,11 @@
 {% endmacro %}
 
 {% macro idName(name, value) %}
-    {% if value is defined %}
+    {% if value is defined and value is not empty %}
         {% set id = name ~ '-' ~ value %}
     {% else %}
         {% set id = name %}
     {% endif %}
-    {{ id|replace({'[]':'', '[':'_', ']':''}) }}
+    {% set id = id|replace({'[]':'', '[':'_', ']':''})|trim %}
+    id="{{ id }}"
 {% endmacro %}

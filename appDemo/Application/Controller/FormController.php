@@ -33,6 +33,7 @@ class FormController extends AbstractController
                 // use dot-notation keys to match form names and FormDotted
                 'profile.email' => 'This is an error message for email.',
                 'dev.ai' => 'This is an error message for AI.',
+                'dev.ai.1' => 'AI error for Gemini only.',
                 'say' => 'This is an error message for YEAH!',
                 'dev.framework' => 'This is an error message for framework.',
                 'profile.birthday' => 'This is an error message for birthday.',
