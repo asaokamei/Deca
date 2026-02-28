@@ -8,8 +8,18 @@ use Wscore\LeanValidator\Sanitizer;
 use Wscore\LeanValidator\Validator;
 
 /**
- * AbstractLeanValidator is the base class for LeanValidator.
- * Please refer to the documentation of LeanValidator at vendor/wscore/leanvalidator.
+ * Base class for Deca validators backed by **Wscore\LeanValidator**.
+ * (Deca may also provide other base validators using different libraries.)
+ *
+ * IMPORTANT:
+ * - Subclasses MUST implement validate() using LeanValidator APIs (Validator/Sanitizer).
+ * - Do NOT invent validation methods or write Laravel/Symfony-style validation here.
+ * - If an API is unclear, check vendor/wscore/leanvalidator (README/source) first.
+ *
+ * Recommended flow: sanitize -> clean($data) -> buildValidator($cleanedData) -> rules -> buildResult($v)
+ * Error contract: buildResult() uses getErrorsFlat() => [field => message] (dot-notation for nested fields).
+ *
+ * @see \AppDemo\Application\Forms\SampleLeanValidator
  */
 class AbstractLeanValidator implements ValidatorInterface
 {
@@ -36,7 +46,8 @@ class AbstractLeanValidator implements ValidatorInterface
     }
 
     /**
-     * validate the data using the validator object.
+     * Implement using Wscore\LeanValidator API (Validator/Sanitizer).
+     * * Follow: sanitize -> buildValidator -> rules -> buildResult.
      * 
      * @override
      * @param array $data
