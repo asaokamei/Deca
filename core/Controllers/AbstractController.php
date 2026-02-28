@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace WScore\Deca\Controllers;
 
+use RuntimeException;
 use WScore\Deca\Contracts\MessageInterface;
 use WScore\Deca\Contracts\RoutingInterface;
 use WScore\Deca\Contracts\SessionInterface;
@@ -13,6 +14,8 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpMethodNotAllowedException;
+use WScore\Deca\Contracts\ValidatorInterface;
+use WScore\Deca\Contracts\ValidatorResultInterface;
 use WScore\Deca\Contracts\ViewInterface;
 
 abstract class AbstractController
@@ -24,6 +27,8 @@ abstract class AbstractController
     protected array $args = [];
 
     protected ContainerInterface $container;
+    private ValidatorInterface $validator;
+    private ValidatorResultInterface $validatorResult;
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
@@ -34,6 +39,7 @@ abstract class AbstractController
 
         if (method_exists($this, 'action')) {
             /** @noinspection PhpVoidFunctionResultUsedInspection */
+            /** @noinspection PhpMethodParametersCountMismatchInspection */
             return $this->action($this->args);
         }
         $method = 'on' . $this->determineMethod();
@@ -87,14 +93,21 @@ abstract class AbstractController
 
     protected function getView(): ViewInterface
     {
+        /** @var ViewInterface $view */
         static $view;
         if (!isset($view)) {
             $view = $this->container->get(ViewInterface::class);
             $view->setRequest($this->request);
             $this->container->get(SessionInterface::class)->clearFlash();
         }
+        if (isset($this->validatorResult)) {
+            if ($this->validatorResult->success()) {
+                $view->setInputs($this->validatorResult->getValidData());
+            } else {
+                $view->setInputs([], $this->validatorResult->getErrors());
+            }
+        }
         return $view;
-
     }
 
     protected function view(string $template, array $data = []): ResponseInterface
@@ -125,5 +138,19 @@ abstract class AbstractController
     protected function determineMethod(): string
     {
         return $this->request->getParsedBody()['_method'] ?? $this->request->getMethod();
+    }
+
+    protected function setValidator(ValidatorInterface $validator): void
+    {
+        $this->validator = $validator;
+    }
+
+    protected function validate(?array $data = null): ValidatorResultInterface
+    {
+        if (!isset($this->validator)) {
+            throw new RuntimeException('validator is not set.');
+        }
+        $data = $data ?? $this->request->getParsedBody();
+        return $this->validatorResult = $this->validator->validate($data);
     }
 }

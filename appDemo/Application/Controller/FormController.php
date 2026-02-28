@@ -11,8 +11,9 @@ use WScore\Deca\Controllers\AbstractController;
 
 class FormController extends AbstractController
 {
-    public function __construct(private SampleLeanValidator $validator)
+    public function __construct(SampleLeanValidator $validator)
     {
+        $this->setValidator($validator);
     }
 
     public function onGet(): ResponseInterface
@@ -38,16 +39,14 @@ class FormController extends AbstractController
                 'dev.framework' => 'This is an error message for framework.',
                 'profile.birthday' => 'This is an error message for birthday.',
             ];
-        } elseif ($this->validator->validate($inputs)->success()) {
+            $this->withInputs($inputs, $errors);
+        } elseif ($this->validate()->success()) {
             $this->messages()->addSuccess('Post accepted!<br>Input validated...');
-            $errors = [];
         } else {
-            $this->messages()->addError('Post rejected!<br>Input not validated...');
-            $errors = $this->validator->getErrors();
+            $this->messages()->addError('Post rejected!<br>Input in-validated...');
         }
 
         return $this
-            ->withInputs($inputs, $errors)
             ->view('samples/form.twig');
     }
 }
