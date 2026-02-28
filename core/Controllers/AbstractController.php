@@ -1,4 +1,7 @@
 <?php
+/**
+ * @noinspection PhpUnhandledExceptionInspection
+ */
 declare(strict_types=1);
 
 namespace WScore\Deca\Controllers;
@@ -10,6 +13,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpMethodNotAllowedException;
+use WScore\Deca\Contracts\ViewInterface;
 
 abstract class AbstractController
 {
@@ -29,13 +33,13 @@ abstract class AbstractController
         $this->args = $args;
 
         if (method_exists($this, 'action')) {
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->action($this->args);
         }
         $method = 'on' . $this->determineMethod();
         if (method_exists($this, $method)) {
             return $this->$method($this->args);
         }
-        /** @noinspection PhpUnhandledExceptionInspection */
         throw new HttpMethodNotAllowedException($request);
     }
 
@@ -56,7 +60,6 @@ abstract class AbstractController
 
     protected function session(): SessionInterface
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
         return $this->container->get(SessionInterface::class);
     }
 
@@ -79,18 +82,38 @@ abstract class AbstractController
 
     protected function respond(): Respond
     {
-        $respond = new Respond($this->container, $this->response);
-        $respond->setRequest($this->request);
-        return $respond;
+        return new Respond($this->response);
     }
 
-    /**
-     * a quick way to render a view (skip getting the respond object)
-     */
+    protected function getView(): ViewInterface
+    {
+        static $view;
+        if (!isset($view)) {
+            $view = $this->container->get(ViewInterface::class);
+            $view->setRequest($this->request);
+            $this->container->get(SessionInterface::class)->clearFlash();
+        }
+        return $view;
+
+    }
+
     protected function view(string $template, array $data = []): ResponseInterface
     {
-        $respond = $this->respond();
-        return $respond->view($template, $data);
+        $html = $this->drawTemplate($template, $data);
+        return $this->respond()->response($html, Respond::OK);
+    }
+
+    protected function drawTemplate(string $template, array $data = []): string
+    {
+        $view = $this->getView();
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return $view->drawTemplate($template, $data);
+    }
+
+    protected function withInputs(array $inputs, array $errors = []): static
+    {
+        $this->getView()->setInputs($inputs, $errors);
+        return $this;
     }
 
     /**

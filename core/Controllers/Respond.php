@@ -12,22 +12,11 @@ class Respond
 {
     const OK = 200;
 
-    private ContainerInterface $container;
-
     private ResponseInterface $response;
 
-    private ServerRequestInterface $request;
-    private ViewInterface $view;
-
-    public function __construct(ContainerInterface $container, ResponseInterface $response)
+    public function __construct(ResponseInterface $response)
     {
-        $this->container = $container;
         $this->response = $response;
-    }
-
-    public function setRequest(ServerRequestInterface $request): void
-    {
-        $this->request = $request;
     }
 
     public function response(string $input, int $status, array $header = []): ResponseInterface
@@ -39,28 +28,6 @@ class Respond
         }
 
         return $response;
-    }
-
-    private function getView(): ViewInterface
-    {
-        if (!isset($this->view)) {
-            $this->view = $this->container->get(ViewInterface::class);
-            $this->view->setRequest($this->request);
-            $this->container->get(SessionInterface::class)->clearFlash();
-        }
-        return $this->view;
-    }
-
-    public function view(string $template, array $data = []): ResponseInterface
-    {
-        $view = $this->getView();
-        return $view->render($this->response, $template, $data);
-    }
-
-    public function drawTemplate(string $template, array $data = []): string
-    {
-        $view = $this->getView();
-        return $view->drawTemplate($template, $data);
     }
 
     public function json(array $json): ResponseInterface
@@ -81,11 +48,5 @@ class Respond
             'Content-Length'      => (string)strlen($content),
             'Content-Type'        => $mime,
         ]);
-    }
-
-    public function withInputs(array $inputs, array $errors = []): static
-    {
-        $this->getView()->setInputs($inputs, $errors);
-        return $this;
     }
 }

@@ -46,7 +46,7 @@ class FormController extends AbstractController
             $errors = $this->validator->getErrors();
         }
 
-        return $this->respond()
+        return $this
             ->withInputs($inputs, $errors)
             ->view('samples/form.twig');
     }
