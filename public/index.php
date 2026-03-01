@@ -12,9 +12,8 @@ if (php_sapi_name() == 'cli-server') {
 }
 SERVER:
 
-require_once dirname(__DIR__) . '/vendor/autoload.php';
-
-require __DIR__ . '/../appDemo/boot.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../appDemo/boot.php';
 
 $setting = Setting::forge(__DIR__ . '/../settings.ini', $_ENV);
 $container = getContainer($setting);
