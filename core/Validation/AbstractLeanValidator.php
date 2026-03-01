@@ -47,17 +47,26 @@ class AbstractLeanValidator implements ValidatorInterface
     }
 
     /**
-     * Implement using Wscore\LeanValidator API (Validator/Sanitizer).
-     * * Follow: sanitize -> buildValidator -> rules -> buildResult.
-     * 
-     * @override
      * @param array $data
      * @return ValidatorResultInterface
      */
     public function validate(array $data): ValidatorResultInterface
     {
         $this->rawData = $data;
-        throw new \RuntimeException('validate() must be implemented.');
+        return $this->validation($data);
+    }
+
+    /**
+     * Implement using Wscore\LeanValidator API (Validator/Sanitizer).
+     * * Follow: sanitize -> buildValidator -> rules -> buildResult.
+     *
+     * @override
+     * @param array $data
+     * @return ValidatorResultInterface
+     */
+    protected function validation(array $data): ValidatorResultInterface
+    {
+        throw new \RuntimeException('validation() must be implemented.');
     }
 
     /**
@@ -73,20 +82,5 @@ class AbstractLeanValidator implements ValidatorInterface
         }
         $this->lastResult = new ValidatorFailed($this->rawData, $validatorData->getErrorsFlat());
         return $this->lastResult;
-    }
-
-    public function getErrors(): array
-    {
-        return $this->lastResult?->getErrors() ?? [];
-    }
-
-    public function success(): bool
-    {
-        return $this->lastResult?->success() ?? false;
-    }
-
-    public function failed(): bool
-    {
-        return $this->lastResult?->failed() ?? true;
     }
 }

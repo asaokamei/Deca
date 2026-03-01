@@ -8,10 +8,8 @@ use Wscore\LeanValidator\Validator;
 
 class SampleLeanValidator extends AbstractLeanValidator
 {
-    public function validate(array $data): ValidatorResultInterface
+    protected function validation(array $data): ValidatorResultInterface
     {
-        $this->rawData = $data;
-
         $this->sanitizer->toLower('email');
         $this->sanitizer->toHankaku('email');
         $this->sanitizer->toZenkaku('name');
@@ -22,8 +20,8 @@ class SampleLeanValidator extends AbstractLeanValidator
         $v->field('say', 'Say Yeah! if you like')->optional()->equalTo('yeah');
         $v->field('language', 'Select language')->required()->in(['en', 'ja']);
         $v->field('dev')->asObject(function(Validator $v) {
-            $v->field('framework', 'Select Framework')->required()->in(['LARAVEL', 'SYMFONY', 'SLIM']);
-            $v->field('ai', 'Select AI')->required()->arrayCount(1)->arrayApply('in', ['CHATGPT', 'GEMINI', 'CLAUDE']);
+            $v->field('framework', 'Select a Framework')->required()->in(['LARAVEL', 'SYMFONY', 'SLIM']);
+            $v->field('ai', 'Select at least one AI')->required()->arrayCount(1)->asList('in', ['CHATGPT', 'GEMINI', 'CLAUDE']);
         });
         $v->field('profile')->asObject(function(Validator $v) {
             $v->field('email', 'Input valid email address')->required()->email();
