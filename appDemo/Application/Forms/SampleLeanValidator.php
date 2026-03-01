@@ -10,6 +10,8 @@ class SampleLeanValidator extends AbstractLeanValidator
 {
     public function validate(array $data): ValidatorResultInterface
     {
+        $this->rawData = $data;
+
         $this->sanitizer->toLower('email');
         $this->sanitizer->toHankaku('email');
         $this->sanitizer->toZenkaku('name');

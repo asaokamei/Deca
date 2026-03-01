@@ -26,6 +26,7 @@ class AbstractLeanValidator implements ValidatorInterface
     protected Sanitizer $sanitizer;
 
     private ?ValidatorResultInterface $lastResult = null;
+    protected array $rawData;
 
     public function __construct()
     {
@@ -55,6 +56,7 @@ class AbstractLeanValidator implements ValidatorInterface
      */
     public function validate(array $data): ValidatorResultInterface
     {
+        $this->rawData = $data;
         throw new \RuntimeException('validate() must be implemented.');
     }
 
@@ -66,10 +68,10 @@ class AbstractLeanValidator implements ValidatorInterface
     protected function buildResult(Validator $validatorData): ValidatorResultInterface
     {
         if ($validatorData->isValid()) {
-            $this->lastResult = new ValidatorSuccess($validatorData->getValidatedData());
+            $this->lastResult = new ValidatorSuccess($this->rawData, $validatorData->getValidatedData());
             return $this->lastResult;
         }
-        $this->lastResult = new ValidatorFailed($validatorData->getErrorsFlat());
+        $this->lastResult = new ValidatorFailed($this->rawData, $validatorData->getErrorsFlat());
         return $this->lastResult;
     }
 

@@ -10,5 +10,7 @@ interface ValidatorResultInterface
 
     public function getErrors(): array;
 
-    public function getValidData(): array;
+    public function getValidatedData(): array;
+
+    public function getRawData(): array;
 }

@@ -102,9 +102,9 @@ abstract class AbstractController
         }
         if (isset($this->validatorResult)) {
             if ($this->validatorResult->success()) {
-                $view->setInputs($this->validatorResult->getValidData());
+                $view->setInputs($this->validatorResult->getRawData());
             } else {
-                $view->setInputs([], $this->validatorResult->getErrors());
+                $view->setInputs($this->validatorResult->getRawData(), $this->validatorResult->getErrors());
             }
         }
         return $view;
@@ -150,7 +150,11 @@ abstract class AbstractController
         if (!isset($this->validator)) {
             throw new RuntimeException('validator is not set.');
         }
-        $data = $data ?? $this->request->getParsedBody();
+        $data = $data ?? (
+            $this->request->getMethod() === 'GET'
+                ? $this->request->getQueryParams()
+                : $this->request->getParsedBody()
+        );
         return $this->validatorResult = $this->validator->validate($data);
     }
 }

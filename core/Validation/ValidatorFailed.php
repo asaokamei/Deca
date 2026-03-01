@@ -6,7 +6,7 @@ use WScore\Deca\Contracts\ValidatorResultInterface;
 
 class ValidatorFailed implements ValidatorResultInterface
 {
-    public function __construct(private array $errors)
+    public function __construct(private array $rawData, private array $errors)
     {
     }
 
@@ -25,8 +25,13 @@ class ValidatorFailed implements ValidatorResultInterface
         return $this->errors;
     }
 
-    public function getValidData(): array
+    public function getValidatedData(): array
     {
         throw new \RuntimeException('no valid data');
+    }
+
+    public function getRawData(): array
+    {
+        return $this->rawData;
     }
 }
