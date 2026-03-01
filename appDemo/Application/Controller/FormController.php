@@ -40,13 +40,13 @@ class FormController extends AbstractController
                 'profile.birthday' => 'This is an error message for birthday.',
             ];
             $this->withInputs($inputs, $errors);
-        } elseif ($this->validate()->success()) {
-            $this->messages()->addSuccess('Post accepted!<br>Input validated...');
-        } else {
+            return $this->view('samples/form.twig');
+        } elseif ($this->validate()->failed()) {
             $this->messages()->addError('Post rejected!<br>Input in-validated...');
+            return $this->view('samples/form.twig');
         }
+        $this->messages()->addSuccess('Post accepted!<br>Input validated...');
 
-        return $this
-            ->view('samples/form.twig');
+        return $this->view('samples/form-done.twig');
     }
 }

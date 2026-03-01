@@ -1,0 +1,70 @@
+{% extends('layouts/layout.html.twig') %}
+
+{% block contents %}
+<h1>Form Building</h1>
+
+    <h3>Sample Form Output</h3>
+        <label>
+            <strong>Name:</strong>
+            {{ getValue('name') }}
+        </label>
+
+        <div class="grid">
+            <div>
+                <fieldset>
+                    <strong>Say Yeah!</strong>
+                    {{ getValue('say') }}
+                </fieldset>
+            </div>
+            <div>
+                <fieldset>
+                    <strong>Language:</strong>
+                    {{ getValue('language') }}
+                </fieldset>
+            </div>
+        </div>
+
+        <h3>Favorite Development Tools:</h3>
+        <div class="grid">
+            <div>
+                <fieldset>
+                    <strong>Favorite Framework:</strong>
+                    {{ getValue('dev[framework]') }}
+                </fieldset>
+            </div>
+            <div>
+                <fieldset>
+                    <strong>AI Assets:</strong>
+                    {{ getValue('dev[ai]')|arrayToString }}
+                </fieldset>
+            </div>
+        </div>
+
+        <h3>Profile:</h3>
+        <fieldset>
+            <strong>Your Email:</strong>
+            {{ getValue('profile[email]') }}
+        </fieldset>
+
+        <fieldset>
+            <strong>Birthday:</strong>
+            {{ getValue('profile[birthday]') }}
+        </fieldset>
+
+        <h3>Note:</h3>
+        <fieldset>
+            <strong>Your Note:</strong>
+            {{ getValue('note')|nl2br }}
+        </fieldset>
+
+        <input type="hidden" id="token" name="{{ csrfTokenName() }}" value="{{ csrfTokenValue() }}">
+        <div class="grid">
+            <div>
+                <form action="{{ url_for('samples-form') }}" method="get">
+                    <input type="submit" value="Show Form">
+                </form>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

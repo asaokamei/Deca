@@ -27,16 +27,14 @@ class TwigValueLoader implements TwigLoaderInterface
         $this->request = $request;
     }
 
-    public function value(string $name): string
+    public function value(string $name): mixed
     {
         if (!isset($this->values)) {
             $this->values = new FormData((array) $this->request->getParsedBody());
         }
         $value = $this->values->getByName($name);
-        if (is_string($value)) {
-            return $value;
-        }
-        return '';
+
+        return $value;
     }
 
     public function checkIf(string $name, string $value): bool

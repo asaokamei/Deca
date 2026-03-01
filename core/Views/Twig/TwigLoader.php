@@ -43,9 +43,13 @@ class TwigLoader implements TwigLoaderInterface
         $environment->addFilter(new TwigFilter('mailAddress', [$this, 'filterMailAddressArray'], ['is_safe' => ['html']]));
     }
 
-    public function filterArrayToString(string $path): string
+    public function filterArrayToString(array $data, ?string $format = null): string
     {
-        return json_encode($path);
+        if ($format === 'json') {
+            return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        }
+        $format = $format ?? '<br>';
+        return implode($format, $data);
     }
 
     public function filterMailAddressArray($address, $name = null): string
