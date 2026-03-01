@@ -82,6 +82,14 @@ abstract class AbstractController
 
     protected function redirect(): Redirect
     {
+        if (isset($this->validatorResult)) {
+            if ($this->validatorResult->success()) {
+                $this->session()->setFlash('_prev_inputs', $this->validatorResult->getRawData());
+            } else {
+                $this->session()->setFlash('_prev_inputs', $this->validatorResult->getRawData());
+                $this->session()->setFlash('_prev_errors', $this->validatorResult->getErrors());
+            }
+        }
         /** @noinspection PhpUnhandledExceptionInspection */
         return new Redirect($this->container->get(RoutingInterface::class), $this->response);
     }
@@ -100,6 +108,12 @@ abstract class AbstractController
             $view->setRequest($this->request);
             $this->container->get(SessionInterface::class)->clearFlash();
         }
+        $_prev_inputs = $this->session()->getFlash('_prev_inputs');
+        $_prev_errors = $this->session()->getFlash('_prev_errors') ?? [];
+        if ($_prev_inputs) {
+            $view->setInputs($_prev_inputs, $_prev_errors);
+        }
+
         if (isset($this->validatorResult)) {
             if ($this->validatorResult->success()) {
                 $view->setInputs($this->validatorResult->getRawData());
