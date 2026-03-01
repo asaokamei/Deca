@@ -21,7 +21,6 @@
         "aura/session": "^2.1",
         "twig/twig": "^3.0",
         "ext-json": "*",
-        "aura/filter": "^2.3",
         "wscore/leanvalidator": "^0.2.0"
     },
     "require-dev": {
