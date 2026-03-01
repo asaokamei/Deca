@@ -28,6 +28,7 @@ use WScore\Deca\Views\Twig\ViewTwig;
 class Definitions
 {
     public const APP_DIR = 'app-Dir';
+    public const VAR_DIR = 'var-Dir';
 
     /**
      * @var callable[]
@@ -105,10 +106,11 @@ class Definitions
             },
             Environment::class => function(ContainerInterface $container) {
                 $appDir = $container->get(self::APP_DIR);
+                $varDir = $container->get(self::VAR_DIR);
                 $loader = new FilesystemLoader($appDir . '/templates/');
                 $settings = $container->get(Setting::class);
                 $cache =  $settings->isProduction()
-                    ? $appDir . '/../var/cache'
+                    ? $varDir . '/cache'
                     : false;
                 return new Environment($loader, [
                     'cache' => $cache,
@@ -155,7 +157,7 @@ class Definitions
                 $processor = new UidProcessor();
                 $logger->pushProcessor($processor);
 
-                $path = $container->get(self::APP_DIR) . '/../var/app.log';
+                $path = $container->get(self::VAR_DIR) . '/app.log';
 
                 if ($settings->isProduction()) {
                     $handler = new FingersCrossedHandler(

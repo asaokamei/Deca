@@ -26,6 +26,7 @@ function getContainer(?Setting $setting = null): ContainerInterface
         $definitions->setValue(Setting::class, $setting);
     }
     $definitions->setValue(Definitions::APP_DIR, __DIR__);
+    $definitions->setValue(Definitions::VAR_DIR, dirname(__DIR__) . '/var');
     $definitions->setAlias(RoutingInterface::class, Routing::class);
     $definitions->setAlias(SessionInterface::class, SessionAura::class);
     $definitions->setAlias(MessageInterface::class, Messages::class);
