@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Views;
+namespace Tests\Core\Unit\Views;
 
 use PHPUnit\Framework\TestCase;
 use WScore\Deca\Views\FormData;
 
-class FormValuesTest extends TestCase
+class FormDataTest extends TestCase
 {
-    public function testOldValues()
+    public function testOldValues(): void
     {
         $oldValues = new FormData(['name' => 'John', 'age' => 30]);
         $this->assertEquals('John', $oldValues->getByPath('name'));
@@ -15,7 +15,7 @@ class FormValuesTest extends TestCase
         $this->assertNull($oldValues->getByPath('address'));
     }
 
-    public function testGetValueByPath()
+    public function testGetValueByPath(): void
     {
         $oldValues = new FormData(['inputs' => ['name' => 'John', 'lang' => ['ENG', 'JPN']]]);
         $this->assertEquals('John', $oldValues->getByPath('inputs.name'));
@@ -23,7 +23,7 @@ class FormValuesTest extends TestCase
         $this->assertEquals(['ENG', 'JPN'], $oldValues->getByPath('inputs.lang'));
     }
 
-    public function testGetValueByName()
+    public function testGetValueByName(): void
     {
         $oldValues = new FormData(['inputs' => ['name' => 'John', 'lang' => ['ENG', 'JPN']]]);
         $this->assertEquals('John', $oldValues->getByName('inputs[name]'));
@@ -31,7 +31,7 @@ class FormValuesTest extends TestCase
         $this->assertEquals(['ENG', 'JPN'], $oldValues->getByName('inputs[lang]'));
     }
 
-    public function testGetValueForObject()
+    public function testGetValueForObject(): void
     {
         $entity = new \stdClass();
         $entity->name = 'John';
@@ -41,13 +41,12 @@ class FormValuesTest extends TestCase
         $this->assertEquals('ENG', $oldValues->getByName('inputs[lang][0]'));
     }
 
-
-    public function testGetValueForObjectGetter()
+    public function testGetValueForObjectGetter(): void
     {
         $entity = new class {
             public function name() { return 'John'; }
             public function getLang() { return ['ENG', 'JPN']; }
-            public function get($name) {return $name . ' getter';}
+            public function get($name) { return $name . ' getter'; }
         };
         $oldValues = new FormData(['inputs' => $entity]);
         $this->assertEquals('John', $oldValues->getByName('inputs[name]'));
@@ -55,7 +54,7 @@ class FormValuesTest extends TestCase
         $this->assertEquals('anything getter', $oldValues->getByName('inputs[anything]'));
     }
 
-    public function testCheckIf()
+    public function testCheckIf(): void
     {
         $oldValues = new FormData(['inputs' => ['name' => 'John', 'lang' => ['ENG', 'JPN']]]);
         $this->assertTrue($oldValues->checkIf('inputs[name]', 'John'));
