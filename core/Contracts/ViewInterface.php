@@ -49,5 +49,5 @@ interface ViewInterface
 
     public function setRequest(ServerRequestInterface $request): void;
 
-    public function setInputs(array $inputs, array $errors = []): void;
+    public function setInputs(array|MessageBagInterface $inputs, array|MessageBagInterface $errors = []): void;
 }

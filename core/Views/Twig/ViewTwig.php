@@ -5,6 +5,7 @@ namespace WScore\Deca\Views\Twig;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Twig\Environment;
+use WScore\Deca\Contracts\MessageBagInterface;
 use WScore\Deca\Contracts\ViewInterface;
 
 class ViewTwig implements ViewInterface
@@ -77,7 +78,7 @@ class ViewTwig implements ViewInterface
         $this->loaders[] = $loader;
     }
 
-    public function setInputs(array $inputs, array $errors = []): void
+    public function setInputs(array|MessageBagInterface $inputs, array|MessageBagInterface $errors = []): void
     {
         $this->valueLoader->setValues($inputs, $errors);
     }

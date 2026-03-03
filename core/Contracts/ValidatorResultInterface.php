@@ -8,9 +8,9 @@ interface ValidatorResultInterface
 
     public function success(): bool;
 
-    public function getErrors(): array;
+    public function getErrorBag(): MessageBagInterface;
 
     public function getValidatedData(): array;
 
-    public function getRawData(): array;
+    public function getRawDataBag(): MessageBagInterface;
 }

@@ -84,10 +84,10 @@ abstract class AbstractController
     {
         if (isset($this->validatorResult)) {
             if ($this->validatorResult->success()) {
-                $this->session()->setFlash('_prev_inputs', $this->validatorResult->getRawData());
+                $this->session()->setFlash('_prev_inputs', $this->validatorResult->getRawDataBag());
             } else {
-                $this->session()->setFlash('_prev_inputs', $this->validatorResult->getRawData());
-                $this->session()->setFlash('_prev_errors', $this->validatorResult->getErrors());
+                $this->session()->setFlash('_prev_inputs', $this->validatorResult->getRawDataBag());
+                $this->session()->setFlash('_prev_errors', $this->validatorResult->getErrorBag());
             }
         }
         /** @noinspection PhpUnhandledExceptionInspection */
@@ -116,9 +116,9 @@ abstract class AbstractController
 
         if (isset($this->validatorResult)) {
             if ($this->validatorResult->success()) {
-                $view->setInputs($this->validatorResult->getRawData());
+                $view->setInputs($this->validatorResult->getRawDataBag());
             } else {
-                $view->setInputs($this->validatorResult->getRawData(), $this->validatorResult->getErrors());
+                $view->setInputs($this->validatorResult->getRawDataBag(), $this->validatorResult->getErrorBag());
             }
         }
         return $view;

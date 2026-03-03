@@ -2,7 +2,11 @@
 
 namespace WScore\Deca\Validation;
 
+use WScore\Deca\Contracts\MessageBagInterface;
 use WScore\Deca\Contracts\ValidatorResultInterface;
+use WScore\Deca\Views\FormData;
+use WScore\Deca\Views\FormDotted;
+use Wscore\LeanValidator\MessageBag;
 
 class ValidatorFailed implements ValidatorResultInterface
 {
@@ -20,9 +24,9 @@ class ValidatorFailed implements ValidatorResultInterface
         return false;
     }
 
-    public function getErrors(): array
+    public function getErrorBag(): MessageBagInterface
     {
-        return $this->errors;
+        return new FormDotted($this->errors);
     }
 
     public function getValidatedData(): array
@@ -30,8 +34,8 @@ class ValidatorFailed implements ValidatorResultInterface
         throw new \RuntimeException('no valid data');
     }
 
-    public function getRawData(): array
+    public function getRawDataBag(): MessageBagInterface
     {
-        return $this->rawData;
+        return new FormData($this->rawData);
     }
 }

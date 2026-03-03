@@ -2,11 +2,13 @@
 
 namespace WScore\Deca\Views;
 
+use WScore\Deca\Contracts\MessageBagInterface;
+
 /**
  * Form data backed by a flat array with dot-notation keys (e.g. Laravel-style errors).
  * Same API as FormData; use for error bags where keys are "profile.email", "dev.ai.0", etc.
  */
-class FormDotted
+class FormDotted implements MessageBagInterface
 {
     public function __construct(private array $oldData)
     {

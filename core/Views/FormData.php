@@ -3,8 +3,9 @@
 namespace WScore\Deca\Views;
 
 use ArrayAccess;
+use WScore\Deca\Contracts\MessageBagInterface;
 
-class FormData
+class FormData implements MessageBagInterface
 {
     public function __construct(private array $oldData)
     {
@@ -29,7 +30,7 @@ class FormData
     /**
      * 多次元配列からドット記法で値を取得するロジック
      */
-    public function getByPath(string $path)
+    public function getByPath(string $path): mixed
     {
         $array = $this->oldData;
         if (!$path) return $array;
@@ -63,7 +64,7 @@ class FormData
     /**
      * "dev[program][php]" -> "dev.program.php" に変換して値を引く
      */
-    public function getByName(string $name)
+    public function getByName(string $name): mixed
     {
         // 1. "[]" を除去 (tags[] のような末尾配列対応)
         $path = str_replace('[]', '', $name);

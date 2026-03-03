@@ -2,17 +2,17 @@
 
 namespace WScore\Deca\Views\Twig;
 
-use foo\bar;
 use Psr\Http\Message\RequestInterface;
 use Twig\Environment;
 use Twig\TwigFunction;
+use WScore\Deca\Contracts\MessageBagInterface;
 use WScore\Deca\Views\FormData;
 use WScore\Deca\Views\FormDotted;
 
 class TwigValueLoader implements TwigLoaderInterface
 {
-    private FormData $values;
-    private ?FormDotted $errors = null;
+    private MessageBagInterface $values;
+    private ?MessageBagInterface $errors = null;
     private RequestInterface $request;
 
     public function load(Environment $environment): void
@@ -61,9 +61,9 @@ class TwigValueLoader implements TwigLoaderInterface
         return $string;
     }
 
-    public function setValues(array $values, array $errors): void
+    public function setValues(array|MessageBagInterface $values, array|MessageBagInterface $errors): void
     {
-        $this->values = new FormData($values);
-        $this->errors = new FormDotted($errors);
+        $this->values = $values instanceof MessageBagInterface ? $values: new FormData($values);
+        $this->errors = $errors instanceof MessageBagInterface ? $errors: new FormDotted($errors);
     }
 }

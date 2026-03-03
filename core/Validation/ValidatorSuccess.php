@@ -2,7 +2,9 @@
 
 namespace WScore\Deca\Validation;
 
+use WScore\Deca\Contracts\MessageBagInterface;
 use WScore\Deca\Contracts\ValidatorResultInterface;
+use WScore\Deca\Views\FormData;
 
 class ValidatorSuccess implements ValidatorResultInterface
 {
@@ -20,7 +22,7 @@ class ValidatorSuccess implements ValidatorResultInterface
         return true;
     }
 
-    public function getErrors(): array
+    public function getErrorBag(): MessageBagInterface
     {
         throw new \RuntimeException('no errors');
     }
@@ -30,8 +32,8 @@ class ValidatorSuccess implements ValidatorResultInterface
         return $this->data;
     }
 
-    public function getRawData(): array
+    public function getRawDataBag(): MessageBagInterface
     {
-        return $this->rawData;
+        return new FormData($this->rawData);
     }
 }
