@@ -77,4 +77,9 @@ class FormData implements MessageBagInterface
         // 3. 既存のドット記法用検索ロジックに投げる
         return $this->getByPath($path);
     }
+
+    public function getData(): array
+    {
+        return $this->oldData;
+    }
 }

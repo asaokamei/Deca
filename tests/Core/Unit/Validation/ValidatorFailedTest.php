@@ -18,14 +18,14 @@ class ValidatorFailedTest extends TestCase
     {
         $errors = ['name' => 'Name is required', 'email' => 'Invalid email'];
         $result = new ValidatorFailed(['name' => '', 'email' => 'x'], $errors);
-        $this->assertEquals($errors, $result->getErrors());
+        $this->assertEquals($errors, $result->getErrorBag()->getData());
     }
 
     public function testGetRawData(): void
     {
         $raw = ['name' => '', 'email' => 'x'];
         $result = new ValidatorFailed($raw, ['name' => 'Required']);
-        $this->assertEquals($raw, $result->getRawData());
+        $this->assertEquals($raw, $result->getRawDataBag()->getData());
     }
 
     public function testGetValidatedDataThrows(): void

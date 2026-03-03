@@ -64,4 +64,9 @@ class FormDotted implements MessageBagInterface
         $path = str_replace('[', '.', $path);
         return $this->getByPath($path);
     }
+
+    public function getData(): array
+    {
+        return $this->oldData;
+    }
 }

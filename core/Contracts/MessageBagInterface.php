@@ -23,4 +23,6 @@ interface MessageBagInterface
      * "dev[program][php]" -> "dev.program.php" に変換してドットキーで引く
      */
     public function getByName(string $name): mixed;
+
+    public function getData(): array;
 }

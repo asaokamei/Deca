@@ -26,7 +26,7 @@ class ValidatorSuccessTest extends TestCase
     {
         $raw = ['name' => '  John  '];
         $result = new ValidatorSuccess($raw, ['name' => 'John']);
-        $this->assertEquals($raw, $result->getRawData());
+        $this->assertEquals($raw, $result->getRawDataBag()->getData());
     }
 
     public function testGetErrorsThrows(): void
@@ -35,6 +35,6 @@ class ValidatorSuccessTest extends TestCase
         $this->expectExceptionMessage('no errors');
 
         $result = new ValidatorSuccess([], []);
-        $result->getErrors();
+        $result->getErrorBag();
     }
 }

@@ -6,7 +6,6 @@ use WScore\Deca\Contracts\MessageBagInterface;
 use WScore\Deca\Contracts\ValidatorResultInterface;
 use WScore\Deca\Views\FormData;
 use WScore\Deca\Views\FormDotted;
-use Wscore\LeanValidator\MessageBag;
 
 class ValidatorFailed implements ValidatorResultInterface
 {
