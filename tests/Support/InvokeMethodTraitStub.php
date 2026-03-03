@@ -1,40 +1,37 @@
 <?php
 
-namespace Tests\Routes\Utils;
+namespace Tests\Support;
 
 use Psr\Http\Message\ResponseInterface;
 use WScore\Deca\Controllers\InvokeMethodTrait;
 
-class Invoked
+/**
+ * Stub controller for testing InvokeMethodTrait.
+ */
+class InvokeMethodTraitStub
 {
     use InvokeMethodTrait;
 
-    /**
-     * @var ResponseInterface
-     */
-    private $response;
+    private ResponseInterface $response;
 
-    /**
-     * @param ResponseInterface $response
-     */
     public function __construct(ResponseInterface $response)
     {
         $this->response = $response;
     }
 
-    public function getName($name): ResponseInterface
+    public function getName(string $name): ResponseInterface
     {
         $this->response->getBody()->write("name: $name");
         return $this->response;
     }
 
-    public function getOptional($option = 'option'): ResponseInterface
+    public function getOptional(string $option = 'option'): ResponseInterface
     {
         $this->response->getBody()->write("option: $option");
         return $this->response;
     }
 
-    public function invoke(string $method, array $args)
+    public function invoke(string $method, array $args): ResponseInterface
     {
         return $this->_invokeMethod($method, $args);
     }

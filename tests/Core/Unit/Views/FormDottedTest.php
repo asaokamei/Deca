@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Views;
+namespace Tests\Core\Unit\Views;
 
 use PHPUnit\Framework\TestCase;
 use WScore\Deca\Views\FormDotted;
@@ -41,5 +41,12 @@ class FormDottedTest extends TestCase
         $errors = new FormDotted(['lang' => 'en']);
         $this->assertTrue($errors->checkIf('lang', 'en'));
         $this->assertFalse($errors->checkIf('lang', 'ja'));
+    }
+
+    public function testGetByPathEmptyStringReturnsAllData(): void
+    {
+        $data = ['a' => 1, 'b' => 2];
+        $form = new FormDotted($data);
+        $this->assertEquals($data, $form->getByPath(''));
     }
 }

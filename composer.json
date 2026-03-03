@@ -23,6 +23,12 @@
         "ext-json": "*",
         "wscore/leanvalidator": "^0.2.0"
     },
+    "scripts": {
+        "test": "phpunit",
+        "test:unit": "phpunit --testsuite=unit",
+        "test:integration": "phpunit --testsuite=integration",
+        "test:http": "phpunit --testsuite=http"
+    },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "symfony/mailer": "^6.0",

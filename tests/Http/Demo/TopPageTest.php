@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\End2End;
+namespace Tests\Http\Demo;
 
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Factory\ServerRequestCreatorFactory;
-use PHPUnit\Framework\TestCase;
 use WScore\Deca\Services\Setting;
 
 class TopPageTest extends TestCase
@@ -15,17 +15,14 @@ class TopPageTest extends TestCase
     {
         $request = ServerRequestCreatorFactory::create()
             ->createServerRequestFromGlobals();
-        $uri = $request->getUri();
-        $uri = $uri->withPath($path);
-        $request = $request->withUri($uri);
-
-        return $request;
+        $uri = $request->getUri()->withPath($path);
+        return $request->withUri($uri);
     }
 
     private function createApp(ServerRequestInterface $request): App
     {
-        require_once __DIR__ . '/../../appDemo/boot.php';
-        $setting = Setting::forge(__DIR__ . '/../../settings.ini', $_ENV);
+        require_once __DIR__ . '/../../../appDemo/boot.php';
+        $setting = Setting::forge(__DIR__ . '/../../../settings.ini', $_ENV);
         $container = getContainer($setting);
         $app = getApp($container);
         setRoutes($app);
@@ -47,7 +44,7 @@ class TopPageTest extends TestCase
         return $response->getBody()->getContents();
     }
 
-    public function testTopPage()
+    public function testTopPage(): void
     {
         $html = $this->getHtml('/');
 
@@ -55,13 +52,13 @@ class TopPageTest extends TestCase
         $this->assertStringContainsString('Deca Framework</h1>', $html);
     }
 
-    public function test404NotFound()
+    public function test404NotFound(): void
     {
         $response = $this->getResponse('/Path-NotFound');
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-    public function testDividedByZeroReturns500()
+    public function testDividedByZeroReturns500(): void
     {
         $response = $this->getResponse('/samples/errors/error');
         $this->assertEquals(500, $response->getStatusCode());
