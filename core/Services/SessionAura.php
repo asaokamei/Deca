@@ -65,7 +65,7 @@ class SessionAura implements SessionInterface
 
     public function clearFlash()
     {
-        $this->segment->clearFlash();
+        $this->segment->clearFlashNow();
     }
 
     public function save(string $key, $val)
