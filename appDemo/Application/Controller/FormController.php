@@ -25,7 +25,7 @@ class FormController extends AbstractController
     {
         $inputs = $this->getInputs();
 
-        if (isset($inputs['with_error']) && $inputs['with_error']) {
+        if (isset($inputs['with_error'])) {
             $this->messages()->addError('Post with Error!<br>Showing default errors...');
             $errors = [
                 'name' => 'This is an error message for name.',
@@ -42,6 +42,7 @@ class FormController extends AbstractController
             $this->withInputs($inputs, $errors);
             return $this->view('samples/form.twig');
         }
+
         if ($this->validate()->failed()) {
             if (isset($inputs['redirect'])) {
                 $this->messages()->addError('Post is invalidated!<br>Redirected back to the input form...');

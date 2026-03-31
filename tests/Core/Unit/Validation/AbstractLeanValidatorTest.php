@@ -27,8 +27,8 @@ class AbstractLeanValidatorTest extends TestCase
                 $v = $this->buildValidator($cleaned);
                 
                 // 4. rules
-                $v->forKey('name')->required()->string();
-                $v->forKey('age')->required()->int();
+                $v->field('name')->required()->string();
+                $v->field('age')->required()->int();
                 
                 // 5. buildResult
                 return $this->buildResult($v);
