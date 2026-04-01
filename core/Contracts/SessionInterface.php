@@ -43,7 +43,7 @@ interface SessionInterface
      * @param mixed|null $default
      * @return mixed
      */
-    public function getFlash(string $key, $default = null);
+    public function getFlash(string $key, mixed $default = null): mixed;
 
     /**
      * sets flash data for the given key to be available in the next request.
@@ -53,7 +53,7 @@ interface SessionInterface
      * @param mixed $val
      * @return void
      */
-    public function setFlash(string $key, $val);
+    public function setFlash(string $key, mixed $val): void;
 
     /**
      * clears flash data for the given key or all flash data if key is null.
@@ -62,7 +62,7 @@ interface SessionInterface
      * @param string|null $key
      * @return void
      */
-    public function clearFlash(?string $key = null);
+    public function clearFlash(?string $key = null): void;
 
     /**
      * keeps flash data for the next request.
@@ -71,7 +71,7 @@ interface SessionInterface
      * @param string|null $key
      * @return void
      */
-    public function keepFlash(?string $key = null);
+    public function keepFlash(?string $key = null): void;
 
     /**
      * saves data to the persistent session (not flash).
@@ -80,13 +80,13 @@ interface SessionInterface
      * @param mixed $val
      * @return void
      */
-    public function save(string $key, $val);
+    public function save(string $key, mixed $val): void;
 
     /**
      * loads data from the persistent session (not flash).
      *
-     * @param mixed $key
+     * @param string $key
      * @return mixed
      */
-    public function load($key);
+    public function load(string $key): mixed;
 }

@@ -77,17 +77,17 @@ class Session implements SessionInterface
         $this->data[self::CSRF_TOKEN] = bin2hex(random_bytes(32));
     }
 
-    public function getFlash(string $key, $default = null)
+    public function getFlash(string $key, mixed $default = null): mixed
     {
         return $this->data[self::FLASH_NEXT][$key] ?? $this->data[self::FLASH_NOW][$key] ?? $default;
     }
 
-    public function setFlash(string $key, $val)
+    public function setFlash(string $key, mixed $val): void
     {
         $this->data[self::FLASH_NEXT][$key] = $val;
     }
 
-    public function clearFlash(?string $key = null)
+    public function clearFlash(?string $key = null): void
     {
         if ($key === null) {
             $this->data[self::FLASH_NOW] = [];
@@ -97,7 +97,7 @@ class Session implements SessionInterface
         }
     }
 
-    public function keepFlash(?string $key = null)
+    public function keepFlash(?string $key = null): void
     {
         if ($key === null) {
             $this->data[self::FLASH_NEXT] = array_merge($this->data[self::FLASH_NEXT], $this->data[self::FLASH_NOW]);
@@ -106,12 +106,12 @@ class Session implements SessionInterface
         }
     }
 
-    public function save(string $key, $val)
+    public function save(string $key, mixed $val): void
     {
         $this->data[$key] = $val;
     }
 
-    public function load($key)
+    public function load($key): mixed
     {
         return $this->data[$key] ?? null;
     }
