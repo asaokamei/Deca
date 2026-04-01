@@ -11,34 +11,37 @@ use WScore\Deca\Middleware\AppMiddleware;
 use WScore\Deca\Middleware\CsRfGuard;
 use WScore\Deca\Services\Setting;
 
-function getApp(ContainerInterface $container): App
-{
-    $app = AppFactory::createFromContainer($container);
+if (!function_exists('getApp')) {
+    function getApp(ContainerInterface $container): App
+    {
+        $app = AppFactory::createFromContainer($container);
 
-    // set up middlewares
-    $app->addRoutingMiddleware();
-    $app->add(CsRfGuard::class);
-    $app->add(AppMiddleware::class);
+        // set up middlewares
+        $app->addRoutingMiddleware();
+        $app->add(CsRfGuard::class);
+        $app->add(AppMiddleware::class);
 
-    $settings = $container->get(Setting::class);
-    $displayErrorDetails = (bool) ($settings['display_errors'] ?? false);
-    $errorMiddleware = $app->addErrorMiddleware(
-        $displayErrorDetails,
-        true,
-        true,
-        $container->get(LoggerInterface::class)
-    );
-    $errorHandler = $errorMiddleware->getDefaultErrorHandler();
-    $errorHandler->registerErrorRenderer('text/html', SimpleErrorHandler::class);
+        $settings = $container->get(Setting::class);
+        $displayErrorDetails = (bool) ($settings['display_errors'] ?? false);
+        $errorMiddleware = $app->addErrorMiddleware(
+            $displayErrorDetails,
+            true,
+            true,
+            $container->get(LoggerInterface::class)
+        );
+        $errorHandler = $errorMiddleware->getDefaultErrorHandler();
+        $errorHandler->registerErrorRenderer('text/html', SimpleErrorHandler::class);
 
-    // register $app self and routeCollector.
-    if ($container instanceof Container) {
-        $container->set(App::class, $app);
-        $container->set(RouteCollectorInterface::class, $app->getRouteCollector());
-    } else {
-        throw new \LogicException('container must be DI\Container.');
+        // register $app self and routeCollector.
+        if ($container instanceof Container) {
+            $container->set(App::class, $app);
+            $container->set(RouteCollectorInterface::class, $app->getRouteCollector());
+        } else {
+            throw new \LogicException('container must be DI\Container.');
+        }
+
+        return $app;
     }
-
-    return $app;
 }
+
 
