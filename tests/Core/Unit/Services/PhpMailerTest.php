@@ -2,27 +2,50 @@
 
 namespace Tests\Core\Unit\Services;
 
+use Tests\Core\Support\MailerCasePhpMailer;
 use PHPMailer\PHPMailer\PHPMailer as PHPMailerEngine;
 use PHPUnit\Framework\TestCase;
-use WScore\Deca\Contracts\MailableInterface;
 use WScore\Deca\Contracts\ViewInterface;
 use WScore\Deca\Services\PhpMailer;
 
 class PhpMailerTest extends TestCase
 {
+    private PhpMailer $mailer;
+
+    public function setUp(): void
+    {
+        $mailer = new PHPMailerEngine(null);
+        $mailer->SMTPDebug = 0;
+        $this->mailer = new PhpMailer($mailer);
+    }
+
+    public function testWithAbstractMailer()
+    {
+        $mailable = new MailerCasePhpMailer();
+        $this->mailer->send($mailable);
+
+        // check if values are set correctly
+        $reflection = new \ReflectionClass(PhpMailer::class);
+        $mailerProperty = $reflection->getProperty('mailer');
+        /** @var PHPMailerEngine $engine */
+        $engine = $mailerProperty->getValue($this->mailer);
+
+        $this->assertEquals('Test Subject', $engine->Subject);
+        $this->assertEquals('<h1>Hello</h1>', $engine->Body);
+    }
     public function testBuildMail(): void
     {
         $phpMailerEngine = new PHPMailerEngine();
         $mailer = new PhpMailer($phpMailerEngine);
 
-        $mailable = $this->createMock(MailableInterface::class);
-        $mailable->method('subject')->willReturn('Test Subject');
-        $mailable->method('render')->willReturn('<h1>Hello</h1>');
-        $mailable->method('mailTo')->willReturn(['to@example.com' => 'To Name']);
-        $mailable->method('from')->willReturn(['from@example.com' => 'From Name']);
-        $mailable->method('replyTo')->willReturn(['reply@example.com']);
-        $mailable->method('cc')->willReturn(['cc@example.com']);
-        $mailable->method('bcc')->willReturn(['bcc@example.com' => 'Bcc Name']);
+        $mailable = (new MailerCasePhpMailer())
+            ->withSubject('Test Subject')
+            ->withRender('<h1>Hello</h1>')
+            ->withTo(['to@example.com' => 'To Name'])
+            ->withFrom(['from@example.com' => 'From Name'])
+            ->withReplyTo(['reply@example.com'])
+            ->withCc(['cc@example.com'])
+            ->withBcc(['bcc@example.com' => 'Bcc Name']);
 
         // Use reflection to access protected buildMail for testing its logic
         $reflection = new \ReflectionClass(PhpMailer::class);
@@ -62,10 +85,10 @@ class PhpMailerTest extends TestCase
         $viewMock = $this->createMock(ViewInterface::class);
         $mailer = new PhpMailer($phpMailerEngine, $viewMock);
 
-        $mailable = $this->createMock(MailableInterface::class);
-        $mailable->method('render')->willReturn(''); // No direct render
-        $mailable->method('template')->willReturn('mail.twig');
-        $mailable->method('data')->willReturn(['name' => 'World']);
+        $mailable = (new MailerCasePhpMailer())
+            ->withRender('') // No direct render
+            ->withTemplate('mail.twig')
+            ->withData(['name' => 'World']);
 
         $viewMock->expects($this->once())
             ->method('drawTemplate')
@@ -86,10 +109,10 @@ class PhpMailerTest extends TestCase
             ->getMock();
         $mailer = new PhpMailer($phpMailerEngine);
 
-        $mailable = $this->createMock(MailableInterface::class);
-        $mailable->method('subject')->willReturn('Subject');
-        $mailable->method('render')->willReturn('Body');
-        $mailable->method('mailTo')->willReturn(['to@example.com']);
+        $mailable = (new MailerCasePhpMailer())
+            ->withSubject('Subject')
+            ->withRender('Body')
+            ->withTo(['to@example.com']);
 
         $phpMailerEngine->expects($this->once())
             ->method('send')
@@ -109,10 +132,10 @@ class PhpMailerTest extends TestCase
         $phpMailerEngine->ErrorInfo = 'Mock Error';
         $mailer = new PhpMailer($phpMailerEngine);
 
-        $mailable = $this->createMock(MailableInterface::class);
-        $mailable->method('subject')->willReturn('Subject');
-        $mailable->method('render')->willReturn('Body');
-        $mailable->method('mailTo')->willReturn(['to@example.com']);
+        $mailable = (new MailerCasePhpMailer())
+            ->withSubject('Subject')
+            ->withRender('Body')
+            ->withTo(['to@example.com']);
 
         $phpMailerEngine->expects($this->once())
             ->method('send')
