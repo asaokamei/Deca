@@ -27,6 +27,8 @@ abstract class AbstractController
     protected array $args = [];
 
     protected ContainerInterface $container;
+
+    protected ViewInterface $view;
     private ValidatorInterface $validator;
     private ValidatorResultInterface $validatorResult;
 
@@ -101,26 +103,24 @@ abstract class AbstractController
 
     protected function getView(): ViewInterface
     {
-        /** @var ViewInterface $view */
-        static $view;
-        if (!isset($view)) {
-            $view = $this->container->get(ViewInterface::class);
-            $view->setRequest($this->request);
+        if (!isset($this->view) || (isset($this->container) && $this->view !== $this->container->get(ViewInterface::class))) {
+            $this->view = $this->container->get(ViewInterface::class);
+            $this->view->setRequest($this->request);
         }
         $_prev_inputs = $this->session()->getFlash('_prev_inputs');
         $_prev_errors = $this->session()->getFlash('_prev_errors') ?? [];
         if ($_prev_inputs) {
-            $view->setInputs($_prev_inputs, $_prev_errors);
+            $this->view->setInputs($_prev_inputs, $_prev_errors);
         }
 
         if (isset($this->validatorResult)) {
             if ($this->validatorResult->success()) {
-                $view->setInputs($this->validatorResult->getRawDataBag());
+                $this->view->setInputs($this->validatorResult->getRawDataBag());
             } else {
-                $view->setInputs($this->validatorResult->getRawDataBag(), $this->validatorResult->getErrorBag());
+                $this->view->setInputs($this->validatorResult->getRawDataBag(), $this->validatorResult->getErrorBag());
             }
         }
-        return $view;
+        return $this->view;
     }
 
     protected function view(string $template, array $data = []): ResponseInterface
