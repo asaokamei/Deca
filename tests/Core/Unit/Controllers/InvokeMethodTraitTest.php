@@ -5,7 +5,7 @@ namespace Tests\Core\Unit\Controllers;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
-use Tests\Support\InvokeMethodTraitStub;
+use Tests\Core\Support\InvokeMethodTraitStub;
 
 class InvokeMethodTraitTest extends TestCase
 {

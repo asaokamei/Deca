@@ -30,6 +30,9 @@ class ViewTwig implements ViewInterface
         $this->loaders[] = $this->valueLoader;
     }
 
+    /**
+     * @deprecated
+     */
     public function setValueLoader(array $values, array $errors = []): static
     {
         $this->valueLoader->setValues($values, $errors);

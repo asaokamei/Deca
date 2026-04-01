@@ -106,7 +106,6 @@ abstract class AbstractController
         if (!isset($view)) {
             $view = $this->container->get(ViewInterface::class);
             $view->setRequest($this->request);
-            $this->container->get(SessionInterface::class)->clearFlash();
         }
         $_prev_inputs = $this->session()->getFlash('_prev_inputs');
         $_prev_errors = $this->session()->getFlash('_prev_errors') ?? [];

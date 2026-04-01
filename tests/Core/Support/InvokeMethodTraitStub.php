@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Support;
+namespace Tests\Core\Support;
 
 use Psr\Http\Message\ResponseInterface;
 use WScore\Deca\Controllers\InvokeMethodTrait;

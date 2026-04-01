@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace WScore\Deca\Services;
 
-use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface as SymfonyMailerInterface;
 use WScore\Deca\Contracts\MailableInterface;
 use WScore\Deca\Contracts\MailerInterface;
 use WScore\Deca\Contracts\ViewInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\Mime\Email;
 class SymfonyMailer implements MailerInterface
 {
     public function __construct(
-        protected Mailer $mailer,
+        protected SymfonyMailerInterface $mailer,
         protected ?ViewInterface $view = null
     ) {
     }
