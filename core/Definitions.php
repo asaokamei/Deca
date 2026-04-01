@@ -20,6 +20,7 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use WScore\Deca\Controllers\Messages;
 use WScore\Deca\Contracts\SessionInterface;
+use WScore\Deca\Services\Session;
 use WScore\Deca\Services\SessionAura;
 use WScore\Deca\Services\Setting;
 use WScore\Deca\Views\Twig\TwigLoader;
@@ -97,6 +98,9 @@ class Definitions
                 $loader = $container->get(TwigLoader::class);
                 $view->setRuntimeLoader($loader);
                 return $view;
+            },
+            Session::class => function() {
+                return new Session();
             },
             SessionAura::class => function(ContainerInterface $container) {
                 return new SessionAura($container->get(SessionFactory::class));

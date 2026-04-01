@@ -73,14 +73,28 @@ class SessionAuraTest extends TestCase
         $this->assertNull($this->session->load('unknown'));
     }
 
-    public function testFlashMessages(): void
+    public function testClearFlash(): void
     {
-        // SessionAura uses setFlashNow() in setFlash(), which makes it immediately available
         $this->session->setFlash('notice', 'hello');
         $this->assertEquals('hello', $this->session->getFlash('notice'));
 
-        $this->session->clearFlash();
+        // Clear specific key
+        $this->session->clearFlash('notice');
         $this->assertNull($this->session->getFlash('notice'));
+
+        // Clear all
+        $this->session->setFlash('info', 'val');
+        $this->session->clearFlash();
+        $this->assertNull($this->session->getFlash('info'));
+    }
+
+    public function testKeepFlash(): void
+    {
+        $this->session->setFlash('keep-me', 'val');
+        // setFlash in SessionAura uses setFlashNow(), so it's in now.
+        // Aura's keepFlash() copies from now to next.
+        $this->session->keepFlash('keep-me');
+        $this->assertEquals('val', $this->session->getFlash('keep-me'));
     }
 
     public function testFlashDefaultValue(): void

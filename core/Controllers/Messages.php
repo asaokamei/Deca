@@ -37,7 +37,8 @@ class Messages implements MessageInterface
 
     public function getMessages(string $level): array
     {
-        $this->session->clearFlash();
-        return (array) $this->session->getFlash($level, []);
+        $messages = (array) $this->session->getFlash($level, []);
+        $this->session->clearFlash($level);
+        return $messages;
     }
 }

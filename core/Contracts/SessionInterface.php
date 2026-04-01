@@ -18,7 +18,9 @@ interface SessionInterface
 
     public function setFlash(string $key, $val);
 
-    public function clearFlash();
+    public function clearFlash(?string $key = null);
+
+    public function keepFlash(?string $key = null);
 
     public function save(string $key, $val);
 

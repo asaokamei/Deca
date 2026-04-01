@@ -60,12 +60,28 @@ class SessionAura implements SessionInterface
 
     public function setFlash(string $key, $val)
     {
+        $this->segment->setFlash($key, $val);
         $this->segment->setFlashNow($key, $val);
     }
 
-    public function clearFlash()
+    public function clearFlash(?string $key = null)
     {
-        $this->segment->clearFlashNow();
+        if ($key === null) {
+            $this->segment->clearFlashNow();
+            $this->segment->clearFlash();
+        } else {
+            $this->segment->clearFlashNow($key);
+            $this->segment->clearFlash($key);
+        }
+    }
+
+    public function keepFlash(?string $key = null)
+    {
+        if ($key === null) {
+            $this->segment->keepFlash();
+        } else {
+            $this->segment->keepFlash($key);
+        }
     }
 
     public function save(string $key, $val)
