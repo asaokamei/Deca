@@ -14,7 +14,6 @@ use WScore\Deca\Contracts\ViewInterface;
 use WScore\Deca\Services\PhpMailer;
 use WScore\Deca\Services\Routing;
 use WScore\Deca\Services\Session;
-use WScore\Deca\Services\SessionAura;
 use WScore\Deca\Services\Setting;
 use WScore\Deca\Views\Twig\ViewTwig;
 

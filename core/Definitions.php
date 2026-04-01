@@ -2,7 +2,6 @@
 
 namespace WScore\Deca;
 
-use Aura\Session\SessionFactory;
 use Monolog\Handler\FingersCrossedHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -21,7 +20,6 @@ use Twig\Loader\FilesystemLoader;
 use WScore\Deca\Controllers\Messages;
 use WScore\Deca\Contracts\SessionInterface;
 use WScore\Deca\Services\Session;
-use WScore\Deca\Services\SessionAura;
 use WScore\Deca\Services\Setting;
 use WScore\Deca\Views\Twig\TwigLoader;
 use WScore\Deca\Views\Twig\ViewTwig;
@@ -102,8 +100,8 @@ class Definitions
             Session::class => function() {
                 return new Session();
             },
-            SessionAura::class => function(ContainerInterface $container) {
-                return new SessionAura($container->get(SessionFactory::class));
+            SessionInterface::class => function(ContainerInterface $container) {
+                return $container->get(Session::class);
             },
             Messages::class => function(ContainerInterface $container) {
                 return new Messages($container->get(SessionInterface::class));

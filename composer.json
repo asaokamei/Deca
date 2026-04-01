@@ -18,7 +18,6 @@
         "monolog/monolog": " ^2.0",
         "php-di/php-di": "^7.0",
         "filp/whoops": "^2.7",
-        "aura/session": "^2.1",
         "twig/twig": "^3.0",
         "ext-json": "*",
         "wscore/leanvalidator": "^0.2.0"

@@ -14,7 +14,7 @@ use WScore\Deca\Contracts\ViewInterface;
 use WScore\Deca\Contracts\MessageInterface;
 use WScore\Deca\Contracts\RoutingInterface;
 use WScore\Deca\Services\Routing;
-use WScore\Deca\Services\SessionAura;
+use WScore\Deca\Services\Session;
 use WScore\Deca\Controllers\Messages;
 use WScore\Deca\Views\Twig\ViewTwig;
 use WScore\Deca\Services\Setting;
@@ -22,8 +22,6 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
-use Aura\Session\SessionFactory;
-use Aura\Session\Phpfunc;
 
 abstract class ControllerTestCase extends TestCase
 {
@@ -47,9 +45,7 @@ abstract class ControllerTestCase extends TestCase
             ]),
             LoggerInterface::class => new NullLogger(),
             SessionInterface::class => function () {
-                $sessionFactory = new SessionFactory();
-                // SessionAura expects SessionFactory as argument 1
-                return new SessionAura($sessionFactory);
+                return new Session();
             },
             MessageInterface::class => function (ContainerInterface $c) {
                 return new Messages($c->get(SessionInterface::class));
@@ -99,14 +95,4 @@ abstract class ControllerTestCase extends TestCase
         // AbstractController::__invoke expects (Request, Response, Args)
         return $controller($request, $response, $args);
     }
-}
-
-class PhpfuncMock extends Phpfunc
-{
-    public function __construct() {}
-    public function session_start(array $options = []): bool { return true; }
-    public function session_status(): int { return PHP_SESSION_ACTIVE; }
-    public function session_id(?string $id = null): string { return 'test-session-id'; }
-    public function header($string, $replace = true, $http_response_code = null): void {}
-    public function setcookie($name, $value = '', $expires = 0, $path = '', $domain = '', $secure = false, $httponly = false): bool { return true; }
 }
