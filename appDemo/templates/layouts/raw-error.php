@@ -83,7 +83,7 @@ declare(strict_types=1);
     <div class="error-box">
         <h1>System Error</h1>
 
-        <?php if ($throwable instanceof Throwable): ?>
+        <?php if (isset($throwable) &&$throwable instanceof Throwable): ?>
             <div class="message"><?= htmlspecialchars($throwable->getMessage(), ENT_QUOTES, 'UTF-8') ?></div>
             
             <div class="details-header">Stack Trace & Details</div>

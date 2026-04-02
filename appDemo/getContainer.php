@@ -20,9 +20,9 @@ use WScore\Deca\Views\Twig\ViewTwig;
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 if (!function_exists('getContainer')) {
-    function getContainer(?Setting $setting = null): ContainerInterface
+    function getContainer(?Setting $setting = null, ?Definitions $definitions = null): ContainerInterface
     {
-        $definitions = new Definitions();
+        $definitions = $definitions ?? new Definitions();
         if (isset($setting)) {
             $definitions->setValue(Setting::class, $setting);
         }
