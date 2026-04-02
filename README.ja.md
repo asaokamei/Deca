@@ -5,7 +5,7 @@ Deca
 そう思って作りはじめたフレームワークです。
 Slim4をベースに、比較的小さくて有名で信頼できるパッケージを利用しています。
 
-- Slim4, PHP-DI, nyholm/psr7, monolog, Twig, Aura/Session, filp/whoops, etc.
+- Slim4, PHP-DI, nyholm/psr7, monolog, Twig, filp/whoops, etc.
 
 slim-skeletonやslim-twigをベースに作りはじめ、少しずつ機能をつかしています。
 なお、DB/ORMやバリデーションは未対応です。

@@ -48,7 +48,7 @@ class TopPageTest extends TestCase
     {
         $html = $this->getHtml('/');
 
-        $this->assertStringContainsString('<title>Deca for PHP</title>', $html);
+        $this->assertStringContainsString('<h1>Deca Framework</h1>', $html);
         $this->assertStringContainsString('Deca Framework</h1>', $html);
     }
 

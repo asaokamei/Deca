@@ -15,6 +15,10 @@ SERVER:
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../appDemo/boot.php';
 
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
 $setting = Setting::forge(__DIR__ . '/../settings.ini', $_ENV);
 $container = getContainer($setting);
 $app = getApp($container);

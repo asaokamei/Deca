@@ -21,16 +21,20 @@ class Session implements SessionInterface
     public function __construct(?array &$data = null)
     {
         if ($data === null) {
-            if (session_status() !== PHP_SESSION_ACTIVE) {
-                session_start();
-            }
-            if (!isset($_SESSION[self::SESSION_KEY])) {
-                $_SESSION[self::SESSION_KEY] = [
+            if (session_status() === PHP_SESSION_ACTIVE) {
+                if (!isset($_SESSION[self::SESSION_KEY])) {
+                    $_SESSION[self::SESSION_KEY] = [
+                        self::FLASH_NOW => [],
+                        self::FLASH_NEXT => [],
+                    ];
+                }
+                $this->data = &$_SESSION[self::SESSION_KEY];
+            } else {
+                $this->data = [
                     self::FLASH_NOW => [],
                     self::FLASH_NEXT => [],
                 ];
             }
-            $this->data = &$_SESSION[self::SESSION_KEY];
         } else {
             $this->data = &$data;
             if (!isset($this->data[self::FLASH_NOW])) {

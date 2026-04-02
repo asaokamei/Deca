@@ -13,30 +13,33 @@ use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 use WScore\Deca\Contracts\ViewInterface;
 
-function setRoutes(App $app): void
-{
-    /**
-     * set up main routes
-     */
-    $app->get('/', function (Request $request, Response $response) {
-        $view = $this->get(ViewInterface::class);
-        $view->setRequest($request);
-        return $view->render($response, 'hello.twig', [
-            'app_name' => $_ENV['APP_NAME'] ?? 'APP_NAME is blank!',
-        ]);
-    })->setName('hello');
+if (!function_exists('setRoutes')) {
+    function setRoutes(App $app): void
+    {
+        /**
+         * set up main routes
+         */
+        $app->get('/', function (Request $request, Response $response) {
+            $view = $this->get(ViewInterface::class);
+            $view->setRequest($request);
+            return $view->render($response, 'hello.twig', [
+                'app_name' => $_ENV['APP_NAME'] ?? 'APP_NAME is blank!',
+            ]);
+        })->setName('hello');
 
-    $app->get('/info', InfoAction::class)->setName('phpinfo');
+        $app->get('/info', InfoAction::class)->setName('phpinfo');
 
 
-    /**
-     * sample groups.
-     */
-    $app->group('/samples', function (Group $group) {
-        $group->any('/errors/[{method}]', ErrorController::class)->setName('samples-error');
-        $group->any('/flashes/[{method}]', FlashController::class)->setName('samples-flash');
-        $group->any('/csrf', CsRfController::class)->setName('samples-csrf');
-        $group->any('/form', FormController::class)->setName('samples-form');
-        $group->any('/mail', MailController::class)->setName('samples-mail');
-    });
+        /**
+         * sample groups.
+         */
+        $app->group('/samples', function (Group $group) {
+            $group->any('/errors/[{method}]', ErrorController::class)->setName('samples-error');
+            $group->any('/flashes/[{method}]', FlashController::class)->setName('samples-flash');
+            $group->any('/csrf', CsRfController::class)->setName('samples-csrf');
+            $group->any('/form', FormController::class)->setName('samples-form');
+            $group->any('/mail', MailController::class)->setName('samples-mail');
+        });
+    }
+
 }

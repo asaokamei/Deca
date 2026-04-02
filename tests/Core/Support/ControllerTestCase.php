@@ -45,7 +45,8 @@ abstract class ControllerTestCase extends TestCase
             ]),
             LoggerInterface::class => new NullLogger(),
             SessionInterface::class => function () {
-                return new Session();
+                $sessionData = [];
+                return new Session($sessionData);
             },
             MessageInterface::class => function (ContainerInterface $c) {
                 return new Messages($c->get(SessionInterface::class));
