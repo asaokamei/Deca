@@ -27,10 +27,14 @@ set_error_handler(
 register_shutdown_function(
     function () {
         $error = error_get_last();
-        if ($error === null) {
+        if ($error === null || !in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR])) {
             return;
         }
-        throw new ErrorException($error['message'], 0, 0, $error['file'], $error['line']);
+        $handler = ShutdownHandler::forgeRaw(
+            __DIR__ . '/templates/layouts',
+            dirname(__DIR__) . '/var/raw-error.log'
+        );
+        $handler(new ErrorException($error['message'], 0, $error['type'], $error['file'], $error['line']));
     }
 );
 
@@ -38,7 +42,10 @@ register_shutdown_function(
  * handle uncaught exception
  */
 set_exception_handler(
-    ShutdownHandler::forgeRaw()
+    ShutdownHandler::forgeRaw(
+        __DIR__ . '/templates/layouts',
+        dirname(__DIR__) . '/var/raw-error.log'
+    )
         ->setDebug(false)
         ->setDisplayErrorDetails(true)
 );

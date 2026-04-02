@@ -29,16 +29,17 @@ class ShutdownHandler
      */
     private $debug = false;
 
-    public function __construct(string $raw_error_file, string $log_file = null)
+    public function __construct(string $raw_error_file, ?string $log_file = null)
     {
         $this->log_file = $log_file;
         $this->raw_error_file = $raw_error_file;
     }
 
-    public static function forgeRaw(): ShutdownHandler
+    public static function forgeRaw(?string $template_dir = null, ?string $log_file = null): ShutdownHandler
     {
-        $raw_error_file = dirname(__DIR__, 2) . '/templates/raw-error.php';
-        $log_file = dirname(__DIR__, 3) . '/var/raw-error.log';
+        $template_dir = $template_dir ?? dirname(__DIR__, 1) . '/templates';
+        $raw_error_file = $template_dir . '/raw-error.php';
+        $log_file = $log_file ?? dirname($template_dir) . '/var/raw-error.log';
 
         return new self($raw_error_file, $log_file);
     }
@@ -68,7 +69,7 @@ class ShutdownHandler
         $this->rawError(null);
     }
 
-    private function rawError(Throwable $throwable = null)
+    private function rawError(?Throwable $throwable = null)
     {
         include $this->raw_error_file;
     }
