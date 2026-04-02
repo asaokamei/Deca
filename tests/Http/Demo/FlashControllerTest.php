@@ -71,6 +71,18 @@ class FlashControllerTest extends TestCase
         $this->assertStringContainsString('Flash Messages', $html);
     }
 
+    public function test_default_method_is_get()
+    {
+        $app = $this->createApp();
+        // method引数なしのURL
+        $request = $this->createRequest('GET', '/samples/flashes/');
+        $response = $app->handle($request);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $html = (string)$response->getBody();
+        $this->assertStringContainsString('Flash Messages', $html);
+    }
+
     public function test_onPage_sets_messages_and_displays_them()
     {
         $app = $this->createApp();
