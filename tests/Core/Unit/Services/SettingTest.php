@@ -17,22 +17,22 @@ class SettingTest extends TestCase
         $this->assertEquals('tested', $setting['test']);
     }
 
-    public function testGetEnv(): void
+    public function testAppEnv(): void
     {
         $setting = new Setting(['APP_ENV' => 'development']);
-        $this->assertEquals('development', $setting->getEnv());
+        $this->assertEquals('development', $setting->appEnv());
     }
 
-    public function testGetEnvDefaultProductionWhenMissing(): void
+    public function testAppEnvDefaultProductionWhenMissing(): void
     {
         $setting = new Setting([]);
-        $this->assertEquals('production', $setting->getEnv());
+        $this->assertEquals('production', $setting->appEnv());
     }
 
-    public function testGetEnvNormalizesToLowercase(): void
+    public function testAppEnvNormalizesToLowercase(): void
     {
         $setting = new Setting(['APP_ENV' => 'DEVELOPMENT']);
-        $this->assertEquals('development', $setting->getEnv());
+        $this->assertEquals('development', $setting->appEnv());
     }
 
     public function testIsProduction(): void
