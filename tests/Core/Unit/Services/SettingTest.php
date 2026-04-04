@@ -100,6 +100,17 @@ class SettingTest extends TestCase
         $this->assertEquals('from-env', $setting->get('EXTRA'));
     }
 
+    public function testForgeEnvOverridesIniForSameKey(): void
+    {
+        $iniPath = __DIR__ . '/../../../Fixtures/settings.test.ini';
+        $setting = Setting::forge($iniPath, [
+            'APP_ENV' => 'production',
+            'app_name' => 'from-env-only',
+        ]);
+        $this->assertEquals('production', $setting->get('APP_ENV'));
+        $this->assertEquals('from-env-only', $setting->get('app_name'));
+    }
+
     public function testForgeThrowsWhenFileMissing(): void
     {
         $this->expectException(\RuntimeException::class);

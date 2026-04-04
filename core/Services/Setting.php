@@ -37,8 +37,9 @@ class Setting implements ArrayAccess, IteratorAggregate
         }
         $settings = parse_ini_file($settingFile);
         if (is_array($settings)) {
-            $settings = $settings + $env;
-            return new self($settings);
+            // Environment variables must override values from the ini file (12-factor style).
+            $merged = array_merge($settings, $env);
+            return new self($merged);
         }
         throw new RuntimeException('Failed to parse a setting file: ' . $settingFile);
     }
