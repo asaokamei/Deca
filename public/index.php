@@ -1,8 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use WScore\Deca\Services\Setting;
-
 if (php_sapi_name() == 'cli-server') {
     /* 静的コンテンツのルーティングをして false を返します */
     $path = $_SERVER["REQUEST_URI"];
@@ -19,8 +17,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-$setting = Setting::forge(__DIR__ . '/../settings.ini', $_ENV);
-$container = getContainer($setting);
+$container = getContainer();
 $app = getApp($container);
 setRoutes($app);
 

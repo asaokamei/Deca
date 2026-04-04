@@ -10,25 +10,22 @@ use WScore\Deca\Services\PhpMailer;
 
 class PhpMailerTest extends TestCase
 {
-    private PhpMailer $mailer;
-
-    public function setUp(): void
+    public function testWithAbstractMailer(): void
     {
-        $mailer = new PHPMailerEngine(null);
-        $mailer->SMTPDebug = 0;
-        $this->mailer = new PhpMailer($mailer);
-    }
+        $phpMailerEngine = $this->getMockBuilder(PHPMailerEngine::class)
+            ->onlyMethods(['send'])
+            ->getMock();
+        $phpMailerEngine->method('send')->willReturn(true);
 
-    public function testWithAbstractMailer()
-    {
+        $mailer = new PhpMailer($phpMailerEngine);
         $mailable = new MailerCasePhpMailer();
-        $this->mailer->send($mailable);
+        $mailer->send($mailable);
 
-        // check if values are set correctly
         $reflection = new \ReflectionClass(PhpMailer::class);
         $mailerProperty = $reflection->getProperty('mailer');
+        $mailerProperty->setAccessible(true);
         /** @var PHPMailerEngine $engine */
-        $engine = $mailerProperty->getValue($this->mailer);
+        $engine = $mailerProperty->getValue($mailer);
 
         $this->assertEquals('Test Subject', $engine->Subject);
         $this->assertEquals('<h1>Hello</h1>', $engine->Body);

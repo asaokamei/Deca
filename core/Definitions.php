@@ -29,6 +29,9 @@ class Definitions
     public const APP_DIR = 'app-Dir';
     public const VAR_DIR = 'var-Dir';
 
+    /** Absolute path to the application settings.ini (set by getContainer()). */
+    public const SETTINGS_INI_PATH = 'settings-ini-path';
+
     /**
      * @var callable[]
      */
@@ -87,8 +90,8 @@ class Definitions
             ResponseFactoryInterface::class => function () {
                 return new Psr17Factory();
             },
-            Setting::class => function(ContainerInterface $container) {
-                return Setting::forge($container->get(self::APP_DIR) . '/../settings.ini', $_ENV);
+            Setting::class => function (ContainerInterface $container) {
+                return Setting::forge($container->get(self::SETTINGS_INI_PATH), $_ENV);
             },
             ViewTwig::class => function(ContainerInterface $container) {
                 $environment = $container->get(Environment::class);

@@ -37,8 +37,9 @@ class Setting implements ArrayAccess, IteratorAggregate
         }
         $settings = parse_ini_file($settingFile);
         if (is_array($settings)) {
-            $settings = $settings + $env;
-            return new self($settings);
+            // Environment variables must override values from the ini file (12-factor style).
+            $merged = array_merge($settings, $env);
+            return new self($merged);
         }
         throw new RuntimeException('Failed to parse a setting file: ' . $settingFile);
     }
@@ -74,22 +75,24 @@ class Setting implements ArrayAccess, IteratorAggregate
         return array_key_exists($key, $this->settings);
     }
 
-    public function getEnv(): string
+    /**
+     * Normalized value of `APP_ENV` (e.g. dev, production).
+     */
+    public function appEnv(): string
     {
         $env = $this->get(self::APP_ENV);
         if (is_string($env)) {
-            $env = strtolower($env);
-            return $env ?? self::PRODUCTION_ENVS[0];
+            return strtolower($env);
         }
         if ($env === null) {
             return self::PRODUCTION_ENVS[0];
         }
-        throw new RuntimeException('Environment is not a string.');
+        throw new RuntimeException('APP_ENV is not a string.');
     }
 
     public function isProduction(): bool
     {
-        return in_array($this->getEnv(), self::PRODUCTION_ENVS);
+        return in_array($this->appEnv(), self::PRODUCTION_ENVS);
     }
 
     public function isDebug(): bool

@@ -1,29 +1,30 @@
 Deca
 ====
 
-A PHP framework I can use for a decade, hopefully. 
+An **application starter kit** built on **Slim 4**, aimed at **years of continued use**—to keep building and maintaining real apps on the same stack.
 
-It is built from a set of reliable and (rather small) packages, such as,
+- **Slim** handles HTTP routing and the request/response cycle.
+- **Deca** layers familiar, low-dependency packages—PHP-DI, nyholm/psr7, Monolog, Twig, filp/whoops, and more—**on top of** Slim, **with** its own `core` code **to** wire them together cleanly.
+- **Interfaces** (often PSR) abstract third-party boundaries so app code can survive library upgrades.
 
-- Slim4, PHP-DI, nyholm/psr7, monolog, Twig, filp/whoops, etc.
-- project started based on slim-skeleton with slim-view. 
-
-Please read more in [Japanese readme file](README.ja.md). 
+Japanese: [README.ja.md](README.ja.md). In-depth documentation: [docs/deca/README.md](docs/deca/README.md) (English) · [docs/deca/README.ja.md](docs/deca/README.ja.md) (Japanese).
 
 ### Installation
 
+Requires PHP 8.0+ and [Composer](https://getcomposer.org/).
+
+Use Composer’s [`create-project`](https://getcomposer.org/doc/03-cli.md#create-project) to create a new project and install dependencies in one step. Replace `my-app` with your directory name:
+
 ```
-$ git clone https://github.com/asaokamei/Deca.git 
+composer create-project wscore/deca my-app
 ```
 
 ### Demo 
 
 ```
-$ git clone https://github.com/asaokamei/Deca.git
-$ cd Deca
-$ composer install
-$ cd public
-$ php -S 127.0.0.1:8000 index.php
+cd my-app
+cd public
+php -S 127.0.0.1:8000 index.php
 ```
 
-and access `127.0.0.1:8000` with your browser. 
+Then open `http://127.0.0.1:8000` in your browser.
