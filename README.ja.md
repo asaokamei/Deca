@@ -7,7 +7,7 @@ Deca
 - **Deca** は、PHP-DI、nyholm/psr7、Monolog、Twig、filp/whoops など、よく知られた依存の少ないパッケージを **Slim の上に** 載せ、**独自の `core` コード**でそれらをすっきりと組み合わせます。
 - **インターフェース**（多くは PSR）で外部ライブラリとの境界を抽象化し、ライブラリを更新してもアプリ側のコードを保ちやすくします。
 
-英語版は [README.md](README.md)。より詳しい説明（日本語）は [docs/deca/README.ja.md](docs/deca/README.ja.md) を参照してください。
+英語版は [README.md](README.md)。詳細ドキュメントは [docs/deca/README.md](docs/deca/README.md)（英語）· [docs/deca/README.ja.md](docs/deca/README.ja.md)（日本語）。
 
 ### インストール
 

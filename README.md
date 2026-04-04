@@ -7,7 +7,7 @@ An **application starter kit** built on **Slim 4**, aimed at **years of continue
 - **Deca** layers familiar, low-dependency packages—PHP-DI, nyholm/psr7, Monolog, Twig, filp/whoops, and more—**on top of** Slim, **with** its own `core` code **to** wire them together cleanly.
 - **Interfaces** (often PSR) abstract third-party boundaries so app code can survive library upgrades.
 
-Japanese: [README.ja.md](README.ja.md). In-depth documentation (Japanese): [docs/deca/README.ja.md](docs/deca/README.ja.md).
+Japanese: [README.ja.md](README.ja.md). In-depth documentation: [docs/deca/README.md](docs/deca/README.md) (English) · [docs/deca/README.ja.md](docs/deca/README.ja.md) (Japanese).
 
 ### Installation
 
