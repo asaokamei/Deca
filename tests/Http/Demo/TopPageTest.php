@@ -7,8 +7,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Factory\ServerRequestCreatorFactory;
-use WScore\Deca\Services\Setting;
-
 class TopPageTest extends TestCase
 {
     private function createRequest(string $path = '/'): ServerRequestInterface
@@ -22,8 +20,7 @@ class TopPageTest extends TestCase
     private function createApp(ServerRequestInterface $request): App
     {
         require_once __DIR__ . '/../../../appDemo/boot.php';
-        $setting = Setting::forge(__DIR__ . '/../../../settings.ini', $_ENV);
-        $container = getContainer($setting);
+        $container = getContainer(__DIR__ . '/../../../settings.ini');
         $app = getApp($container);
         setRoutes($app);
 

@@ -14,18 +14,22 @@ use WScore\Deca\Contracts\ViewInterface;
 use WScore\Deca\Services\PhpMailer;
 use WScore\Deca\Services\Routing;
 use WScore\Deca\Services\Session;
-use WScore\Deca\Services\Setting;
 use WScore\Deca\Views\Twig\ViewTwig;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 if (!function_exists('getContainer')) {
-    function getContainer(?Setting $setting = null, ?Definitions $definitions = null): ContainerInterface
+    /**
+     * Build the DI container.
+     *
+     * @param string|null $settingsIniPath Absolute path to settings.ini. Defaults to project root settings.ini (next to appDemo/).
+     * @param Definitions|null $definitions Optional Definitions instance to extend (e.g. setValue(Setting::class, ...) for tests).
+     */
+    function getContainer(?string $settingsIniPath = null, ?Definitions $definitions = null): ContainerInterface
     {
         $definitions = $definitions ?? new Definitions();
-        if (isset($setting)) {
-            $definitions->setValue(Setting::class, $setting);
-        }
+        $path = $settingsIniPath ?? dirname(__DIR__) . '/settings.ini';
+        $definitions->setValue(Definitions::SETTINGS_INI_PATH, $path);
         $definitions->setValue(Definitions::APP_DIR, __DIR__);
         $definitions->setValue(Definitions::VAR_DIR, dirname(__DIR__) . '/var');
         $definitions->setAlias(RoutingInterface::class, Routing::class);
