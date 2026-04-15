@@ -3,20 +3,22 @@
 namespace Tests\Core\Support;
 
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use WScore\Deca\Controllers\InvokeMethodTrait;
 
-/**
- * Stub controller for testing InvokeMethodTrait.
- */
-class InvokeMethodTraitStub
+class InvokeMethodTraitStubWithRequest
 {
     use InvokeMethodTrait;
 
     private ResponseInterface $response;
+    private ServerRequestInterface $request;
 
-    public function __construct(ResponseInterface $response)
-    {
+    public function __construct(
+        ResponseInterface $response,
+        ServerRequestInterface $request
+    ) {
         $this->response = $response;
+        $this->request = $request;
     }
 
     public function getName(string $name): ResponseInterface
@@ -33,7 +35,7 @@ class InvokeMethodTraitStub
 
     public function getNoParams(): ResponseInterface
     {
-        $this->response->getBody()->write('no params');
+        $this->response->getBody()->write("no params");
         return $this->response;
     }
 

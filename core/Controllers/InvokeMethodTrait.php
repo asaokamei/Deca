@@ -9,7 +9,7 @@ use ReflectionMethod;
 
 trait InvokeMethodTrait
 {
-    protected function _invokeMethod(string $method, array $inputs): ResponseInterface
+    protected function _invokeMethod(string $method, array $args): ResponseInterface
     {
         if (!method_exists($this, $method)) {
             throw new BadMethodCallException("method, '$method', not found in " . __CLASS__);
@@ -17,12 +17,25 @@ trait InvokeMethodTrait
 
         $refMethod = new ReflectionMethod($this, $method);
         $parameters = $refMethod->getParameters();
+        if (empty($parameters)) {
+            // no arguments
+            return $this->$method();
+        }
+        // build an argument pool.
+        $inputs = $args;
+        if (isset($this->request)) {
+            $inputs = array_merge($this->request->getAttributes(), $inputs);
+        }
         $arguments = [];
         foreach ($parameters as $arg) {
             $position = $arg->getPosition();
             $varName = $arg->getName();
             if (isset($inputs[$varName])) {
                 $arguments[$position] = $inputs[$varName];
+                continue;
+            }
+            if ($varName === 'args') {
+                $arguments[$position] = $args;
                 continue;
             }
             /* TODO: test this code.

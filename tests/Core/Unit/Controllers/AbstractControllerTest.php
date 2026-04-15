@@ -294,9 +294,9 @@ class AbstractControllerTest extends ControllerTestCase
         $this->assertEquals('action called', (string)$response->getBody());
     }
 
-    private function callConcreteController($controller, $request): ResponseInterface
+    private function callConcreteController($controller, $request, array $args = []): ResponseInterface
     {
         $response = (new \Nyholm\Psr7\Factory\Psr17Factory())->createResponse();
-        return $controller($request, $response, []);
+        return $controller($request, $response, $args);
     }
 }

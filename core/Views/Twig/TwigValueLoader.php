@@ -17,8 +17,15 @@ class TwigValueLoader implements TwigLoaderInterface
 
     public function load(Environment $environment): void
     {
+        // add value loader.
         $environment->addFunction(new TwigFunction('getValue', [$this, 'value']));
+        $environment->addFunction(new TwigFunction('old', [$this, 'value']));
+
+        // add error loader.
         $environment->addFunction(new TwigFunction('getError', [$this, 'error']));
+        $environment->addFunction(new TwigFunction('error', [$this, 'error'], ['is_safe' => ['html']]));
+
+        // add checkIf loader.
         $environment->addFunction(new TwigFunction('checkIf', [$this, 'checkIf']));
     }
 
