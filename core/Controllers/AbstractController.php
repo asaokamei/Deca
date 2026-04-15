@@ -20,6 +20,8 @@ use WScore\Deca\Contracts\ViewInterface;
 
 abstract class AbstractController
 {
+    use InvokeMethodTrait;
+
     protected ServerRequestInterface $request;
 
     protected ResponseInterface $response;
@@ -44,6 +46,9 @@ abstract class AbstractController
             return $this->action($this->args);
         }
         $method = 'on' . $this->determineMethod();
+        if (method_exists($this, '_invokeMethod')) {
+            return $this->_invokeMethod($method, $this->args);
+        }
         if (method_exists($this, $method)) {
             return $this->$method($this->args);
         }
