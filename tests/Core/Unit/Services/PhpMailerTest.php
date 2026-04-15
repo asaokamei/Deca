@@ -23,7 +23,9 @@ class PhpMailerTest extends TestCase
 
         $reflection = new \ReflectionClass(PhpMailer::class);
         $mailerProperty = $reflection->getProperty('mailer');
-        $mailerProperty->setAccessible(true);
+        if (PHP_VERSION_ID < 80500) {
+            $mailerProperty->setAccessible(true);
+        }
         /** @var PHPMailerEngine $engine */
         $engine = $mailerProperty->getValue($mailer);
 
