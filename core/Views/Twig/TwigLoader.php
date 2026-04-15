@@ -30,15 +30,27 @@ class TwigLoader implements TwigLoaderInterface
             $environment->addGlobal('_request', $this->request);
         }
 
+        // CSRF Tokens
+        $environment->addFunction(new TwigFunction('csrfTokenTag', [$this, 'getCsrfTokenTag']));
         $environment->addFunction(new TwigFunction('csrfTokenName', [$this, 'getCsrfTokenName']));
         $environment->addFunction(new TwigFunction('csrfTokenValue', [$this, 'getCsrfTokenValue']));
+
+        // Flash Messages
         $environment->addFunction(new TwigFunction('flashMessages', [$this, 'getFlashMessages']));
         $environment->addFunction(new TwigFunction('flashNotices', [$this, 'getFlashNotices']));
+
+        // URL Helpers
         $environment->addFunction(new TwigFunction('basePath', [$this, 'getBasePath']));
+        $environment->addFunction(new TwigFunction('asset', [$this, 'getBasePath']));
         $environment->addFunction(new TwigFunction('currentUrl', [$this, 'getCurrentUrl']));
+
+        // route() and path() are aliases for url_for()
         $environment->addFunction(new TwigFunction('url_for', [$this, 'getUrlFor']));
         $environment->addFunction(new TwigFunction('urlFor', [$this, 'getUrlFor']));
+        $environment->addFunction(new TwigFunction('route', [$this, 'getUrlFor']));
+        $environment->addFunction(new TwigFunction('path', [$this, 'getUrlFor']));
 
+        // Other Filters
         $environment->addFilter(new TwigFilter('arrayToString', [$this, 'filterArrayToString'], ['is_safe' => ['html']]));
         $environment->addFilter(new TwigFilter('mailAddress', [$this, 'filterMailAddressArray'], ['is_safe' => ['html']]));
     }
@@ -91,6 +103,11 @@ class TwigLoader implements TwigLoaderInterface
         /** @var SessionInterface $session */
         $session = $this->container->get(SessionInterface::class);
         return $session->getCsRfToken();
+    }
+
+    public function getCsrfTokenTag(): string
+    {
+        return "<input type='hidden' name='{$this->getCsrfTokenName()}' value='{$this->getCsrfTokenValue()}' />";
     }
 
     public function getFlashMessages(): array
