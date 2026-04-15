@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace AppDemo\Application\Controller;
 
 
-use WScore\Deca\Controllers\AbstractControllerInvoker;
+use WScore\Deca\Controllers\AbstractController;
 use Psr\Http\Message\ResponseInterface;
 
-class FlashController extends AbstractControllerInvoker
+class FlashController extends AbstractController
 {
     protected function determineMethod(): string
     {
