@@ -40,7 +40,6 @@ abstract class AbstractController
         $this->args = $args;
 
         if (method_exists($this, 'action')) {
-            /** @noinspection PhpVoidFunctionResultUsedInspection */
             /** @noinspection PhpMethodParametersCountMismatchInspection */
             return $this->action($this->args);
         }
@@ -59,6 +58,14 @@ abstract class AbstractController
     protected function getInputs(): array
     {
         return $this->request()->getparsedBody();
+    }
+
+    protected function post(?string $name, mixed $default = null): mixed
+    {
+        if ($name === null) {
+        return $this->request()->getparsedBody();
+        }
+        return $this->request()->getParsedBody()[$name] ?? $default;
     }
 
     protected function request(): ServerRequestInterface
@@ -94,6 +101,16 @@ abstract class AbstractController
         }
         /** @noinspection PhpUnhandledExceptionInspection */
         return new Redirect($this->container->get(RoutingInterface::class), $this->response, $this->request);
+    }
+
+    protected function redirectTo(string $routeName, array $data = [], array $queryParams = []): ResponseInterface
+    {
+        return $this->redirect()->toRoute($routeName, $data, $queryParams);
+    }
+
+    protected function back(): ResponseInterface
+    {
+        return $this->redirect()->toReferer();
     }
 
     protected function respond(): Respond
@@ -134,6 +151,11 @@ abstract class AbstractController
         $view = $this->getView();
         /** @noinspection PhpUnhandledExceptionInspection */
         return $view->drawTemplate($template, $data);
+    }
+
+    protected function json(mixed $data, int $status = 200): ResponseInterface
+    {
+        return $this->respond()->response(json_encode($data), $status, ['Content-Type' => 'application/json']);
     }
 
     protected function withInputs(array $inputs, array $errors = []): static
