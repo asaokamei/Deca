@@ -93,7 +93,7 @@ abstract class AbstractController
             }
         }
         /** @noinspection PhpUnhandledExceptionInspection */
-        return new Redirect($this->container->get(RoutingInterface::class), $this->response);
+        return new Redirect($this->container->get(RoutingInterface::class), $this->response, $this->request);
     }
 
     protected function respond(): Respond
