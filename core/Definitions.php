@@ -29,7 +29,7 @@ class Definitions
     public const APP_DIR = 'app-Dir';
     public const VAR_DIR = 'var-Dir';
 
-    /** Absolute path to the application settings.ini (set by getContainer()). */
+    /** Absolute path to the application settings.ini (used when {@see Setting} is resolved from this path). */
     public const SETTINGS_INI_PATH = 'settings-ini-path';
 
     /**

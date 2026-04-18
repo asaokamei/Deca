@@ -8,7 +8,6 @@ if (php_sapi_name() == 'cli-server') {
         return false;    // リクエストされたリソースをそのままの形式で扱います。
     }
 }
-SERVER:
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../appDemo/boot.php';
@@ -17,9 +16,11 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-$container = getContainer();
+$settingsIniPath = dirname(__DIR__) . '/settings.ini';
+$setting = getSettings($settingsIniPath);
+$definitions = getDefinitions($setting);
+$container = getContainer($definitions);
 $app = getApp($container);
-setRoutes($app);
+registerRoutes($app);
 
-// All OK!
 $app->run();

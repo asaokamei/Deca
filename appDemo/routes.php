@@ -13,8 +13,8 @@ use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 use WScore\Deca\Contracts\ViewInterface;
 
-if (!function_exists('setRoutes')) {
-    function setRoutes(App $app): void
+if (!function_exists('registerRoutes')) {
+    function registerRoutes(App $app): void
     {
         /**
          * set up main routes

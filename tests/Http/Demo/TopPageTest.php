@@ -20,9 +20,12 @@ class TopPageTest extends TestCase
     private function createApp(ServerRequestInterface $request): App
     {
         require_once __DIR__ . '/../../../appDemo/boot.php';
-        $container = getContainer(__DIR__ . '/../../../settings.ini');
+        $settingsIniPath = __DIR__ . '/../../../settings.ini';
+        $setting = getSettings($settingsIniPath);
+        $definitions = getDefinitions($setting);
+        $container = getContainer($definitions);
         $app = getApp($container);
-        setRoutes($app);
+        registerRoutes($app);
 
         return $app;
     }

@@ -53,9 +53,11 @@ class FlashControllerTest extends TestCase
         $session = new Session($this->sessionData);
         $definitions->setValue(Session::class, $session);
 
-        $container = getContainer(null, $definitions);
+        $setting = getSettings(__DIR__ . '/../../../settings.ini');
+        $definitions = getDefinitions($setting, $definitions);
+        $container = getContainer($definitions);
         $app = getApp($container);
-        setRoutes($app);
+        registerRoutes($app);
 
         return $app;
     }

@@ -9,7 +9,6 @@ use Slim\App;
 use WScore\Deca\Services\Session;
 use WScore\Deca\Definitions;
 use Nyholm\Psr7\Factory\Psr17Factory;
-use WScore\Deca\Services\Setting;
 
 class FormControllerTest extends TestCase
 {
@@ -37,20 +36,18 @@ class FormControllerTest extends TestCase
     {
         require_once __DIR__ . '/../../../appDemo/boot.php';
 
+        $setting = getSettings(__DIR__ . '/../../../settings.ini');
+        $setting->addSettings(['display_errors' => $displayErrors]);
+
         $definitions = new Definitions();
-        // セッションをテスト用の配列で初期化し、参照渡しで永続化
         $session = new Session($this->sessionData);
         $definitions->setValue(Session::class, $session);
-        
-        // エラー詳細表示設定を上書きするために、新しいSettingを作成して注入
-        $setting = Setting::forge(__DIR__ . '/../../../settings.ini');
-        $setting->addSettings(['display_errors' => $displayErrors]);
-        $definitions->setValue(Setting::class, $setting);
 
-        $container = getContainer(null, $definitions);
-        
+        $definitions = getDefinitions($setting, $definitions);
+        $container = getContainer($definitions);
+
         $app = getApp($container);
-        setRoutes($app);
+        registerRoutes($app);
 
         return $app;
     }
