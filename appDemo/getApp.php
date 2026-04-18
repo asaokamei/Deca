@@ -22,7 +22,7 @@ if (!function_exists('getApp')) {
         $app->add(AppMiddleware::class);
 
         $settings = $container->get(Setting::class);
-        $displayErrorDetails = (bool) ($settings['DISPLAY_ERRORS'] ?? false);
+        $displayErrorDetails = $settings->isDebug();
         $errorMiddleware = $app->addErrorMiddleware(
             $displayErrorDetails,
             true,

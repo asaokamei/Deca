@@ -18,7 +18,7 @@
 
 `getApp()` で `addErrorMiddleware` を設定し、HTML は **`SimpleErrorHandler`**（`core/Handlers/SimpleErrorHandler.php`）を使用。
 
-`DISPLAY_ERRORS`（`settings.ini`）が有効なとき、詳細エラーが表示される想定。
+`APP_DEBUG`（`settings.ini`）が有効なとき、詳細エラーが表示される想定（Slim のエラーミドルウェア）。
 
 ## 起動前の致命的エラー（`error.php`）
 

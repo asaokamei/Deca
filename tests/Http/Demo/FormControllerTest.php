@@ -31,12 +31,12 @@ class FormControllerTest extends TestCase
         return $request;
     }
 
-    private function createApp(bool $displayErrors = false): App
+    private function createApp(bool $appDebug = false): App
     {
         require_once __DIR__ . '/../../../appDemo/boot.php';
 
         $setting = getSettings(__DIR__ . '/../../../settings.ini');
-        $setting->addSettings(['DISPLAY_ERRORS' => $displayErrors]);
+        $setting->addSettings(['APP_DEBUG' => $appDebug]);
 
         $definitions = getDefinitions($setting);
         $definitions->setValue(Session::class, new Session($this->sessionData));
@@ -172,7 +172,7 @@ class FormControllerTest extends TestCase
 
     public function test_onPost_csrf_failure()
     {
-        // SimpleErrorHandler を確実に使うために displayErrors = false
+        // SimpleErrorHandler を確実に使うために APP_DEBUG = false
         $app = $this->createApp(false);
         
         $postData = [

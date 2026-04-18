@@ -10,7 +10,7 @@
 
 - `ArrayAccess` / `get($key)` / `__get` でプロパティ風アクセス。  
 - **`isProduction()`** — `APP_ENV` が `production` / `prod` なら true。  
-- **`isDebug()`** — `APP_DEBUG`。  
+- **`isDebug()`** — `APP_DEBUG`（`getApp()` で Slim の `addErrorMiddleware` の `displayErrorDetails` に使う）。  
 - **`appEnv()`** — `APP_ENV` を正規化した環境名（例: dev / production）。
 
 ## サンプル（`settings.ini`）
@@ -20,7 +20,6 @@
 APP_ENV = dev
 APP_NAME = deca-demo
 APP_DEBUG = true
-DISPLAY_ERRORS = true
 MAILER_DSN = null://null
 ```
 
@@ -28,7 +27,6 @@ MAILER_DSN = null://null
 
 `Definitions` や `getApp()` で参照される例:
 
-- **`DISPLAY_ERRORS`** — Slim エラーミドルウェアの詳細表示。  
 - **`PDO_DSN` / `PDO_USER` / `PDO_PASS`** — `PDO::class` を使う場合（未設定だと接続時にエラーになり得る）。  
 - **メール** — Symfony Mailer の `MAILER_DSN`、PHPMailer 用のキーは `core/Definitions.php` の `PHPMailer::class` 定義を参照（プロジェクトの `settings.ini` のキー名と一致させる）。
 

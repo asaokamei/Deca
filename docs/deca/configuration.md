@@ -10,7 +10,7 @@ The project root **`settings.ini`** (path from `getContainer`’s first argument
 
 - `ArrayAccess` / `get($key)` / `__get` for key access.  
 - **`isProduction()`** — true when `APP_ENV` is `production` or `prod`.  
-- **`isDebug()`** — `APP_DEBUG`.  
+- **`isDebug()`** — `APP_DEBUG` (Slim `addErrorMiddleware` uses this for `displayErrorDetails` in `getApp()`).  
 - **`appEnv()`** — normalized environment name from `APP_ENV` (e.g. dev / production).
 
 ## Sample `settings.ini`
@@ -20,7 +20,6 @@ The project root **`settings.ini`** (path from `getContainer`’s first argument
 APP_ENV = dev
 APP_NAME = deca-demo
 APP_DEBUG = true
-DISPLAY_ERRORS = true
 MAILER_DSN = null://null
 ```
 
@@ -28,7 +27,6 @@ MAILER_DSN = null://null
 
 Examples used from `Definitions` or `getApp()`:
 
-- **`DISPLAY_ERRORS`** — detail level for Slim’s error middleware.  
 - **`PDO_DSN` / `PDO_USER` / `PDO_PASS`** — when using `PDO::class` (missing values can fail at connect time).  
 - **Mail** — Symfony Mailer `MAILER_DSN`; PHPMailer keys must match **`core/Definitions.php`** `PHPMailer::class` (align names with your `settings.ini`).
 

@@ -18,7 +18,7 @@ Typical flow:
 
 `getApp()` registers **`addErrorMiddleware`**; HTML errors use **`SimpleErrorHandler`** (`core/Handlers/SimpleErrorHandler.php`).
 
-When **`DISPLAY_ERRORS`** in `settings.ini` is enabled, detailed errors are shown.
+When **`APP_DEBUG`** in `settings.ini` is enabled, detailed errors are shown (Slim error middleware).
 
 ## Fatal errors before bootstrap (`error.php`)
 
