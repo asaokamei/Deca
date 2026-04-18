@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use WScore\Deca\Services\Session;
-use WScore\Deca\Definitions;
 use Nyholm\Psr7\Factory\Psr17Factory;
 
 class FormControllerTest extends TestCase
@@ -39,11 +38,8 @@ class FormControllerTest extends TestCase
         $setting = getSettings(__DIR__ . '/../../../settings.ini');
         $setting->addSettings(['display_errors' => $displayErrors]);
 
-        $definitions = new Definitions();
-        $session = new Session($this->sessionData);
-        $definitions->setValue(Session::class, $session);
-
-        $definitions = getDefinitions($setting, $definitions);
+        $definitions = getDefinitions($setting);
+        $definitions->setValue(Session::class, new Session($this->sessionData));
         $container = getContainer($definitions);
 
         $app = getApp($container);

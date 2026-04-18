@@ -17,12 +17,11 @@ use WScore\Deca\Views\Twig\ViewTwig;
 if (!function_exists('getDefinitions')) {
     /**
      * Build DI definitions for appDemo: paths, {@see Setting}, and interface aliases.
-     *
-     * @param Definitions|null $base Optional base (e.g. test overrides); merged with appDemo defaults.
+     * Tests can override entries afterward (e.g. {@see Session::class}) via {@see Definitions::setValue()}.
      */
-    function getDefinitions(Setting $setting, ?Definitions $base = null): Definitions
+    function getDefinitions(Setting $setting): Definitions
     {
-        $definitions = $base ?? new Definitions();
+        $definitions = new Definitions();
         $definitions->setValue(Definitions::APP_DIR, __DIR__);
         $definitions->setValue(Definitions::VAR_DIR, dirname(__DIR__) . '/var');
         $definitions->setValue(Setting::class, $setting);

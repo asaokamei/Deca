@@ -17,7 +17,6 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use WScore\Deca\Services\Setting;
 use WScore\Deca\Services\Session;
 use WScore\Deca\Contracts\SessionInterface;
-use WScore\Deca\Definitions;
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 use Psr\Log\LoggerInterface;
@@ -49,12 +48,9 @@ class FlashControllerTest extends TestCase
     {
         require_once __DIR__ . '/../../../appDemo/boot.php';
 
-        $definitions = new Definitions();
-        $session = new Session($this->sessionData);
-        $definitions->setValue(Session::class, $session);
-
         $setting = getSettings(__DIR__ . '/../../../settings.ini');
-        $definitions = getDefinitions($setting, $definitions);
+        $definitions = getDefinitions($setting);
+        $definitions->setValue(Session::class, new Session($this->sessionData));
         $container = getContainer($definitions);
         $app = getApp($container);
         registerRoutes($app);
