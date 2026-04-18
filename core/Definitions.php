@@ -157,7 +157,7 @@ class Definitions
             LoggerInterface::class => function(ContainerInterface $container) {
                 $settings = $container->get(Setting::class);
 
-                $logger = new Logger($settings['app_name']??'decaApp');
+                $logger = new Logger($settings['APP_NAME'] ?? 'decaApp');
 
                 $processor = new UidProcessor();
                 $logger->pushProcessor($processor);

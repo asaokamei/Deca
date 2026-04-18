@@ -41,7 +41,7 @@ abstract class ControllerTestCase extends TestCase
         $builder = new ContainerBuilder();
         $builder->addDefinitions([
             Setting::class => new Setting([
-                'display_errors' => true,
+                'DISPLAY_ERRORS' => true,
             ]),
             LoggerInterface::class => new NullLogger(),
             SessionInterface::class => function () {

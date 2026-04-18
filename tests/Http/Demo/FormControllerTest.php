@@ -36,7 +36,7 @@ class FormControllerTest extends TestCase
         require_once __DIR__ . '/../../../appDemo/boot.php';
 
         $setting = getSettings(__DIR__ . '/../../../settings.ini');
-        $setting->addSettings(['display_errors' => $displayErrors]);
+        $setting->addSettings(['DISPLAY_ERRORS' => $displayErrors]);
 
         $definitions = getDefinitions($setting);
         $definitions->setValue(Session::class, new Session($this->sessionData));

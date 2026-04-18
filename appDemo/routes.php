@@ -12,6 +12,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 use WScore\Deca\Contracts\ViewInterface;
+use WScore\Deca\Services\Setting;
 
 if (!function_exists('registerRoutes')) {
     function registerRoutes(App $app): void
@@ -22,8 +23,10 @@ if (!function_exists('registerRoutes')) {
         $app->get('/', function (Request $request, Response $response) {
             $view = $this->get(ViewInterface::class);
             $view->setRequest($request);
+            $setting = $this->get(Setting::class);
+
             return $view->render($response, 'hello.twig', [
-                'app_name' => $_ENV['APP_NAME'] ?? 'APP_NAME is blank!',
+                'app_name' => $setting->get('APP_NAME') ?? 'APP_NAME is blank!',
             ]);
         })->setName('hello');
 

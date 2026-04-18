@@ -18,9 +18,9 @@ The project root **`settings.ini`** (path from `getContainer`’s first argument
 ```
 [Application]
 APP_ENV = dev
-app_name = deca-demo
+APP_NAME = deca-demo
 APP_DEBUG = true
-display_errors = true
+DISPLAY_ERRORS = true
 MAILER_DSN = null://null
 ```
 
@@ -28,7 +28,7 @@ MAILER_DSN = null://null
 
 Examples used from `Definitions` or `getApp()`:
 
-- **`display_errors`** — detail level for Slim’s error middleware.  
+- **`DISPLAY_ERRORS`** — detail level for Slim’s error middleware.  
 - **`PDO_DSN` / `PDO_USER` / `PDO_PASS`** — when using `PDO::class` (missing values can fail at connect time).  
 - **Mail** — Symfony Mailer `MAILER_DSN`; PHPMailer keys must match **`core/Definitions.php`** `PHPMailer::class` (align names with your `settings.ini`).
 

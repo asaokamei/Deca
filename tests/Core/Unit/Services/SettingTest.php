@@ -96,7 +96,7 @@ class SettingTest extends TestCase
         $setting = Setting::forge($iniPath, ['EXTRA' => 'from-env']);
         $this->assertTrue($setting->has('APP_ENV'));
         $this->assertEquals('test', $setting->get('APP_ENV'));
-        $this->assertEquals('deca-test', $setting->get('app_name'));
+        $this->assertEquals('deca-test', $setting->get('APP_NAME'));
         $this->assertEquals('from-env', $setting->get('EXTRA'));
     }
 
@@ -105,10 +105,10 @@ class SettingTest extends TestCase
         $iniPath = __DIR__ . '/../../../Fixtures/settings.test.ini';
         $setting = Setting::forge($iniPath, [
             'APP_ENV' => 'production',
-            'app_name' => 'from-env-only',
+            'APP_NAME' => 'from-env-only',
         ]);
         $this->assertEquals('production', $setting->get('APP_ENV'));
-        $this->assertEquals('from-env-only', $setting->get('app_name'));
+        $this->assertEquals('from-env-only', $setting->get('APP_NAME'));
     }
 
     public function testForgeThrowsWhenFileMissing(): void
