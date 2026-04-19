@@ -15,11 +15,13 @@
 
 | Path | Role |
 |------|------|
-| `boot.php` | Loads `error.php`, `getContainer.php`, `getApp.php`, `routes.php`. |
+| `boot.php` | Loads `error.php`, `getSettings.php`, `getDefinitions.php`, `getContainer.php`, `getApp.php`, `routes.php` (each `require_once`). |
 | `error.php` | Error / shutdown / uncaught handlers **before** the container (`ShutdownHandler`). |
-| `getContainer.php` | `getContainer(?string $settingsIniPath = null, ?Definitions $definitions = null)`—sets `SETTINGS_INI_PATH` / `APP_DIR` / `VAR_DIR` and aliases, builds PHP-DI. |
-| `getApp.php` | `getApp()`: builds Slim `App`, middleware, error handling. |
-| `routes.php` | `setRoutes()`: route definitions only. |
+| `getSettings.php` | `getSettings(string $settingsIniPath)`: `Setting::forge` (ini + `$_ENV`). |
+| `getDefinitions.php` | `getDefinitions(Setting $setting)`: `APP_DIR`, `VAR_DIR`, injected `Setting`, interface aliases on top of core `Definitions`. |
+| `getContainer.php` | `getContainer(Definitions $definitions)`: PHP-DI `ContainerBuilder` only. |
+| `getApp.php` | `getApp(ContainerInterface $container)`: Slim `App`, middleware, error handling. |
+| `routes.php` | `registerRoutes(App $app)`: route definitions only. |
 | `Application/Controller/` | Sample controllers (`AbstractController`, etc.). |
 | `Application/Action/` | Small single-action classes. |
 | `Application/Forms/` | Sample validators (LeanValidator). |

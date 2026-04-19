@@ -2,9 +2,9 @@
 
 ## File
 
-The project root **`settings.ini`** (path from `getContainer`’s first argument or the default) is read with **`parse_ini_file`** and merged with **`$_ENV`**. For duplicate keys, **`$_ENV` wins** (`array_merge($ini, $env)` inside `Setting::forge`).
+The project root **`settings.ini`** is loaded by path chosen in **`public/index.php`** (typically **`dirname(__DIR__) . '/settings.ini'`** from `public/`). **`getSettings($path)`** uses **`parse_ini_file`** and merges with **`$_ENV`**; duplicate keys **`$_ENV` wins** (`array_merge($ini, $env)` inside **`Setting::forge`**).
 
-**`Setting` is created only inside the container factory** (via `Definitions::SETTINGS_INI_PATH`). `public/index.php` does **not** call `Setting::forge` separately.
+**`Setting`** is built in **`getSettings()`**, then registered on **`Definitions`** in **`getDefinitions($setting)`** (appDemo overrides the core **`Definitions`** factory for **`Setting::class`** with that instance).
 
 ## `Setting` class (`WScore\Deca\Services\Setting`)
 

@@ -2,9 +2,9 @@
 
 ## ファイル
 
-プロジェクトルートの **`settings.ini`**（パスは `getContainer` の第 1 引数またはデフォルト）を **`parse_ini_file`** で読み込み、**環境変数 `$_ENV` の値とマージ**する。同じキーは **`$_ENV`（環境変数）が優先**される（`Setting::forge` 内で `array_merge($ini, $env)`）。
+プロジェクトルートの **`settings.ini`** は **`public/index.php`** でパスを決めて読み込む（多くの場合 **`dirname(__DIR__) . '/settings.ini'`**）。**`getSettings($path)`** が **`parse_ini_file`** と環境変数 **`$_ENV`** をマージする。同じキーは **`$_ENV` が優先**（`Setting::forge` 内の `array_merge($ini, $env)`）。
 
-**`Setting` の生成はコンテナ内のファクトリのみ**（`Definitions::SETTINGS_INI_PATH` を参照）。`public/index.php` で別途 `Setting::forge` することはない。
+**`Setting`** は **`getSettings()`** で生成し、**`getDefinitions($setting)`** で **`Definitions`** に登録する（appDemo はコアの **`Setting::class`** ファクトリを、このインスタンスで上書きする）。
 
 ## `Setting` クラス（`WScore\Deca\Services\Setting`）
 

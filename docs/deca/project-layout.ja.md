@@ -15,11 +15,13 @@
 
 | パス | 役割 |
 |------|------|
-| `boot.php` | `error.php`、`getContainer.php`、`getApp.php`、`routes.php` を読み込む。 |
+| `boot.php` | `error.php`、`getSettings.php`、`getDefinitions.php`、`getContainer.php`、`getApp.php`、`routes.php` をそれぞれ `require_once`。 |
 | `error.php` | 起動**前**のエラー・シャットダウン・未捕捉例外のハンドラ（`ShutdownHandler`）。 |
-| `getContainer.php` | `getContainer(?string $settingsIniPath = null, ?Definitions $definitions = null)` — `SETTINGS_INI_PATH` / `APP_DIR` / `VAR_DIR` とエイリアスを載せて PHP-DI ビルド。 |
-| `getApp.php` | `getApp()` 関数: Slim `App` 生成とミドルウェア・エラー処理。 |
-| `routes.php` | `setRoutes()` 関数: ルート定義のみ。 |
+| `getSettings.php` | `getSettings(string $settingsIniPath)` — `Setting::forge`（ini + `$_ENV`）。 |
+| `getDefinitions.php` | `getDefinitions(Setting $setting)` — コアの `Definitions` に `APP_DIR` / `VAR_DIR` / 注入した `Setting` / エイリアスを載せる。 |
+| `getContainer.php` | `getContainer(Definitions $definitions)` — PHP-DI のビルドのみ。 |
+| `getApp.php` | `getApp(ContainerInterface $container)` — Slim `App` とミドルウェア・エラー処理。 |
+| `routes.php` | `registerRoutes(App $app)` — ルート定義のみ。 |
 | `Application/Controller/` | サンプルコントローラ（`AbstractController` 継承など）。 |
 | `Application/Action/` | ルート 1 アクション向けの小さなクラス例。 |
 | `Application/Forms/` | バリデータ例（LeanValidator）。 |

@@ -19,7 +19,7 @@ Deca **does not replace Slim**. Routing, middleware, and error middleware use Sl
 [ Browser ]
      │
      ▼
-public/index.php  … session, getContainer() (builds Setting), Slim, routes
+public/index.php  … session, getSettings → getDefinitions → getContainer, Slim, registerRoutes
      │
      ▼
 Slim App … middleware (LIFO) → route handler
@@ -39,19 +39,25 @@ ViewInterface (Twig), Session, Messages, etc. (from the container)
 2. **`session_start()`**  
    Session runs before the container so CSRF and flash work.
 
-3. **`getContainer(?string $settingsIniPath = null, ?Definitions $definitions = null)`** (`appDemo/getContainer.php`)  
-   Puts **`Definitions::SETTINGS_INI_PATH`** (defaults to project root `settings.ini`), `APP_DIR` (= `appDemo`), `VAR_DIR`, and interface aliases into `Definitions`, then builds the PHP-DI `Container`.
+3. **`getSettings($settingsIniPath)`** (`appDemo/getSettings.php`)  
+   Loads **`settings.ini`** via **`Setting::forge`** (merged with **`$_ENV`**).
 
-4. **`getApp($container)`** (`appDemo/getApp.php`)  
+4. **`getDefinitions($setting)`** (`appDemo/getDefinitions.php`)  
+   Builds **`Definitions`**: **`APP_DIR`** (= `appDemo`), **`VAR_DIR`**, the **`Setting`** instance, and appDemo **`setAlias()`** entries, on top of **`WScore\Deca\Definitions`** defaults.
+
+5. **`getContainer($definitions)`** (`appDemo/getContainer.php`)  
+   Runs **PHP-DI** `ContainerBuilder` only.
+
+6. **`getApp($container)`** (`appDemo/getApp.php`)  
    Builds Slim `App` with `AppFactory::createFromContainer`.  
    `$app->add()` order: `RoutingMiddleware`, `CsRfGuard`, `AppMiddleware` (Slim is **LIFO**, so **runtime order** is `AppMiddleware` → `CsRfGuard` → `RoutingMiddleware`).  
    Then **error middleware**.  
    Finally registers **`App`** and **`RouteCollectorInterface`** on the container.
 
-5. **`setRoutes($app)`** (`appDemo/routes.php`)  
+7. **`registerRoutes($app)`** (`appDemo/routes.php`)  
    Defines routes with `$app->get()` / `group()`, etc.
 
-6. **`$app->run()`**  
+8. **`$app->run()`**  
    Slim handles the request and returns a response.
 
 ## Notes for implementers

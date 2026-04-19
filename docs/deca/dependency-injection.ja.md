@@ -2,13 +2,13 @@
 
 ## 概要
 
-`appDemo/getContainer.php` の `getContainer()` が **PHP-DI** の `ContainerBuilder` でコンテナを構築する。  
-定義の土台は **`WScore\Deca\Definitions`**（`core/Definitions.php`）の `getDefaults()` で、プロジェクト側で **`setValue` / `setAlias` で上書き・追加**する。
+**`appDemo/getContainer.php`** は、組み立て済みの **`Definitions`** に対して **PHP-DI** の `ContainerBuilder` を実行するだけである。  
+定義の土台は **`WScore\Deca\Definitions`**（`core/Definitions.php`）の `getDefaults()` で、**`appDemo/getDefinitions.php`** の **`getDefinitions($setting)`** が **`APP_DIR`** / **`VAR_DIR`** / 注入する **`Setting`** / **`setAlias()`** を追加する。
 
 ## `Definitions` がデフォルトで登録するもの（例）
 
 - `ResponseFactoryInterface` — PSR-17 ファクトリ  
-- `Setting::class` — `Setting::forge($container->get(Definitions::SETTINGS_INI_PATH), $_ENV)`。パスは `getContainer()` が **`Definitions::SETTINGS_INI_PATH`** に設定（省略時はプロジェクトルートの `settings.ini`）  
+- `Setting::class` — コアでは `Setting::forge($container->get(Definitions::SETTINGS_INI_PATH), $_ENV)`。**appDemo** は **`getSettings()`** のあと **`setValue(Setting::class, $setting)`** で上書きする  
 - `Environment::class`（Twig）— ローダーは `{APP_DIR}/templates/`、本番時は `var/cache` にキャッシュ  
 - `ViewTwig::class` / `ViewInterface` へのエイリアス  
 - `Session::class` / `SessionInterface`  
@@ -19,13 +19,13 @@
 
 実際のキー名は **`core/Definitions.php` を参照**すること。
 
-## プロジェクト側での差し替え（`getContainer()`）
+## プロジェクト側での配線（`getDefinitions()`）
 
-`getContainer()` 内で例として行っていること:
+**`getDefinitions(Setting $setting)`** で行っていることの例:
 
-- `Definitions::SETTINGS_INI_PATH` に `settings.ini` の絶対パス（第 1 引数が null なら `dirname(appDemo)/settings.ini`）  
-- `Definitions::APP_DIR` に `__DIR__`（= `appDemo`）を設定  
+- `Definitions::APP_DIR` に `__DIR__`（= `appDemo`）  
 - `Definitions::VAR_DIR` にプロジェクトの `var` パス  
+- **`Setting::class`** に **`getSettings()`** で得たインスタンスを登録  
 - **`setAlias()`** でインターフェース → 実装の対応を明示:
   - `RoutingInterface` → `Routing`
   - `SessionInterface` → `Session`
@@ -33,7 +33,7 @@
   - `ViewInterface` → `ViewTwig`
   - `MailerInterface` → `PhpMailer`（例）
 
-別のメール実装やビューエンジンに差し替えるときは、**ここでエイリアス先を変える**か、`Definitions` に定義を追加する。
+別のメール実装やビューエンジンに差し替えるときは、**ここでエイリアス先を変える**か、`Definitions` に **`setValue` / `load()`** で追加する。テストでは **`getDefinitions($setting)` のあと** **`$definitions->setValue(Session::class, ...)`** などしてから **`getContainer($definitions)`** とする。
 
 ## コンテナに Slim が登録されるタイミング
 
@@ -47,6 +47,6 @@
 
 ## AI がサービスを追加するとき
 
-1. `Definitions` にクロージャを追加するか、`getContainer()` で `new Definitions()` に `load()` する。  
+1. `Definitions` にクロージャを追加するか、**`getDefinitions()`** で載せたうえで **`getContainer($definitions)`** する。  
 2. コントローラのコンストラクタで型ヒントすれば PHP-DI が自動注入（ルートでクラス名を指定する場合）。  
 3. ルートクロージャ内では `$this->get(インターフェース::class)`（Slim のアプリバインディング）を使える。

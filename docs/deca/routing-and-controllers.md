@@ -2,7 +2,7 @@
 
 ## Where routes live
 
-In **`appDemo/routes.php`**, inside **`setRoutes(App $app): void`**, using Slim 4’s **`$app->get()` / `post()` / `any()` / `group()`**, etc.
+In **`appDemo/routes.php`**, inside **`registerRoutes(App $app): void`**, using Slim 4’s **`$app->get()` / `post()` / `any()` / `group()`**, etc.
 
 ## Route callable shapes
 

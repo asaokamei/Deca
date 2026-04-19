@@ -22,9 +22,9 @@ Deca は **Slim 4** を HTTP 層に使い、`core/`（名前空間 `WScore\Deca`
 
 ## 最短の全体像（30 秒）
 
-1. **入口**: `public/index.php` が Composer のオートロード、`appDemo/boot.php`、セッション、**`getContainer()`**（内部で `settings.ini` パスを登録し `Setting` を生成）→ `getApp()` → `setRoutes()` を順に実行し、**`$app->run()`** で Slim がリクエストを処理する。
-2. **アプリ固有コード**: ルートは `appDemo/routes.php` の `setRoutes()`。コントローラは `AppDemo\Application\...`、Twig は `appDemo/templates/`。
+1. **入口**: `public/index.php` が Composer のオートロード、`appDemo/boot.php`、セッションのあと、**`getSettings` → `getDefinitions` → `getContainer` → `getApp` → `registerRoutes`** の順で組み立て、**`$app->run()`** で Slim がリクエストを処理する。
+2. **アプリ固有コード**: ルートは `appDemo/routes.php` の **`registerRoutes()`**。コントローラは `AppDemo\Application\...`、Twig は `appDemo/templates/`。
 3. **フレームワーク寄りの共通処理**: `core/` のミドルウェア、抽象コントローラ、Twig ラッパー、セッション、ログなど。
-4. **差し替え**: PHP-DI の定義は `Definitions` と `getContainer()` の `setAlias()` でまとめて調整する（例: `ViewInterface` → `ViewTwig`）。
+4. **差し替え**: **`getDefinitions()`** で組み立てた **`Definitions`** に対して `setAlias()` などを調整し（例: `ViewInterface` → `ViewTwig`）、**`getContainer($definitions)`** に渡す。
 
 詳細は各ファイルを参照してください。

@@ -2,13 +2,13 @@
 
 ## Overview
 
-`appDemo/getContainer.php` builds the container with **PHP-DI**’s `ContainerBuilder`.  
-The base definitions live in **`WScore\Deca\Definitions`** (`core/Definitions.php`) `getDefaults()`; the app overrides or extends them with **`setValue` / `setAlias`**.
+**`appDemo/getContainer.php`** only runs **PHP-DI**’s `ContainerBuilder` on an assembled **`Definitions`** object.  
+The base definitions live in **`WScore\Deca\Definitions`** (`core/Definitions.php`) `getDefaults()`; **`getDefinitions($setting)`** in **`appDemo/getDefinitions.php`** adds **`APP_DIR`**, **`VAR_DIR`**, the **`Setting`** instance, and **`setAlias()`** entries.
 
 ## What `Definitions` registers by default (examples)
 
 - `ResponseFactoryInterface` — PSR-17 factory  
-- `Setting::class` — `Setting::forge($container->get(Definitions::SETTINGS_INI_PATH), $_ENV)`; path is set by **`getContainer()`** on **`Definitions::SETTINGS_INI_PATH`** (default: project root `settings.ini`)  
+- `Setting::class` — in core, **`Setting::forge($container->get(Definitions::SETTINGS_INI_PATH), $_ENV)`**; **appDemo** overrides this by **`setValue(Setting::class, $setting)`** after **`getSettings()`**  
 - `Environment::class` (Twig) — loader `{APP_DIR}/templates/`, cache under `var/cache` in production  
 - `ViewTwig::class` / alias to `ViewInterface`  
 - `Session::class` / `SessionInterface`  
@@ -19,13 +19,13 @@ The base definitions live in **`WScore\Deca\Definitions`** (`core/Definitions.ph
 
 See **`core/Definitions.php`** for exact keys.
 
-## Project overrides (`getContainer()`)
+## Project wiring (`getDefinitions()`)
 
-`getContainer()` typically:
+**`getDefinitions(Setting $setting)`** typically:
 
-- Sets **`Definitions::SETTINGS_INI_PATH`** to the absolute `settings.ini` path (default: `dirname(appDemo)/settings.ini` when the first argument is null)  
 - Sets **`Definitions::APP_DIR`** to `__DIR__` (= `appDemo`)  
 - Sets **`Definitions::VAR_DIR`** to the project `var` directory  
+- Sets **`Setting::class`** to the instance from **`getSettings()`**  
 - Uses **`setAlias()`** for interface → implementation, e.g.:  
   - `RoutingInterface` → `Routing`  
   - `SessionInterface` → `Session`  
@@ -33,7 +33,7 @@ See **`core/Definitions.php`** for exact keys.
   - `ViewInterface` → `ViewTwig`  
   - `MailerInterface` → `PhpMailer` (example)
 
-To swap mail or the view engine, **change aliases here** or add definitions to `Definitions`.
+To swap mail or the view engine, **change aliases here** or add **`setValue` / `load()`** on **`Definitions`** before **`getContainer($definitions)`**. In tests, call **`getDefinitions($setting)`** then **`$definitions->setValue(Session::class, ...)`** (etc.) before **`getContainer`**.
 
 ## When Slim is registered on the container
 
@@ -47,6 +47,6 @@ Middleware that needs `App` therefore resolves only **after** `getApp()` complet
 
 ## Adding services
 
-1. Add closures to `Definitions`, or `load()` extra definitions from `getContainer()`.  
+1. Add closures to `Definitions`, or extend them in **`getDefinitions()`** before **`getContainer($definitions)`**.  
 2. Type-hint constructors on controllers; PHP-DI autowires when the route uses a class name.  
 3. In route closures, use `$this->get(FooInterface::class)` (Slim app binding).

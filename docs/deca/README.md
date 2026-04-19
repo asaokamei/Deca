@@ -22,9 +22,9 @@ These pages are written for **humans and AI** building sites on Deca: architectu
 
 ## Big picture (30 seconds)
 
-1. **Entry:** `public/index.php` loads Composer autoload, `appDemo/boot.php`, starts the session, calls **`getContainer()`** (registers `settings.ini` and builds `Setting`), then `getApp()` → `setRoutes()`, and **`$app->run()`** lets Slim handle the request.
-2. **App code:** Routes in `setRoutes()` in `appDemo/routes.php`. Controllers under `AppDemo\Application\...`, Twig under `appDemo/templates/`.
+1. **Entry:** `public/index.php` loads Composer autoload, `appDemo/boot.php`, starts the session, then **`getSettings`** → **`getDefinitions`** → **`getContainer`** → **`getApp`** → **`registerRoutes`**, and **`$app->run()`** lets Slim handle the request.
+2. **App code:** Routes in **`registerRoutes()`** in `appDemo/routes.php`. Controllers under `AppDemo\Application\...`, Twig under `appDemo/templates/`.
 3. **Shared stack:** Middleware, abstract controller, Twig wrapper, session, logging, etc. in `core/`.
-4. **Swapping:** Adjust PHP-DI via `Definitions` and `getContainer()`’s `setAlias()` (e.g. `ViewInterface` → `ViewTwig`).
+4. **Swapping:** Adjust PHP-DI via **`getDefinitions()`** (e.g. `setAlias()` for `ViewInterface` → `ViewTwig`) before **`getContainer($definitions)`**.
 
 See each file for details.

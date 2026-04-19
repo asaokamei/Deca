@@ -2,7 +2,7 @@
 
 ## ルート定義の場所
 
-**`appDemo/routes.php`** の `setRoutes(App $app): void` 内で、`$app->get()` / `post()` / `any()` / `group()` など **Slim 4 の API** で定義する。
+**`appDemo/routes.php`** の **`registerRoutes(App $app): void`** 内で、`$app->get()` / `post()` / `any()` / `group()` など **Slim 4 の API** で定義する。
 
 ## ルート callable の形
 
