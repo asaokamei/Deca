@@ -10,6 +10,28 @@
 | `var/` | Logs (`app.log`), Twig cache (production), raw error logs, etc.—must be writable. |
 | `settings.ini` | App name, environment, debug, mail, etc. (`parse_ini_file` merged with `$_ENV`). |
 | `vendor/` | Composer dependencies. |
+| `app/` | **Not in the stock repo—create if you want.** Often holds the main web app tree (boot, routes, controllers, templates) when you replace or split from `appDemo/`. |
+| `src/` | **Not in the stock repo—create if you want.** Often holds domain logic, models, or other code kept separate from the HTTP / Slim layer. |
+
+Names and layout are up to you; the table only sketches a common split.
+
+## Composer `autoload` (example)
+
+Deca ships with `WScore\Deca\` → `core/`. When you add **`app/`** and **`src/`**, register PSR-4 roots in **`composer.json`** (then run **`composer dump-autoload`**):
+
+```json
+{
+    "autoload": {
+        "psr-4": {
+            "WScore\\Deca\\": "core/",
+            "App\\": "app/",
+            "MyModel\\": "src/"
+        }
+    }
+}
+```
+
+Adjust namespaces and folder names to match your project; **`App\\`** / **`MyModel\\`** are placeholders.
 
 ## Inside `appDemo/` (current layout)
 
@@ -37,7 +59,7 @@
 
 ## Checklist for a new site
 
-1. Rename `appDemo` to **`app`**, `src`, or similar; update `require` in `public/index.php` and paths passed as `Definitions::APP_DIR`.  
-2. Add your app’s PSR-4 namespace in `composer.json` `autoload`.  
+1. Decide where your app code lives: e.g. rename **`appDemo/`** to **`app/`**, or introduce **`app/`** (HTTP-facing) and **`src/`** (domain/models) as **new directories you create**; update `require` in `public/index.php` and **`Definitions::APP_DIR`**.  
+2. Add PSR-4 mappings in **`composer.json`** (see example above), then **`composer dump-autoload`**.  
 3. Replace namespaces and routes in `routes.php` for your site.  
 4. Edit `templates/` and ensure `var/` permissions.
