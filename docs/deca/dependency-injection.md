@@ -13,6 +13,7 @@ The base definitions live in **`WScore\Deca\Definitions`** (`core/Definitions.ph
 - `ViewTwig::class` / alias to `ViewInterface`  
 - `Session::class` / `SessionInterface`  
 - `Messages::class` / `MessageInterface`  
+- `IdentityResolverInterface` → `NullIdentityResolver`; `IdentityUnauthorizedHandlerInterface` → `DefaultIdentityUnauthorizedHandler`; **`ResolveIdentityMiddleware`** / **`RequireIdentityMiddleware`** (see **[auth-integration.md](auth-integration.md)**)  
 - `LoggerInterface` — Monolog, `var/app.log`  
 - `PDO::class` — from `PDO_DSN` etc. in `settings.ini` (configure keys when used)  
 - `Mailer::class` (Symfony Mailer), `PHPMailer::class`, etc.

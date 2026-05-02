@@ -13,6 +13,7 @@
 - `ViewTwig::class` / `ViewInterface` へのエイリアス  
 - `Session::class` / `SessionInterface`  
 - `Messages::class` / `MessageInterface`  
+- `IdentityResolverInterface` → `NullIdentityResolver`、`IdentityUnauthorizedHandlerInterface` → `DefaultIdentityUnauthorizedHandler`、**`ResolveIdentityMiddleware`** / **`RequireIdentityMiddleware`**（詳細は **[auth-integration.ja.md](auth-integration.ja.md)**）  
 - `LoggerInterface` — Monolog、`var/app.log`  
 - `PDO::class` — `settings.ini` の `PDO_DSN` 等（利用時はキーを設定すること）  
 - `Mailer::class`（Symfony Mailer）、`PHPMailer::class` など

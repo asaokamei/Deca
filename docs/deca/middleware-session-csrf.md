@@ -33,3 +33,7 @@ Forms must submit the token name and value in hidden fields—see templates and 
 ## JSON APIs without CSRF
 
 For **POST JSON APIs that skip CSRF**, you must **exclude routes or use a separate group**—today `CsRfGuard` applies globally to POST. Adjust middleware registration in **`getApp()`** if needed.
+
+## Optional identity (authentication)
+
+Deca can attach an **`IdentityInterface`** to each request via **`ResolveIdentityMiddleware`** and protect routes with **`RequireIdentityMiddleware`**. Stack placement still follows the LIFO rules above—see **[auth-integration.md](auth-integration.md)**.

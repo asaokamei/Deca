@@ -33,3 +33,7 @@ Slim 4 はミドルウェアを **LIFO（後から登録したものが先に実
 ## AI が API だけを追加する場合
 
 - **JSON API で POST かつ CSRF を使わない**場合は、`CsRfGuard` の対象から外す・別グループにするなど **ルート設計が必要**（現状はグローバルに POST を検証）。変更時は `getApp()` のミドルウェア登録を編集する。
+
+## 任意の主体（認証）ミドルウェア
+
+リクエストに **`IdentityInterface`** を載せる **`ResolveIdentityMiddleware`** や、認証必須にする **`RequireIdentityMiddleware`** を足す場合も、上記の **LIFO** と同じ考え方で **`getApp()` の順序**を決める。詳細は **[auth-integration.ja.md](auth-integration.ja.md)**。

@@ -16,6 +16,7 @@ Deca は **Slim 4** を HTTP 層に使い、`core/`（名前空間 `WScore\Deca`
 | [dependency-injection.ja.md](dependency-injection.ja.md) | `Definitions`、PHP-DI、差し替え可能なインターフェース |
 | [routing-and-controllers.ja.md](routing-and-controllers.ja.md) | ルート定義、`AbstractController`、アクション |
 | [views-and-twig.ja.md](views-and-twig.ja.md) | Twig、`ViewInterface`、テンプレート配置 |
+| [auth-integration.ja.md](auth-integration.ja.md) | `IdentityInterface`、認証ミドルウェア、Twig の主体ヘルパー |
 | [middleware-session-csrf.ja.md](middleware-session-csrf.ja.md) | ミドルウェア、セッション、CSRF |
 | [configuration.ja.md](configuration.ja.md) | `settings.ini`、`Setting` クラス |
 | [validation-and-errors.ja.md](validation-and-errors.ja.md) | バリデーション、エラーハンドリング |

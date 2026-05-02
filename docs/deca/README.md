@@ -16,6 +16,7 @@ These pages are written for **humans and AI** building sites on Deca: architectu
 | [dependency-injection.md](dependency-injection.md) | `Definitions`, PHP-DI, swappable interfaces |
 | [routing-and-controllers.md](routing-and-controllers.md) | Routes, `AbstractController`, actions |
 | [views-and-twig.md](views-and-twig.md) | Twig, `ViewInterface`, templates |
+| [auth-integration.md](auth-integration.md) | `IdentityInterface`, auth middleware, Twig identity helpers |
 | [middleware-session-csrf.md](middleware-session-csrf.md) | Middleware, session, CSRF |
 | [configuration.md](configuration.md) | `settings.ini`, `Setting` |
 | [validation-and-errors.md](validation-and-errors.md) | Validation, error handling |

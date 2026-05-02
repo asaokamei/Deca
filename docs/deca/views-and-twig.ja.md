@@ -34,6 +34,10 @@ $view->setRequest($request);
 return $view->render($response, 'hello.twig', ['key' => 'value']);
 ```
 
+## 認証主体まわりの Twig 関数
+
+リクエストがビューに渡されているとき、**`TwigLoader`** が **`isUserLoggedIn()`**、**`getDisplayName()`**、**`getUserId()`**、Symfony 風の **`is_granted(...)`** を登録する。値はリクエスト属性 **`IdentityInterface::class`** から読む。BYO 認証・ミドルウェア・DI は **[auth-integration.ja.md](auth-integration.ja.md)**。
+
 ## AI 向けメモ
 
 - レイアウト継承やパーツ分割は **素の Twig の書き方**でよい。  

@@ -34,6 +34,10 @@ $view->setRequest($request);
 return $view->render($response, 'hello.twig', ['key' => 'value']);
 ```
 
+## Identity helpers (Twig)
+
+When the request is set on the view, **`TwigLoader`** exposes **`isUserLoggedIn()`**, **`getDisplayName()`**, **`getUserId()`**, and Symfony-style **`is_granted(...)`** from the request attribute **`IdentityInterface::class`**. See **[auth-integration.md](auth-integration.md)** for BYO auth, middleware, and DI.
+
 ## Notes
 
 - Layouts and includes use normal Twig syntax.  
