@@ -4,7 +4,7 @@ namespace Tests\Core\Unit\Views\Twig;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorInterface;
@@ -14,6 +14,7 @@ use Twig\Loader\ArrayLoader;
 use WScore\Deca\Contracts\MessageInterface;
 use WScore\Deca\Contracts\RoutingInterface;
 use WScore\Deca\Contracts\SessionInterface;
+use WScore\Deca\Contracts\IdentityInterface;
 use WScore\Deca\Services\Setting;
 use WScore\Deca\Views\Twig\TwigLoader;
 
@@ -49,6 +50,8 @@ class TwigLoaderTest extends TestCase
         $this->assertSame($routes, $globals['_routes']);
 
         $this->assertNotNull($twig->getFunction('csrfTokenName'));
+        $this->assertNotNull($twig->getFunction('isUserLoggedIn'));
+        $this->assertNotNull($twig->getFunction('is_granted'));
         $this->assertNotNull($twig->getFilter('arrayToString'));
     }
 
@@ -127,7 +130,7 @@ class TwigLoaderTest extends TestCase
         $this->assertEquals('', $loader->getCurrentUrl());
 
         // With request
-        $request = $this->createMock(RequestInterface::class);
+        $request = $this->createMock(ServerRequestInterface::class);
         $uri = $this->createMock(UriInterface::class);
         $uri->method('getPath')->willReturn('/current/path');
         $request->method('getUri')->willReturn($uri);
@@ -151,5 +154,50 @@ class TwigLoaderTest extends TestCase
 
         $loader = new TwigLoader($container);
         $this->assertEquals('/url/route/1?q=s', $loader->getUrlFor('route', ['id' => 1], ['q' => 's']));
+    }
+
+    public function testIdentityHelpersAsGuest(): void
+    {
+        $loader = new TwigLoader($this->createContainerMock());
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getAttribute')->with(IdentityInterface::class)->willReturn(null);
+        $loader->setRequest($request);
+
+        $this->assertFalse($loader->isUserLoggedIn());
+        $this->assertSame('', $loader->getDisplayName());
+        $this->assertSame('', $loader->getUserId());
+        $this->assertFalse($loader->isGranted('ROLE_USER'));
+    }
+
+    public function testIdentityHelpersWhenAuthenticated(): void
+    {
+        $identity = $this->createMock(IdentityInterface::class);
+        $identity->method('getId')->willReturn('id-1');
+        $identity->method('getDisplayName')->willReturn('Display');
+        $identity->method('getRoles')->willReturn(['ROLE_USER']);
+
+        $loader = new TwigLoader($this->createContainerMock());
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getAttribute')->with(IdentityInterface::class)->willReturn($identity);
+        $loader->setRequest($request);
+
+        $this->assertTrue($loader->isUserLoggedIn());
+        $this->assertSame('Display', $loader->getDisplayName());
+        $this->assertSame('id-1', $loader->getUserId());
+        $this->assertTrue($loader->isGranted('ROLE_USER'));
+        $this->assertFalse($loader->isGranted('ROLE_ADMIN'));
+    }
+
+    public function testIsGrantedWithSubjectReturnsFalse(): void
+    {
+        $identity = $this->createMock(IdentityInterface::class);
+        $identity->method('getRoles')->willReturn(['ROLE_USER']);
+
+        $loader = new TwigLoader($this->createContainerMock());
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getAttribute')->with(IdentityInterface::class)->willReturn($identity);
+        $loader->setRequest($request);
+
+        $this->assertFalse($loader->isGranted('ROLE_USER', new \stdClass()));
     }
 }

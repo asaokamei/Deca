@@ -16,7 +16,10 @@ if (!function_exists('getApp')) {
     {
         $app = AppFactory::createFromContainer($container);
 
-        // set up middlewares
+        // set up middlewares (Slim runs outermost `add` first; see middleware-session-csrf docs).
+        // Optional auth: bind IdentityResolverInterface in the container, then e.g.
+        // $app->add(\WScore\Deca\Middleware\ResolveIdentityMiddleware::class); // sets WScore\Deca\Contracts\IdentityInterface on the request (null = guest).
+        // Use RequireIdentityMiddleware only on routes/groups that require a logged-in user.
         $app->addRoutingMiddleware();
         $app->add(CsRfGuard::class);
         $app->add(AppMiddleware::class);

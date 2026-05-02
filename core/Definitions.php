@@ -18,7 +18,13 @@ use Symfony\Component\Mailer\Transport\SendmailTransport;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use WScore\Deca\Controllers\Messages;
+use WScore\Deca\Contracts\IdentityResolverInterface;
+use WScore\Deca\Contracts\IdentityUnauthorizedHandlerInterface;
 use WScore\Deca\Contracts\SessionInterface;
+use WScore\Deca\Middleware\RequireIdentityMiddleware;
+use WScore\Deca\Middleware\ResolveIdentityMiddleware;
+use WScore\Deca\Services\DefaultIdentityUnauthorizedHandler;
+use WScore\Deca\Services\NullIdentityResolver;
 use WScore\Deca\Services\Session;
 use WScore\Deca\Services\Setting;
 use WScore\Deca\Views\Twig\TwigLoader;
@@ -105,6 +111,22 @@ class Definitions
             },
             SessionInterface::class => function(ContainerInterface $container) {
                 return $container->get(Session::class);
+            },
+            IdentityResolverInterface::class => function () {
+                return new NullIdentityResolver();
+            },
+            IdentityUnauthorizedHandlerInterface::class => function (ContainerInterface $container) {
+                return new DefaultIdentityUnauthorizedHandler(
+                    $container->get(ResponseFactoryInterface::class)
+                );
+            },
+            ResolveIdentityMiddleware::class => function (ContainerInterface $container) {
+                return new ResolveIdentityMiddleware($container->get(IdentityResolverInterface::class));
+            },
+            RequireIdentityMiddleware::class => function (ContainerInterface $container) {
+                return new RequireIdentityMiddleware(
+                    $container->get(IdentityUnauthorizedHandlerInterface::class)
+                );
             },
             Messages::class => function(ContainerInterface $container) {
                 return new Messages($container->get(SessionInterface::class));

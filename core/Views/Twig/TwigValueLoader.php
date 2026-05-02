@@ -2,7 +2,7 @@
 
 namespace WScore\Deca\Views\Twig;
 
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Twig\Environment;
 use Twig\TwigFunction;
 use WScore\Deca\Contracts\MessageBagInterface;
@@ -13,7 +13,7 @@ class TwigValueLoader implements TwigLoaderInterface
 {
     private MessageBagInterface $values;
     private ?MessageBagInterface $errors = null;
-    private RequestInterface $request;
+    private ServerRequestInterface $request;
 
     public function load(Environment $environment): void
     {
@@ -29,7 +29,7 @@ class TwigValueLoader implements TwigLoaderInterface
         $environment->addFunction(new TwigFunction('checkIf', [$this, 'checkIf']));
     }
 
-    public function setRequest(RequestInterface $request): void
+    public function setRequest(ServerRequestInterface $request): void
     {
         $this->request = $request;
     }

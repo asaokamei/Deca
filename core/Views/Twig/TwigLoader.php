@@ -3,11 +3,12 @@
 namespace WScore\Deca\Views\Twig;
 
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Twig\Environment;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use WScore\Deca\Contracts\IdentityInterface;
 use WScore\Deca\Contracts\MessageInterface;
 use WScore\Deca\Contracts\RoutingInterface;
 use WScore\Deca\Contracts\SessionInterface;
@@ -15,7 +16,7 @@ use WScore\Deca\Services\Setting;
 
 class TwigLoader implements TwigLoaderInterface
 {
-    private RequestInterface $request;
+    private ?ServerRequestInterface $request = null;
 
     public function __construct(private ContainerInterface $container)
     {
@@ -26,9 +27,15 @@ class TwigLoader implements TwigLoaderInterface
         $environment->addGlobal('_app', $this->container->get(App::class));
         $environment->addGlobal('_setting', $this->container->get(Setting::class));
         $environment->addGlobal('_routes', $this->container->get(RoutingInterface::class));
-        if (isset($this->request)) {
+        if ($this->request !== null) {
             $environment->addGlobal('_request', $this->request);
         }
+
+        // Identity (request attribute {@see IdentityInterface::class})
+        $environment->addFunction(new TwigFunction('isUserLoggedIn', [$this, 'isUserLoggedIn']));
+        $environment->addFunction(new TwigFunction('getDisplayName', [$this, 'getDisplayName']));
+        $environment->addFunction(new TwigFunction('getUserId', [$this, 'getUserId']));
+        $environment->addFunction(new TwigFunction('is_granted', [$this, 'isGranted']));
 
         // CSRF Tokens
         $environment->addFunction(new TwigFunction('csrfTokenTag', [$this, 'getCsrfTokenTag']));
@@ -124,9 +131,58 @@ class TwigLoader implements TwigLoaderInterface
         return $messages->getMessages(MessageInterface::LEVEL_ERROR);
     }
 
-    public function setRequest(RequestInterface $request)
+    public function setRequest(ServerRequestInterface $request): void
     {
         $this->request = $request;
+    }
+
+    public function isUserLoggedIn(): bool
+    {
+        return $this->getIdentity() instanceof IdentityInterface;
+    }
+
+    public function getDisplayName(): string
+    {
+        $identity = $this->getIdentity();
+
+        return $identity instanceof IdentityInterface ? $identity->getDisplayName() : '';
+    }
+
+    public function getUserId(): string
+    {
+        $identity = $this->getIdentity();
+
+        return $identity instanceof IdentityInterface ? $identity->getId() : '';
+    }
+
+    /**
+     * Symfony-style role check: {@see IdentityInterface::getRoles()} must contain {@see $attribute}.
+     * If {@see $subject} is non-null, this default implementation returns false (reserved for app-level voters).
+     */
+    public function isGranted(string $attribute, mixed $subject = null): bool
+    {
+        if ($subject !== null) {
+            return false;
+        }
+        $identity = $this->getIdentity();
+        if (!$identity instanceof IdentityInterface) {
+            return false;
+        }
+
+        return in_array($attribute, $identity->getRoles(), true);
+    }
+
+    private function getIdentity(): ?IdentityInterface
+    {
+        if ($this->request === null) {
+            return null;
+        }
+        $value = $this->request->getAttribute(IdentityInterface::class);
+        if (!$value instanceof IdentityInterface) {
+            return null;
+        }
+
+        return $value;
     }
 
     public function getBasePath(): string
@@ -138,7 +194,7 @@ class TwigLoader implements TwigLoaderInterface
 
     public function getCurrentUrl(): string
     {
-        if (!isset($this->request)) {
+        if ($this->request === null) {
             return '';
         }
         return $this->request->getUri()->getPath();
