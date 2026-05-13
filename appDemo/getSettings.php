@@ -9,6 +9,13 @@ if (!function_exists('getSettings')) {
      */
     function getSettings(string $settingsIniPath): Setting
     {
-        return Setting::forge($settingsIniPath);
+        $setting = Setting::forge($settingsIniPath);
+
+        $timeZone = $setting->get('TIME_ZONE');
+        if (is_string($timeZone) && $timeZone !== '') {
+            date_default_timezone_set($timeZone);
+        }
+
+        return $setting;
     }
 }
