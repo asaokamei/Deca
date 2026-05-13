@@ -1,8 +1,8 @@
-# Configuration (`settings.ini` and `Setting`)
+# Configuration (`settings.ini` / `settings.demo.ini` and `Setting`)
 
 ## File
 
-The project root **`settings.ini`** is loaded by path chosen in **`public/index.php`** (typically **`dirname(__DIR__) . '/settings.ini'`** from `public/`). **`getSettings($path)`** uses **`parse_ini_file`** and merges with **`$_ENV`**; duplicate keys **`$_ENV` wins** (`array_merge($ini, $env)` inside **`Setting::forge`**).
+The project root config is loaded by path chosen in **`public/index.php`**. Usually it prioritizes **`settings.ini`** and falls back to **`settings.demo.ini`** when the local file does not exist. **`getSettings($path)`** uses **`parse_ini_file`** and merges with **`$_ENV`**; duplicate keys **`$_ENV` wins** (`array_merge($ini, $env)` inside **`Setting::forge`**).
 
 **`Setting`** is built in **`getSettings()`**, then registered on **`Definitions`** in **`getDefinitions($setting)`** (appDemo overrides the core **`Definitions`** factory for **`Setting::class`** with that instance).
 
@@ -13,7 +13,7 @@ The project root **`settings.ini`** is loaded by path chosen in **`public/index.
 - **`isDebug()`** — `APP_DEBUG` (Slim `addErrorMiddleware` uses this for `displayErrorDetails` in `getApp()`).  
 - **`appEnv()`** — normalized environment name from `APP_ENV` (e.g. dev / production).
 
-## Sample `settings.ini`
+## Sample `settings.demo.ini`
 
 ```
 [Application]

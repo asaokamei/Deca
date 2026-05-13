@@ -1,8 +1,8 @@
-# 設定（`settings.ini` と `Setting`）
+# 設定（`settings.ini` / `settings.demo.ini` と `Setting`）
 
 ## ファイル
 
-プロジェクトルートの **`settings.ini`** は **`public/index.php`** でパスを決めて読み込む（多くの場合 **`dirname(__DIR__) . '/settings.ini'`**）。**`getSettings($path)`** が **`parse_ini_file`** と環境変数 **`$_ENV`** をマージする。同じキーは **`$_ENV` が優先**（`Setting::forge` 内の `array_merge($ini, $env)`）。
+プロジェクトルートの設定は **`public/index.php`** でパスを決めて読み込む。通常は **`settings.ini`** を優先し、存在しない場合は **`settings.demo.ini`** にフォールバックする。`getSettings($path)` は **`parse_ini_file`** と環境変数 **`$_ENV`** をマージし、同じキーは **`$_ENV` が優先**（`Setting::forge` 内の `array_merge($ini, $env)`）。
 
 **`Setting`** は **`getSettings()`** で生成し、**`getDefinitions($setting)`** で **`Definitions`** に登録する（appDemo はコアの **`Setting::class`** ファクトリを、このインスタンスで上書きする）。
 
@@ -13,7 +13,7 @@
 - **`isDebug()`** — `APP_DEBUG`（`getApp()` で Slim の `addErrorMiddleware` の `displayErrorDetails` に使う）。  
 - **`appEnv()`** — `APP_ENV` を正規化した環境名（例: dev / production）。
 
-## サンプル（`settings.ini`）
+## サンプル（`settings.demo.ini`）
 
 ```
 [Application]

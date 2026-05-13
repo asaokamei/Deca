@@ -17,6 +17,9 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 }
 
 $settingsIniPath = dirname(__DIR__) . '/settings.ini';
+if (!is_file($settingsIniPath)) {
+    $settingsIniPath = dirname(__DIR__) . '/settings.demo.ini';
+}
 $setting = getSettings($settingsIniPath);
 $definitions = getDefinitions($setting);
 $container = getContainer($definitions);
