@@ -6,7 +6,7 @@ namespace Tests\Http\Demo;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
-use WScore\Deca\Services\Session;
+use WScore\Deca\Adapters\Session\Session;
 use Nyholm\Psr7\Factory\Psr17Factory;
 
 class FormControllerTest extends TestCase

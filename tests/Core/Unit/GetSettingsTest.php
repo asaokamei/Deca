@@ -3,7 +3,7 @@
 namespace Tests\Core\Unit;
 
 use PHPUnit\Framework\TestCase;
-use WScore\Deca\Services\Setting;
+use WScore\Deca\Adapters\Setting\Setting;
 
 require_once __DIR__ . '/../../../appDemo/getSettings.php';
 

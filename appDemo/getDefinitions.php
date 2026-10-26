@@ -8,11 +8,11 @@ use WScore\Deca\Contracts\MessageInterface;
 use WScore\Deca\Contracts\RoutingInterface;
 use WScore\Deca\Contracts\SessionInterface;
 use WScore\Deca\Contracts\ViewInterface;
-use WScore\Deca\Services\PhpMailer;
-use WScore\Deca\Services\Routing;
-use WScore\Deca\Services\Session;
-use WScore\Deca\Services\Setting;
-use WScore\Deca\Views\Twig\ViewTwig;
+use WScore\Deca\Adapters\Mail\PhpMailer;
+use WScore\Deca\Adapters\Routing\Routing;
+use WScore\Deca\Adapters\Session\Session;
+use WScore\Deca\Adapters\Setting\Setting;
+use WScore\Deca\Adapters\View\Twig\ViewTwig;
 
 if (!function_exists('getDefinitions')) {
     /**

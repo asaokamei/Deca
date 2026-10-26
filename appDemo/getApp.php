@@ -9,7 +9,7 @@ use Slim\Interfaces\RouteCollectorInterface;
 use WScore\Deca\Handlers\SimpleErrorHandler;
 use WScore\Deca\Middleware\AppMiddleware;
 use WScore\Deca\Middleware\CsRfGuard;
-use WScore\Deca\Services\Setting;
+use WScore\Deca\Adapters\Setting\Setting;
 
 if (!function_exists('getApp')) {
     function getApp(ContainerInterface $container): App

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace AppDemo\Application\Emails;
 
-use WScore\Deca\Services\AbstractMailable;
+use WScore\Deca\Adapters\Mail\AbstractMailable;
 
 class SampleMail extends AbstractMailable
 {

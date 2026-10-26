@@ -135,7 +135,7 @@ class AbstractControllerTest extends ControllerTestCase
                 'test_error.twig' => 'Error: {{ getError("name") }}',
             ]);
             $twig = new \Twig\Environment($loader);
-            return new \WScore\Deca\Views\Twig\ViewTwig($twig);
+            return new \WScore\Deca\Adapters\View\Twig\ViewTwig($twig);
         });
 
         $request = $this->createRequest('POST', '/test', ['name' => '']);
@@ -144,8 +144,8 @@ class AbstractControllerTest extends ControllerTestCase
         $validator = $this->createMock(ValidatorInterface::class);
         $result = $this->createMock(ValidatorResultInterface::class);
         
-        $errorBag = new \WScore\Deca\Views\FormDotted(['name' => 'required']);
-        $rawDataBag = new \WScore\Deca\Views\FormData(['name' => '']);
+        $errorBag = new \WScore\Deca\Adapters\View\FormDotted(['name' => 'required']);
+        $rawDataBag = new \WScore\Deca\Adapters\View\FormData(['name' => '']);
         
         $result->method('success')->willReturn(false);
         $result->method('getErrorBag')->willReturn($errorBag);

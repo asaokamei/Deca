@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 use WScore\Deca\Contracts\ViewInterface;
-use WScore\Deca\Services\Setting;
+use WScore\Deca\Adapters\Setting\Setting;
 
 if (!function_exists('registerRoutes')) {
     function registerRoutes(App $app): void

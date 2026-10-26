@@ -1,0 +1,76 @@
+<?php
+
+namespace WScore\Deca\Adapters\View\Twig;
+
+use Psr\Http\Message\ServerRequestInterface;
+use Twig\Environment;
+use Twig\TwigFunction;
+use WScore\Deca\Contracts\MessageBagInterface;
+use WScore\Deca\Adapters\View\FormData;
+use WScore\Deca\Adapters\View\FormDotted;
+
+class TwigValueLoader implements TwigLoaderInterface
+{
+    private MessageBagInterface $values;
+    private ?MessageBagInterface $errors = null;
+    private ServerRequestInterface $request;
+
+    public function load(Environment $environment): void
+    {
+        // add value loader.
+        $environment->addFunction(new TwigFunction('getValue', [$this, 'value']));
+        $environment->addFunction(new TwigFunction('old', [$this, 'value']));
+
+        // add error loader.
+        $environment->addFunction(new TwigFunction('getError', [$this, 'error']));
+        $environment->addFunction(new TwigFunction('error', [$this, 'error'], ['is_safe' => ['html']]));
+
+        // add checkIf loader.
+        $environment->addFunction(new TwigFunction('checkIf', [$this, 'checkIf']));
+    }
+
+    public function setRequest(ServerRequestInterface $request): void
+    {
+        $this->request = $request;
+    }
+
+    public function value(string $name): mixed
+    {
+        if (!isset($this->values)) {
+            $this->values = new FormData((array) $this->request->getParsedBody());
+        }
+        $value = $this->values->getByName($name);
+
+        return $value;
+    }
+
+    public function checkIf(string $name, string $value): bool
+    {
+        if (!isset($this->values)) {
+            $this->values = new FormData((array)$this->request->getParsedBody());
+        }
+        return $this->values->checkIf($name, $value);
+    }
+
+    public function error(string $name, string $format = '%s', string $separator = '<br>\n'): string
+    {
+        if (!isset($this->errors)) {
+            return '';
+        }
+        $value = $this->errors->getByName($name);
+        $string = '';
+        if (is_string($value)) {
+            $string = sprintf($format, $value);
+        }
+        if (is_array($value)) {
+            $string = implode($separator, $value);
+        }
+        return $string;
+    }
+
+    public function setValues(array|MessageBagInterface $values, array|MessageBagInterface $errors): void
+    {
+        $this->values = $values instanceof MessageBagInterface ? $values: new FormData($values);
+        $this->errors = $errors instanceof MessageBagInterface ? $errors: new FormDotted($errors);
+    }
+}

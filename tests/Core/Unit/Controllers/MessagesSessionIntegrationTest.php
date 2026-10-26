@@ -4,7 +4,7 @@ namespace Tests\Core\Unit\Controllers;
 
 use PHPUnit\Framework\TestCase;
 use WScore\Deca\Controllers\Messages;
-use WScore\Deca\Services\Session;
+use WScore\Deca\Adapters\Session\Session;
 
 class MessagesSessionIntegrationTest extends TestCase
 {

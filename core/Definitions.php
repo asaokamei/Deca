@@ -23,12 +23,12 @@ use WScore\Deca\Contracts\IdentityUnauthorizedHandlerInterface;
 use WScore\Deca\Contracts\SessionInterface;
 use WScore\Deca\Middleware\RequireIdentityMiddleware;
 use WScore\Deca\Middleware\ResolveIdentityMiddleware;
-use WScore\Deca\Services\DefaultIdentityUnauthorizedHandler;
-use WScore\Deca\Services\NullIdentityResolver;
-use WScore\Deca\Services\Session;
-use WScore\Deca\Services\Setting;
-use WScore\Deca\Views\Twig\TwigLoader;
-use WScore\Deca\Views\Twig\ViewTwig;
+use WScore\Deca\Adapters\Identity\DefaultIdentityUnauthorizedHandler;
+use WScore\Deca\Adapters\Identity\NullIdentityResolver;
+use WScore\Deca\Adapters\Session\Session;
+use WScore\Deca\Adapters\Setting\Setting;
+use WScore\Deca\Adapters\View\Twig\TwigLoader;
+use WScore\Deca\Adapters\View\Twig\ViewTwig;
 
 class Definitions
 {

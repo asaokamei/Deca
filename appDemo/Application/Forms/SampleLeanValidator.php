@@ -3,7 +3,7 @@
 namespace AppDemo\Application\Forms;
 
 use WScore\Deca\Contracts\ValidatorResultInterface;
-use WScore\Deca\Validation\AbstractLeanValidator;
+use WScore\Deca\Adapters\Validation\AbstractLeanValidator;
 use Wscore\LeanValidator\Validator;
 
 class SampleLeanValidator extends AbstractLeanValidator

@@ -2,7 +2,7 @@
 
 namespace Tests\Core\Support;
 
-use WScore\Deca\Services\AbstractMailable;
+use WScore\Deca\Adapters\Mail\AbstractMailable;
 
 class MailerCasePhpMailer extends AbstractMailable
 {

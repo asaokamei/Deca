@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use WScore\Deca\Services\Setting;
+use WScore\Deca\Adapters\Setting\Setting;
 
 if (!function_exists('getSettings')) {
     /**
