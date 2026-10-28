@@ -9,6 +9,7 @@ use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use stdClass;
 use WScore\Deca\Contracts\IdentityInterface;
 use WScore\Deca\Contracts\IdentityResolverInterface;
 use WScore\Deca\Middleware\ResolveIdentityMiddleware;
@@ -24,9 +25,9 @@ class ResolveIdentityMiddlewareTest extends TestCase
         $middleware = new ResolveIdentityMiddleware($resolver);
         $request = new ServerRequest('GET', '/');
 
-        $bag = new \stdClass();
+        $bag = new stdClass();
         $handler = new class ($bag) implements RequestHandlerInterface {
-            public function __construct(private \stdClass $bag)
+            public function __construct(private stdClass $bag)
             {
             }
 
@@ -50,9 +51,9 @@ class ResolveIdentityMiddlewareTest extends TestCase
         $middleware = new ResolveIdentityMiddleware($resolver);
         $request = new ServerRequest('GET', '/');
 
-        $bag = new \stdClass();
+        $bag = new stdClass();
         $handler = new class ($bag) implements RequestHandlerInterface {
-            public function __construct(private \stdClass $bag)
+            public function __construct(private stdClass $bag)
             {
             }
 

@@ -3,6 +3,7 @@
 namespace Tests\Core\Unit\Adapters\Validation;
 
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use WScore\Deca\Contracts\ValidatorResultInterface;
 use WScore\Deca\Adapters\Validation\AbstractLeanValidator;
 use Wscore\LeanValidator\Validator;
@@ -64,7 +65,7 @@ class AbstractLeanValidatorTest extends TestCase
     public function testUnimplementedValidationThrowsException(): void
     {
         $validator = new class extends AbstractLeanValidator {};
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('validation() must be implemented.');
         $validator->validate(['test' => 'data']);
     }

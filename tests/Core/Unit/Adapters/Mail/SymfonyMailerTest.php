@@ -2,11 +2,11 @@
 
 namespace Tests\Core\Unit\Adapters\Mail;
 
+use ReflectionClass;
 use Tests\Core\Support\MailerCasePhpMailer;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mailer\MailerInterface as SymfonyMailerInterface;
 use Symfony\Component\Mime\Email;
-use WScore\Deca\Contracts\MailableInterface;
 use WScore\Deca\Contracts\ViewInterface;
 use WScore\Deca\Adapters\Mail\SymfonyMailer;
 
@@ -27,7 +27,7 @@ class SymfonyMailerTest extends TestCase
             ->withBcc(['bcc@example.com' => 'Bcc Name']);
 
         // Use reflection to access protected buildMail for testing its logic
-        $reflection = new \ReflectionClass(SymfonyMailer::class);
+        $reflection = new ReflectionClass(SymfonyMailer::class);
         $method = $reflection->getMethod('buildMail');
 
         /** @var Email $email */
@@ -64,7 +64,7 @@ class SymfonyMailerTest extends TestCase
             ->with('mail.twig', ['name' => 'World'])
             ->willReturn('Rendered Content');
 
-        $reflection = new \ReflectionClass(SymfonyMailer::class);
+        $reflection = new ReflectionClass(SymfonyMailer::class);
         $method = $reflection->getMethod('render');
 
         $content = $method->invoke($mailer, $mailable);

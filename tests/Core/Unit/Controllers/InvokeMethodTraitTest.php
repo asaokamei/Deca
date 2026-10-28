@@ -1,6 +1,6 @@
 <?php
 
-namespace WScore\Deca\Tests\Controllers;
+namespace Tests\Core\Unit\Controllers;
 
 use BadMethodCallException;
 use InvalidArgumentException;
@@ -10,7 +10,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Tests\Core\Support\InvokeMethodTraitStub;
 use Tests\Core\Support\InvokeMethodTraitStubWithRequest;
-use WScore\Deca\Controllers\InvokeMethodTrait;
 
 class InvokeMethodTraitTest extends TestCase
 {

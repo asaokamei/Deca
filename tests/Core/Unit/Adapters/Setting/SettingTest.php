@@ -3,6 +3,7 @@
 namespace Tests\Core\Unit\Adapters\Setting;
 
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use WScore\Deca\Adapters\Setting\Setting;
 
 class SettingTest extends TestCase
@@ -67,7 +68,7 @@ class SettingTest extends TestCase
 
     public function testOffsetSetThrows(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Cannot set');
         $setting = new Setting([]);
         $setting['x'] = 'y';
@@ -75,7 +76,7 @@ class SettingTest extends TestCase
 
     public function testOffsetUnsetThrows(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Cannot unset');
         $setting = new Setting(['x' => 'y']);
         unset($setting['x']);
@@ -113,7 +114,7 @@ class SettingTest extends TestCase
 
     public function testForgeThrowsWhenFileMissing(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Cannot find a setting file');
 
         Setting::forge(__DIR__ . '/nonexistent.ini');

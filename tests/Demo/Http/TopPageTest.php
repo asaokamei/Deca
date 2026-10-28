@@ -1,19 +1,20 @@
 <?php
 
-namespace Tests\Http\Demo;
+namespace Tests\Demo\Http;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Factory\ServerRequestCreatorFactory;
+
 class TopPageTest extends TestCase
 {
     private function resolveSettingsPath(): string
     {
-        $settingsIniPath = __DIR__ . '/../../settings.ini';
+        $settingsIniPath = __DIR__ . '/../../../settings.ini';
         if (!is_file($settingsIniPath)) {
-            return __DIR__ . '/../../settings.demo.ini';
+            return __DIR__ . '/../../../settings.demo.ini';
         }
 
         return $settingsIniPath;
@@ -27,9 +28,9 @@ class TopPageTest extends TestCase
         return $request->withUri($uri);
     }
 
-    private function createApp(ServerRequestInterface $request): App
+    private function createApp(): App
     {
-        require_once __DIR__ . '/../../appDemo/boot.php';
+        require_once __DIR__ . '/../../../appDemo/boot.php';
         $settingsIniPath = $this->resolveSettingsPath();
         $setting = getSettings($settingsIniPath);
         $definitions = getDefinitions($setting);

@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Tests\Http\Demo;
+namespace Tests\Demo\Http;
 
+use Nyholm\Psr7\Factory\Psr17Factory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use WScore\Deca\Adapters\Session\Session;
-use Nyholm\Psr7\Factory\Psr17Factory;
 
 class FormControllerTest extends TestCase
 {
@@ -15,9 +15,9 @@ class FormControllerTest extends TestCase
 
     private function resolveSettingsPath(): string
     {
-        $settingsIniPath = __DIR__ . '/../../settings.ini';
+        $settingsIniPath = __DIR__ . '/../../../settings.ini';
         if (!is_file($settingsIniPath)) {
-            return __DIR__ . '/../../settings.demo.ini';
+            return __DIR__ . '/../../../settings.demo.ini';
         }
 
         return $settingsIniPath;
@@ -43,7 +43,7 @@ class FormControllerTest extends TestCase
 
     private function createApp(bool $appDebug = false): App
     {
-        require_once __DIR__ . '/../../appDemo/boot.php';
+        require_once __DIR__ . '/../../../appDemo/boot.php';
 
         $setting = getSettings($this->resolveSettingsPath());
         $setting->addSettings(['APP_DEBUG' => $appDebug]);

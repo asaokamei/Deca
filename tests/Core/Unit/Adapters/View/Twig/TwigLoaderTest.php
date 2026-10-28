@@ -9,6 +9,7 @@ use Psr\Http\Message\UriInterface;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorInterface;
 use Slim\Interfaces\RouteParserInterface;
+use stdClass;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use WScore\Deca\Contracts\MessageInterface;
@@ -198,6 +199,6 @@ class TwigLoaderTest extends TestCase
         $request->method('getAttribute')->with(IdentityInterface::class)->willReturn($identity);
         $loader->setRequest($request);
 
-        $this->assertFalse($loader->isGranted('ROLE_USER', new \stdClass()));
+        $this->assertFalse($loader->isGranted('ROLE_USER', new stdClass()));
     }
 }

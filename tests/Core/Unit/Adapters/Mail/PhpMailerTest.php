@@ -2,6 +2,8 @@
 
 namespace Tests\Core\Unit\Adapters\Mail;
 
+use ReflectionClass;
+use RuntimeException;
 use Tests\Core\Support\MailerCasePhpMailer;
 use PHPMailer\PHPMailer\PHPMailer as PHPMailerEngine;
 use PHPUnit\Framework\TestCase;
@@ -21,7 +23,7 @@ class PhpMailerTest extends TestCase
         $mailable = new MailerCasePhpMailer();
         $mailer->send($mailable);
 
-        $reflection = new \ReflectionClass(PhpMailer::class);
+        $reflection = new ReflectionClass(PhpMailer::class);
         $mailerProperty = $reflection->getProperty('mailer');
         if (PHP_VERSION_ID < 80500) {
             $mailerProperty->setAccessible(true);
@@ -47,7 +49,7 @@ class PhpMailerTest extends TestCase
             ->withBcc(['bcc@example.com' => 'Bcc Name']);
 
         // Use reflection to access protected buildMail for testing its logic
-        $reflection = new \ReflectionClass(PhpMailer::class);
+        $reflection = new ReflectionClass(PhpMailer::class);
         $method = $reflection->getMethod('buildMail');
         $method->invoke($mailer, $mailable);
 
@@ -94,7 +96,7 @@ class PhpMailerTest extends TestCase
             ->with('mail.twig', ['name' => 'World'])
             ->willReturn('Rendered Content');
 
-        $reflection = new \ReflectionClass(PhpMailer::class);
+        $reflection = new ReflectionClass(PhpMailer::class);
         $method = $reflection->getMethod('render');
 
         $content = $method->invoke($mailer, $mailable);
@@ -140,7 +142,7 @@ class PhpMailerTest extends TestCase
             ->method('send')
             ->willReturn(false);
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Mailer Error: Mock Error');
 
         $mailer->send($mailable);

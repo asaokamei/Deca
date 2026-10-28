@@ -2,8 +2,16 @@
 
 namespace Tests\Core\Unit\Controllers;
 
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\ResponseInterface;
+use ReflectionClass;
 use Tests\Core\Support\ControllerTestCase;
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
+use WScore\Deca\Adapters\View\FormData;
+use WScore\Deca\Adapters\View\FormDotted;
+use WScore\Deca\Adapters\View\Twig\ViewTwig;
+use WScore\Deca\Contracts\ViewInterface;
 use WScore\Deca\Controllers\AbstractController;
 use Psr\Container\ContainerInterface;
 
@@ -60,7 +68,6 @@ class AbstractControllerTest extends ControllerTestCase
                 // test withInputs
                 $this->withInputs(['old' => 'val'], ['err' => 'msg']);
                 // test drawTemplate (test.twig is defined in ControllerTestCase)
-                $html = $this->drawTemplate('test.twig', ['name' => 'Deca']);
                 return $this->view('test.twig', ['name' => 'World']);
             }
         };
@@ -69,14 +76,14 @@ class AbstractControllerTest extends ControllerTestCase
         $this->assertEquals('Hello World!', (string)$response->getBody());
         
         // Check if inputs were set in the view via Reflection
-        $view = $this->container->get(\WScore\Deca\Contracts\ViewInterface::class);
-        $refl = new \ReflectionClass($view);
+        $view = $this->container->get(ViewInterface::class);
+        $refl = new ReflectionClass($view);
         
         $valueLoaderProp = $refl->getProperty('valueLoader');
         $valueLoader = $valueLoaderProp->getValue($view);
         
         // Manually set request to valueLoader as it's normally done by load() which is called during render
-        $vlRefl = new \ReflectionClass($valueLoader);
+        $vlRefl = new ReflectionClass($valueLoader);
         $reqProp = $vlRefl->getProperty('request');
         $reqProp->setValue($valueLoader, $request);
 
@@ -112,13 +119,13 @@ class AbstractControllerTest extends ControllerTestCase
         $this->assertEquals('success', (string)$response->getBody());
 
         // Check if validated data is passed to view via getView()
-        $view = $this->container->get(\WScore\Deca\Contracts\ViewInterface::class);
-        $refl = new \ReflectionClass($view);
+        $view = $this->container->get(ViewInterface::class);
+        $refl = new ReflectionClass($view);
 
         $valueLoaderProp = $refl->getProperty('valueLoader');
         $valueLoader = $valueLoaderProp->getValue($view);
 
-        $vlRefl = new \ReflectionClass($valueLoader);
+        $vlRefl = new ReflectionClass($valueLoader);
         $reqProp = $vlRefl->getProperty('request');
         $reqProp->setValue($valueLoader, $request);
 
@@ -130,12 +137,12 @@ class AbstractControllerTest extends ControllerTestCase
         // Re-create container for specific test view logic
         $this->container = $this->createContainer();
         // In ControllerTestCase, ViewInterface is bound to ViewTwig which uses TwigValueLoader.
-        $this->container->set(\WScore\Deca\Contracts\ViewInterface::class, function () {
-            $loader = new \Twig\Loader\ArrayLoader([
+        $this->container->set(ViewInterface::class, function () {
+            $loader = new ArrayLoader([
                 'test_error.twig' => 'Error: {{ getError("name") }}',
             ]);
-            $twig = new \Twig\Environment($loader);
-            return new \WScore\Deca\Adapters\View\Twig\ViewTwig($twig);
+            $twig = new Environment($loader);
+            return new ViewTwig($twig);
         });
 
         $request = $this->createRequest('POST', '/test', ['name' => '']);
@@ -144,8 +151,8 @@ class AbstractControllerTest extends ControllerTestCase
         $validator = $this->createMock(ValidatorInterface::class);
         $result = $this->createMock(ValidatorResultInterface::class);
         
-        $errorBag = new \WScore\Deca\Adapters\View\FormDotted(['name' => 'required']);
-        $rawDataBag = new \WScore\Deca\Adapters\View\FormData(['name' => '']);
+        $errorBag = new FormDotted(['name' => 'required']);
+        $rawDataBag = new FormData(['name' => '']);
         
         $result->method('success')->willReturn(false);
         $result->method('getErrorBag')->willReturn($errorBag);
@@ -296,7 +303,7 @@ class AbstractControllerTest extends ControllerTestCase
 
     private function callConcreteController($controller, $request, array $args = []): ResponseInterface
     {
-        $response = (new \Nyholm\Psr7\Factory\Psr17Factory())->createResponse();
+        $response = (new Psr17Factory())->createResponse();
         return $controller($request, $response, $args);
     }
 }

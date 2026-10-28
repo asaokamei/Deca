@@ -7,7 +7,6 @@ namespace Tests\Core\Unit\Middleware;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use WScore\Deca\Contracts\IdentityInterface;
 use WScore\Deca\Contracts\IdentityUnauthorizedHandlerInterface;

@@ -22,6 +22,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
+use function getApp;
 
 abstract class ControllerTestCase extends TestCase
 {
@@ -33,7 +34,7 @@ abstract class ControllerTestCase extends TestCase
         parent::setUp();
         require_once __DIR__ . '/../../../appDemo/getApp.php';
         $this->container = $this->createContainer();
-        $this->app = \getApp($this->container);
+        $this->app = getApp($this->container);
     }
 
     protected function createContainer(): ContainerInterface
@@ -59,7 +60,7 @@ abstract class ControllerTestCase extends TestCase
                 return new ViewTwig($twig);
             },
             RoutingInterface::class => function (ContainerInterface $c) {
-                return new Routing($c->get(\Slim\App::class)->getRouteCollector());
+                return new Routing($c->get(App::class)->getRouteCollector());
             },
         ]);
         return $builder->build();

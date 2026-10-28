@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace tests\Core\Unit\Handlers;
+namespace Tests\Core\Unit\Handlers;
 
 use PHPUnit\Framework\TestCase;
 use WScore\Deca\Handlers\ShutdownHandler;

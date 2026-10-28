@@ -3,6 +3,7 @@
 namespace Tests\Core\Unit\Adapters\Validation;
 
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use WScore\Deca\Adapters\Validation\ValidatorSuccess;
 
 class ValidatorSuccessTest extends TestCase
@@ -31,7 +32,7 @@ class ValidatorSuccessTest extends TestCase
 
     public function testGetErrorsThrows(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('no errors');
 
         $result = new ValidatorSuccess([], []);

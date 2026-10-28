@@ -3,6 +3,7 @@
 namespace Tests\Core\Unit\Adapters\View;
 
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use WScore\Deca\Adapters\View\FormData;
 
 class FormDataTest extends TestCase
@@ -33,7 +34,7 @@ class FormDataTest extends TestCase
 
     public function testGetValueForObject(): void
     {
-        $entity = new \stdClass();
+        $entity = new stdClass();
         $entity->name = 'John';
         $entity->lang = ['ENG', 'JPN'];
         $oldValues = new FormData(['inputs' => $entity]);

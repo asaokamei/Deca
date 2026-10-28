@@ -3,6 +3,7 @@
 namespace Tests\Core\Unit\Adapters\Validation;
 
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use WScore\Deca\Adapters\Validation\ValidatorFailed;
 
 class ValidatorFailedTest extends TestCase
@@ -30,7 +31,7 @@ class ValidatorFailedTest extends TestCase
 
     public function testGetValidatedDataThrows(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('no valid data');
 
         $result = new ValidatorFailed([], ['field' => 'error']);

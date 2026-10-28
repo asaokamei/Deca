@@ -1,15 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace tests\Core\Unit\Handlers;
+namespace Tests\Core\Unit\Handlers;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Slim\Exception\HttpException;
 use Slim\Exception\HttpForbiddenException;
 use Slim\Exception\HttpMethodNotAllowedException;
 use Slim\Exception\HttpNotFoundException;
 use Psr\Http\Message\ServerRequestInterface;
-use Throwable;
 use Exception;
 use WScore\Deca\Contracts\ViewInterface;
 use WScore\Deca\Handlers\SimpleErrorHandler;
@@ -17,7 +16,7 @@ use WScore\Deca\Handlers\SimpleErrorHandler;
 class SimpleErrorHandlerTest extends TestCase
 {
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject|ViewInterface
+     * @return MockObject|ViewInterface
      */
     private function createViewMock()
     {
