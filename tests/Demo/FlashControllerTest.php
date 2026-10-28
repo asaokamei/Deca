@@ -31,9 +31,9 @@ class FlashControllerTest extends TestCase
 
     private function resolveSettingsPath(): string
     {
-        $settingsIniPath = __DIR__ . '/../../../settings.ini';
+        $settingsIniPath = __DIR__ . '/../../settings.ini';
         if (!is_file($settingsIniPath)) {
-            return __DIR__ . '/../../../settings.demo.ini';
+            return __DIR__ . '/../../settings.demo.ini';
         }
 
         return $settingsIniPath;
@@ -56,7 +56,7 @@ class FlashControllerTest extends TestCase
 
     private function createApp(): App
     {
-        require_once __DIR__ . '/../../../appDemo/boot.php';
+        require_once __DIR__ . '/../../appDemo/boot.php';
 
         $setting = getSettings($this->resolveSettingsPath());
         $definitions = getDefinitions($setting);

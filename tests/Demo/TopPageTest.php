@@ -11,9 +11,9 @@ class TopPageTest extends TestCase
 {
     private function resolveSettingsPath(): string
     {
-        $settingsIniPath = __DIR__ . '/../../../settings.ini';
+        $settingsIniPath = __DIR__ . '/../../settings.ini';
         if (!is_file($settingsIniPath)) {
-            return __DIR__ . '/../../../settings.demo.ini';
+            return __DIR__ . '/../../settings.demo.ini';
         }
 
         return $settingsIniPath;
@@ -29,7 +29,7 @@ class TopPageTest extends TestCase
 
     private function createApp(ServerRequestInterface $request): App
     {
-        require_once __DIR__ . '/../../../appDemo/boot.php';
+        require_once __DIR__ . '/../../appDemo/boot.php';
         $settingsIniPath = $this->resolveSettingsPath();
         $setting = getSettings($settingsIniPath);
         $definitions = getDefinitions($setting);
