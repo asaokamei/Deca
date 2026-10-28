@@ -8,43 +8,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Factory\ServerRequestCreatorFactory;
 
-class TopPageTest extends TestCase
+class TopPageTest extends HttpTestCase
 {
-    private function resolveSettingsPath(): string
-    {
-        $settingsIniPath = __DIR__ . '/../../../settings.ini';
-        if (!is_file($settingsIniPath)) {
-            return __DIR__ . '/../../../settings.demo.ini';
-        }
-
-        return $settingsIniPath;
-    }
-
-    private function createRequest(string $path = '/'): ServerRequestInterface
-    {
-        $request = ServerRequestCreatorFactory::create()
-            ->createServerRequestFromGlobals();
-        $uri = $request->getUri()->withPath($path);
-        return $request->withUri($uri);
-    }
-
-    private function createApp(): App
-    {
-        require_once __DIR__ . '/../../../appDemo/boot.php';
-        $settingsIniPath = $this->resolveSettingsPath();
-        $setting = getSettings($settingsIniPath);
-        $definitions = getDefinitions($setting);
-        $container = getContainer($definitions);
-        $app = getApp($container);
-        registerRoutes($app);
-
-        return $app;
-    }
-
     private function getResponse(string $path = '/'): ResponseInterface
     {
-        $request = $this->createRequest($path);
-        $app = $this->createApp($request);
+        $request = $this->createRequest('GET', $path);
+        $app = $this->createApp();
         return $app->handle($request);
     }
 

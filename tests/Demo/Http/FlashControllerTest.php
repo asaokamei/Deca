@@ -9,49 +9,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use WScore\Deca\Adapters\Session\Session;
 
-class FlashControllerTest extends TestCase
+class FlashControllerTest extends HttpTestCase
 {
-    private array $sessionData = [];
-
-    private function resolveSettingsPath(): string
-    {
-        $settingsIniPath = __DIR__ . '/../../../settings.ini';
-        if (!is_file($settingsIniPath)) {
-            return __DIR__ . '/../../../settings.demo.ini';
-        }
-
-        return $settingsIniPath;
-    }
-
-    protected function setUp(): void
-    {
-        $this->sessionData = [];
-    }
-
-    private function createRequest(string $method, string $path): ServerRequestInterface
-    {
-        $factory = new Psr17Factory();
-        $uri = $factory->createUri($path);
-        // getApp.phpで addRoutingMiddleware() が呼ばれるので、
-        // テスト環境でベースパスがある場合は調整が必要かもしれないが、
-        // ここでは単純なリクエストを作成する。
-        return $factory->createServerRequest($method, $uri);
-    }
-
-    private function createApp(): App
-    {
-        require_once __DIR__ . '/../../../appDemo/boot.php';
-
-        $setting = getSettings($this->resolveSettingsPath());
-        $definitions = getDefinitions($setting);
-        $definitions->setValue(Session::class, new Session($this->sessionData));
-        $container = getContainer($definitions);
-        $app = getApp($container);
-        registerRoutes($app);
-
-        return $app;
-    }
-
     public function test_onGet_displays_flash_page()
     {
         $app = $this->createApp();

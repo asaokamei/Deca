@@ -9,55 +9,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use WScore\Deca\Adapters\Session\Session;
 
-class FormControllerTest extends TestCase
+class FormControllerTest extends HttpTestCase
 {
-    private array $sessionData = [];
-
-    private function resolveSettingsPath(): string
-    {
-        $settingsIniPath = __DIR__ . '/../../../settings.ini';
-        if (!is_file($settingsIniPath)) {
-            return __DIR__ . '/../../../settings.demo.ini';
-        }
-
-        return $settingsIniPath;
-    }
-
-    protected function setUp(): void
-    {
-        $this->sessionData = [];
-    }
-
-    private function createRequest(string $method, string $path, array $postData = []): ServerRequestInterface
-    {
-        $factory = new Psr17Factory();
-        $uri = $factory->createUri($path);
-        $request = $factory->createServerRequest($method, $uri);
-
-        if ($method === 'POST') {
-            $request = $request->withParsedBody($postData);
-        }
-
-        return $request;
-    }
-
-    private function createApp(bool $appDebug = false): App
-    {
-        require_once __DIR__ . '/../../../appDemo/boot.php';
-
-        $setting = getSettings($this->resolveSettingsPath());
-        $setting->addSettings(['APP_DEBUG' => $appDebug]);
-
-        $definitions = getDefinitions($setting);
-        $definitions->setValue(Session::class, new Session($this->sessionData));
-        $container = getContainer($definitions);
-
-        $app = getApp($container);
-        registerRoutes($app);
-
-        return $app;
-    }
-
     public function test_onGet_displays_form()
     {
         $app = $this->createApp();
